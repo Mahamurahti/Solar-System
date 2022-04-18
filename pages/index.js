@@ -3,14 +3,18 @@ import Image from 'next/image'
 import Link from "next/link";
 import styles from '../styles/Home.module.css'
 
+import Panorama from "../components/Panorama";
+
 export default function Home() {
   return (
-    <div className={styles.container}>
+    <>
       <Head>
         <title>Solar System</title>
         <meta name="description" content="Explore the solar system!" />
         {/*<link rel="icon" href="/favicon.ico" />*/}
       </Head>
+
+      <Panorama />
 
       <main className={styles.main}>
         <h1 className={styles.title}>
@@ -84,6 +88,6 @@ export default function Home() {
           </span>
         </a>
       </footer>
-    </div>
+    </>
   )
 }
