@@ -98,6 +98,7 @@
 .card:active {
     color: var(--secondary-color);
     border-color: var(--secondary-color);
+    outline-color: var(--secondary-color);
 }
 
 .arrow {

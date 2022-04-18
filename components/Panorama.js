@@ -1,5 +1,7 @@
 import * as THREE from 'three'
-import { useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import styles from '../styles/Panorama.module.css'
+
 
 /**
  * Creates a Panorama of a star field.
@@ -8,6 +10,8 @@ import { useEffect, useRef } from 'react'
  * @constructor
  */
 export default function Panorama() {
+
+    const [loading, setLoading] = useState(true)
 
     /**
      * Reference to which the renderer will be mounted.
@@ -20,6 +24,8 @@ export default function Panorama() {
      * Camera will follow mouse movement.
      */
     useEffect(() => {
+        setLoading(true)
+
         const WIDTH = window.innerWidth
         const HEIGHT = window.innerHeight
 
@@ -27,11 +33,10 @@ export default function Panorama() {
         const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 0.1, 1000)
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
 
-        const starTexturePath = 'cubemap/'
         /**
          * Load textures from 'cubemap' folder, creating a cubemap for the background of the scene.
          */
-        scene.background = new THREE.CubeTextureLoader().setPath(starTexturePath).load(
+        scene.background = new THREE.CubeTextureLoader().setPath("cubemap/").load(
         [
                 'px.png',
                 'nx.png',
@@ -39,7 +44,9 @@ export default function Panorama() {
                 'ny.png',
                 'pz.png',
                 'nz.png'
-            ]
+            ], function () {
+                setLoading(false)
+            }
         )
 
         renderer.setPixelRatio(window.devicePixelRatio)
@@ -85,7 +92,7 @@ export default function Panorama() {
             target.y = (1 - mouse.y) * 0.001
             camera.rotation.x += 0.01 * (target.y - camera.rotation.x)
             camera.rotation.y += 0.01 * (target.x - camera.rotation.y)
-            
+
             requestAnimationFrame(animate)
             renderer.render(scene, camera)
         };
@@ -101,6 +108,13 @@ export default function Panorama() {
     }, [])
 
     return (
-        <div ref={mountRef} style={{position: "absolute"}}/>
+        <>
+            {loading &&
+                <div className={styles.container}>
+                    <div className={styles.loading} />
+                </div>
+            }
+            <div ref={mountRef} style={{position: "absolute"}}/>
+        </>
     )
 }
