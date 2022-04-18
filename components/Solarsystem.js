@@ -3,7 +3,6 @@ import {useEffect, useRef} from 'react'
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 
 
-
 export default function Solarsystem(props) {
     const mountRef = useRef(null)
 
@@ -30,15 +29,20 @@ export default function Solarsystem(props) {
         const light = new THREE.DirectionalLight(0xffffff)
 
         renderer.setSize(WIDTH, HEIGHT)
+        renderer.setPixelRatio(window.devicePixelRatio)
         scene.add(light)
         const pointLight = new THREE.PointLight(0xFFFFFF, 2, 300);
         scene.add(pointLight);
 
         mountRef.current.appendChild(renderer.domElement)
         const controls = new OrbitControls(camera, renderer.domElement)
+        //const cameraControls = new CameraControls(camera, renderer.domElement, {dollyToCursor: false})
+
+        //cameraControls.update()
 
         camera.position.set(-90, 140, 140);
-        controls.update();
+        //controls.update();
+
 
         const envMapSides = [starTexturePath,starTexturePath,starTexturePath,starTexturePath,starTexturePath,starTexturePath]
         const environmentMap = new THREE.CubeTextureLoader().load(envMapSides);
@@ -53,14 +57,14 @@ export default function Solarsystem(props) {
         })
         const sun = new THREE.Mesh(sunGeometry, sunMaterial)
         scene.add(sun)
-
+        const group = new THREE.Group()
         function createPlanet(size, texture, position, ring) {
             const planetGeometry = new THREE.SphereGeometry(size, 30, 30);
             const planetMaterial = new THREE.MeshStandardMaterial({
                 map: planetTextureLoader.load(texture)
             });
             const planet = new THREE.Mesh(planetGeometry, planetMaterial);
-            const planetGroup = new THREE.Group();
+            const planetGroup = new THREE.Object3D();
             planetGroup.add(planet);
             if(ring) {
                 const ringGeometry = new THREE.RingGeometry(
@@ -77,7 +81,9 @@ export default function Solarsystem(props) {
                 ringMesh.rotation.x = -0.5 * Math.PI;
             }
             scene.add(planetGroup);
+            //group.add(planetGroup)
             planet.position.x = position;
+
             return {planet, planetGroup}
         }
 
@@ -98,6 +104,48 @@ export default function Solarsystem(props) {
         });
         const neptune = createPlanet(7, neptuneTexturePath, 200);
         const pluto = createPlanet(2.8, plutoTexturePath, 216);
+
+        const planets = {
+            sun, earth, mars, mercury, venus, jupiter, saturn, uranus, neptune, pluto
+        }
+
+        //scene.add(group)
+
+        let raycaster = new THREE.Raycaster()
+        const pointer = new THREE.Vector2();
+        function onPointerMove( event ) {
+
+            pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+            pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+        }
+
+        document.addEventListener('mousemove', onPointerMove)
+        let INTERSECTED;
+
+        function render() {
+
+            camera.updateMatrixWorld();
+            raycaster.setFromCamera( pointer, camera );
+
+            const intersects = raycaster.intersectObjects( scene.children, true );
+            console.log(scene.children)
+            if ( intersects.length > 0 ) {
+                if ( INTERSECTED != intersects[ 0 ].object ) {
+                    if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+                    INTERSECTED = intersects[ 0 ].object;
+                    if(INTERSECTED.material) {
+                        INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+                        INTERSECTED.material.emissive.setHex( 0xff0000 );
+                    }
+                    console.log('osu')
+                }
+            } else {
+                if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+                INTERSECTED = null;
+            }
+            renderer.render(scene, camera)
+        }
 
         const animate = function () {
             requestAnimationFrame(animate)
@@ -122,14 +170,16 @@ export default function Solarsystem(props) {
             uranus.planetGroup.rotateY(0.0004);
             neptune.planetGroup.rotateY(0.0001);
             pluto.planetGroup.rotateY(0.00007);
-            renderer.render(scene, camera)
+            render();
         }
         animate()
+
         window.addEventListener('resize', function() {
             camera.aspect = WIDTH / HEIGHT
             camera.updateProjectionMatrix();
             renderer.setSize(WIDTH, HEIGHT)
         })
+
 
         return () => {
             mountRef.current?.removeChild(renderer.domElement)

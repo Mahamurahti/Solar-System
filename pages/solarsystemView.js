@@ -8,7 +8,7 @@ export default function solarsystemView() {
 
     })
     return (
-        <div >
+        <div>
 
             <Solarsystem></Solarsystem>
         </div>
