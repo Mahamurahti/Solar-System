@@ -8,10 +8,11 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 1;
 }
 
 .footer {
+    position: relative;
+
     display: flex;
     flex: 1;
     padding: var(--gap-medium) 0;
@@ -86,6 +87,12 @@
     outline: 0 solid var(--primary-color);
     transition: color .2s ease-in-out, border-color .2s ease-in-out, outline .2s ease-in-out;
     max-width: 300px;
+}
+
+@media (max-width: 600px) {
+    .card {
+        min-width: 250px;
+    }
 }
 
 .card:hover {

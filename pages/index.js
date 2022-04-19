@@ -5,13 +5,20 @@ import styles from '../styles/Home.module.css'
 
 import Panorama from "../components/Panorama";
 
+/**
+ * Creates the Home page
+ *
+ * @author Eric Keränen
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export default function Home() {
   return (
     <>
       <Head>
         <title>Solar System</title>
         <meta name="description" content="Explore the solar system!" />
-        {/*<link rel="icon" href="/favicon.ico" />*/}
+        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <Panorama />

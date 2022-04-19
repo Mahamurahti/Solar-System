@@ -1,17 +1,15 @@
 import * as THREE from 'three'
-import { useState, useEffect, useRef } from 'react'
-import styles from '../styles/Panorama.module.css'
+import { useEffect, useRef } from 'react'
 
 
 /**
  * Creates a Panorama of a star field.
  *
+ * @author Eric Keränen
  * @returns {JSX.Element}
  * @constructor
  */
 export default function Panorama() {
-
-    const [loading, setLoading] = useState(true)
 
     /**
      * Reference to which the renderer will be mounted.
@@ -24,8 +22,6 @@ export default function Panorama() {
      * Camera will follow mouse movement.
      */
     useEffect(() => {
-        setLoading(true)
-
         const WIDTH = window.innerWidth
         const HEIGHT = window.innerHeight
 
@@ -33,21 +29,13 @@ export default function Panorama() {
         const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 0.1, 1000)
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
 
+        const cubemap = 'cubemap/'
+        const images = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png']
+        const loader = new THREE.CubeTextureLoader()
         /**
          * Load textures from 'cubemap' folder, creating a cubemap for the background of the scene.
          */
-        scene.background = new THREE.CubeTextureLoader().setPath("cubemap/").load(
-        [
-                'px.png',
-                'nx.png',
-                'py.png',
-                'ny.png',
-                'pz.png',
-                'nz.png'
-            ], function () {
-                setLoading(false)
-            }
-        )
+        scene.background = loader.setPath(cubemap).load(images)
 
         renderer.setPixelRatio(window.devicePixelRatio)
         renderer.setSize(WIDTH, HEIGHT)
@@ -59,8 +47,8 @@ export default function Panorama() {
         const target = new THREE.Vector2()
         const windowHalf = new THREE.Vector2(WIDTH / 2, HEIGHT / 2)
 
-        document.addEventListener( 'mousemove', onMouseMove, false );
-        window.addEventListener( 'resize', onResize, false );
+        document.addEventListener( 'mousemove', onMouseMove, false )
+        window.addEventListener( 'resize', onResize, false )
 
         /**
          * Update mouse position.
@@ -95,26 +83,15 @@ export default function Panorama() {
 
             requestAnimationFrame(animate)
             renderer.render(scene, camera)
-        };
+        }
 
         animate()
 
         /**
          * Remove the renderer from the mount.
          */
-        return () => {
-            mountRef.current?.removeChild(renderer.domElement)
-        }
+        return () => mountRef.current?.removeChild(renderer.domElement)
     }, [])
 
-    return (
-        <>
-            {loading &&
-                <div className={styles.container}>
-                    <div className={styles.loading} />
-                </div>
-            }
-            <div ref={mountRef} style={{position: "absolute"}}/>
-        </>
-    )
+    return <div ref={mountRef} style={{position: "fixed"}}/>
 }
