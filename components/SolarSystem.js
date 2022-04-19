@@ -9,7 +9,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
  * @returns {JSX.Element}
  * @constructor
  */
-export default function Solarsystem() {
+export default function SolarSystem() {
 
     const mountRef = useRef(null)
 

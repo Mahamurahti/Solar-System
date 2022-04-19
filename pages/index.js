@@ -24,7 +24,7 @@ export default function Home() {
         </p>
 
         <div className={styles.grid}>
-          <Link href={"/solarsystemView"}>
+          <Link href={"/explore"}>
             <a className={styles.card}>
               <h2>Solarsystem &rarr;</h2>
               <p>Find in-depth information about Next.js features and API.</p>
