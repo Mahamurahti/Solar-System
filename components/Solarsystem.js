@@ -30,27 +30,44 @@ export default function Solarsystem() {
     useEffect(()  => {
         const WIDTH = window.innerWidth
         const HEIGHT = window.innerHeight
-        
+
+        /**
+         * Create scene with stars as a background cubemap
+         *
+         * @type {Scene}
+         */
         const scene = new THREE.Scene()
         scene.background = new THREE.CubeTextureLoader().load(Array(6).fill(starTexturePath))
 
         const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 0.1, 1000)
         camera.position.set(-90, 140, 140)
 
-        const renderer = new THREE.WebGLRenderer({antialias: true})
+        const renderer = new THREE.WebGLRenderer({ antialias: true })
         renderer.setSize(WIDTH, HEIGHT)
         renderer.setPixelRatio(window.devicePixelRatio)
 
+        // --- Change to hemisphere light and tweak settings, light comes from the sun --- //
         const dirLight = new THREE.DirectionalLight(0xffffff)
         scene.add(dirLight)
 
         const pointLight = new THREE.PointLight(0xFFFFFF, 2, 300)
         scene.add(pointLight)
+        // --- //
 
         mountRef.current?.appendChild(renderer.domElement)
 
+        /**
+         * Add orbit controls to scene. Orbit controls are used to orbit around selected planet.
+         *
+         * @type {OrbitControls}
+         */
         const controls = new OrbitControls(camera, renderer.domElement)
 
+        /**
+         * Used to store all interactable object in scene.
+         *
+         * @type {Array}
+         */
         const objects = []
 
         const textureLoader = new THREE.TextureLoader()
@@ -62,6 +79,18 @@ export default function Solarsystem() {
         objects.push(sun)
         scene.add(sun)
 
+        /**
+         * Creates a planet with specified instructions given in parameters.
+         *
+         * @param size of the planet
+         * @param texture of the planet
+         * @param position of the planet, dictates only starting position
+         * @param ring object where the following has to be specified:
+         *        innerRadius dictates the radius of the inner circle of the ring,
+         *        outerRadius dictates the radius of the outer circle of the ring,
+         *        texture of the ring
+         * @returns {{planet: Mesh, planetGroup: Object3D}}
+         */
         function createPlanet(size, texture, position, ring) {
             const planetGeometry = new THREE.SphereGeometry(size, 30, 30)
             const planetMaterial = new THREE.MeshPhongMaterial({
@@ -69,6 +98,8 @@ export default function Solarsystem() {
             })
             const planet = new THREE.Mesh(planetGeometry, planetMaterial)
             const planetGroup = new THREE.Object3D()
+
+            // Group used to group up sphere and ring if planet has one
             planetGroup.add(planet)
 
             if(ring) {
@@ -87,6 +118,7 @@ export default function Solarsystem() {
                 ringMesh.rotation.x = -0.5 * Math.PI
             }
 
+            // Add planet to list of object in scene
             objects.push(planet)
             scene.add(planetGroup)
 
@@ -95,6 +127,7 @@ export default function Solarsystem() {
             return { planet, planetGroup }
         }
 
+        // Create planet in solar system (plus pluto)
         const mercury = createPlanet(3.2, mercuryTexturePath, 28)
         const venus = createPlanet(5.8, venusTexturePath, 44)
         const earth = createPlanet(6, earthTexturePath, 62)
@@ -119,9 +152,22 @@ export default function Solarsystem() {
         const raycaster = new THREE.Raycaster()
         const pointer = new THREE.Vector2()
         let intersect
+        /**
+         * cameraTarget dictates where the camera is pointing. This scene must always have a cameraTarget.
+         * Default cameraTarget is the sun.
+         *
+         * @type {Mesh}
+         */
         let cameraTarget = sun
 
-        function onPointerMove( event ) {
+        /**
+         * When user hovers mouse over planet, it will be highlighted. This function casts a raycast and checks
+         * if it hits something from objects-variable. If it does, it set the emission of the intersected object
+         * to a reddish color. Reset emission when not hovered over anything.
+         *
+         * @param event to get the position of the pointer in client
+         */
+        function onPointerMove(event) {
             pointer.set((event.clientX / window.innerWidth) * 2 - 1, - (event.clientY / window.innerHeight) * 2 + 1)
             raycaster.setFromCamera(pointer, camera)
             const intersects = raycaster.intersectObjects(objects, false)
@@ -138,6 +184,12 @@ export default function Solarsystem() {
             }
         }
 
+        /**
+         * When user clicks over a planet, cameraTarget will change to the clicked planet. This function casts a raycast
+         * and checks if it hits something from objects-variable. If it does, change cameraTarget.
+         *
+         * @param event to get the position of the pointer in client
+         */
         function onPointerDown(event) {
             pointer.set((event.clientX / window.innerWidth) * 2 - 1, - (event.clientY / window.innerHeight) * 2 + 1)
             raycaster.setFromCamera(pointer, camera)
@@ -145,6 +197,10 @@ export default function Solarsystem() {
             if (intersects.length > 0) cameraTarget = intersects[0].object
         }
 
+        /**
+         * Update camera position and offset. Camera is always pointing to cameraTarget-variable. cameraTarget-variables
+         * position is continuously checked through .getWorldPosition()-method.
+         */
         function updateCamera() {
             const direction = new THREE.Vector3()
             const cameraOffset = 80
@@ -160,17 +216,26 @@ export default function Solarsystem() {
 
         window.addEventListener( 'resize', onResize, false )
 
+        /**
+         * Scale renderer and aspect ratio to screen size on resize.
+         */
         function onResize() {
             camera.aspect = WIDTH / HEIGHT
             camera.updateProjectionMatrix()
             renderer.setSize(WIDTH, HEIGHT)
         }
 
+        /**
+         * Update matrix so that the correct world position of object can be checked. Render scene.
+         */
         function render() {
             camera.updateMatrixWorld()
             renderer.render(scene, camera)
         }
 
+        /**
+         * Animate whole scene. Rotate planet around their own axis and rotate planets around sun. Update camera lastly.
+         */
         const animate = function () {
             requestAnimationFrame(animate)
 
