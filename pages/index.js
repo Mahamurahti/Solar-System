@@ -1,9 +1,9 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import Link from "next/link";
+import Link from "next/link"
 import styles from '../styles/Home.module.css'
 
-import Panorama from "../components/Panorama";
+import Panorama from "../components/Panorama"
 
 /**
  * Creates the Home page
@@ -28,6 +28,7 @@ export default function Home() {
           SOLAR SYSTEM
         </h1>
 
+
         <p className={styles.description}>
           The Solar System is the gravitationally bound system of the Sun and the objects that orbit it. Of the bodies
           that orbit the Sun directly, the largest are the four gas and ice giants and the four terrestrial planets,
@@ -36,7 +37,7 @@ export default function Home() {
 
         <div className={styles.grid}>
           <div className={styles.card}>
-            <Link href="/">
+            <Link href="/explore">
               <a>
                 <h2>
                   <div className={styles.arrow}>&lt;</div>
@@ -46,6 +47,7 @@ export default function Home() {
               </a>
             </Link>
           </div>
+
 
           <div className={styles.card}>
             <Link href="/">
