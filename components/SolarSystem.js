@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { useEffect, useRef } from 'react'
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
+import { FontLoader } from "three/examples/jsm/loaders/FontLoader"
 
 /**
  * Creates a solar system that can be interacted with
@@ -26,6 +27,7 @@ export default function SolarSystem() {
     const uranusTexturePath = 'textures/uranus.jpg'
     const uranusRingTexturePath = 'textures/uranus ring.png'
     const venusTexturePath = 'textures/venus.jpg'
+    const robotoFontPath = 'fonts/Roboto_Regular.json'
 
     useEffect(()  => {
         const WIDTH = window.innerWidth
@@ -194,7 +196,41 @@ export default function SolarSystem() {
             pointer.set((event.clientX / window.innerWidth) * 2 - 1, - (event.clientY / window.innerHeight) * 2 + 1)
             raycaster.setFromCamera(pointer, camera)
             const intersects = raycaster.intersectObjects(objects, false)
-            if (intersects.length > 0) cameraTarget = intersects[0].object
+            if (intersects.length > 0) {
+                cameraTarget = intersects[0].object
+                const fontLoader = new FontLoader();
+                fontLoader.load(robotoFontPath, function (font) {
+                    const fontMaterial = new THREE.LineBasicMaterial({
+                        color: 0x006699,
+                        side: THREE.DoubleSide
+                    });
+                    const message = 'The Sun is the star at the center of the Solar System.\n It is a nearly perfect ball' +
+                        ' of hot plasma, heated to incandescence\n by nuclear fusion reactions in its core, radiating the' +
+                        ' energy\n mainly as visible light, ultraviolet light, and infrared radiation.\n It is by far the' +
+                        ' most important source of energy for life on Earth.';
+                    const shapes = font.generateShapes(message, 4);
+                    const geometry = new THREE.ShapeGeometry(shapes);
+                    geometry.computeBoundingBox();
+                    const xMid = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
+                    geometry.translate(xMid, 0, 0);
+                    const text = new THREE.Mesh(geometry, fontMaterial)
+                    rotateText = text
+                    scene.add(text);
+                })
+            }
+        }
+
+        let rotateText = null;
+
+        function updateText()  {
+            if (rotateText !== null) {
+                rotateText.renderOrder = 999
+                rotateText.material.depthTest = false;
+                rotateText.material.depthWrite = false;
+                rotateText.onBeforeRender = function (renderer) { renderer.clearDepth(); };
+                rotateText.position.copy(controls.target)
+                rotateText.rotation.copy(camera.rotation)
+            }
         }
 
         /**
@@ -264,6 +300,7 @@ export default function SolarSystem() {
             neptune.planetGroup.rotateY(0.0001 * orbitSpeed)
             pluto.planetGroup.rotateY(0.00007 * orbitSpeed)
 
+            updateText()
             updateCamera()
             render()
         }
