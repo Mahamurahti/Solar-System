@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import { useEffect, useRef } from 'react'
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader"
+import getDescription from "../helpers/getDescription"
 
 /**
  * Creates a solar system that can be interacted with
@@ -78,6 +79,7 @@ export default function SolarSystem() {
             map: textureLoader.load(sunTexturePath)
         })
         const sun = new THREE.Mesh(sunGeometry, sunMaterial)
+        sun.name = "Sun"
         objects.push(sun)
         scene.add(sun)
 
@@ -93,7 +95,7 @@ export default function SolarSystem() {
          *        texture of the ring
          * @returns {{planet: Mesh, planetGroup: Object3D}}
          */
-        function createPlanet(size, texture, position, ring) {
+        function createPlanet(name, size, texture, position, ring) {
             const planetGeometry = new THREE.SphereGeometry(size, 30, 30)
             const planetMaterial = new THREE.MeshPhongMaterial({
                 map: textureLoader.load(texture)
@@ -120,6 +122,8 @@ export default function SolarSystem() {
                 ringMesh.rotation.x = -0.5 * Math.PI
             }
 
+            planet.name = name
+
             // Add planet to list of object in scene
             objects.push(planet)
             scene.add(planetGroup)
@@ -130,23 +134,23 @@ export default function SolarSystem() {
         }
 
         // Create planet in solar system (plus pluto)
-        const mercury = createPlanet(3.2, mercuryTexturePath, 28)
-        const venus = createPlanet(5.8, venusTexturePath, 44)
-        const earth = createPlanet(6, earthTexturePath, 62)
-        const mars = createPlanet(4, marsTexturePath, 78)
-        const jupiter = createPlanet(12, jupiterTexturePath, 100)
-        const saturn = createPlanet(10, saturnTexturePath, 138, {
+        const mercury = createPlanet("Mercury", 3.2, mercuryTexturePath, 28)
+        const venus = createPlanet("Venus", 5.8, venusTexturePath, 44)
+        const earth = createPlanet("Earth", 6, earthTexturePath, 62)
+        const mars = createPlanet("Mars", 4, marsTexturePath, 78)
+        const jupiter = createPlanet("Jupiter", 12, jupiterTexturePath, 100)
+        const saturn = createPlanet("Saturn", 10, saturnTexturePath, 138, {
             innerRadius: 10,
             outerRadius: 20,
             texture: saturnRingTexturePath
         })
-        const uranus = createPlanet(7, uranusTexturePath, 176, {
+        const uranus = createPlanet("Uranus", 7, uranusTexturePath, 176, {
             innerRadius: 7,
             outerRadius: 12,
             texture: uranusRingTexturePath
         })
-        const neptune = createPlanet(7, neptuneTexturePath, 200)
-        const pluto = createPlanet(2.8, plutoTexturePath, 216)
+        const neptune = createPlanet("Neptune", 7, neptuneTexturePath, 200)
+        const pluto = createPlanet("Pluto", 2.8, plutoTexturePath, 216)
 
         document.addEventListener('pointermove', onPointerMove)
         document.addEventListener('pointerdown', onPointerDown)
@@ -186,6 +190,8 @@ export default function SolarSystem() {
             }
         }
 
+        let text;
+
         /**
          * When user clicks over a planet, cameraTarget will change to the clicked planet. This function casts a raycast
          * and checks if it hits something from objects-variable. If it does, change cameraTarget.
@@ -198,25 +204,26 @@ export default function SolarSystem() {
             const intersects = raycaster.intersectObjects(objects, false)
             if (intersects.length > 0) {
                 cameraTarget = intersects[0].object
+                console.log(cameraTarget)
                 const fontLoader = new FontLoader();
                 fontLoader.load(robotoFontPath, function (font) {
+                    scene.remove(text)
                     const fontMaterial = new THREE.LineBasicMaterial({
                         color: 0x006699,
                         side: THREE.DoubleSide
                     });
-                    const message = 'The Sun is the star at the center of the Solar System.\n It is a nearly perfect ball' +
-                        ' of hot plasma, heated to incandescence\n by nuclear fusion reactions in its core, radiating the' +
-                        ' energy\n mainly as visible light, ultraviolet light, and infrared radiation.\n It is by far the' +
-                        ' most important source of energy for life on Earth.';
+                    const message = getDescription(cameraTarget.name)
                     const shapes = font.generateShapes(message, 4);
                     const geometry = new THREE.ShapeGeometry(shapes);
                     geometry.computeBoundingBox();
                     const xMid = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
                     geometry.translate(xMid, 0, 0);
-                    const text = new THREE.Mesh(geometry, fontMaterial)
+                    text = new THREE.Mesh(geometry, fontMaterial)
                     rotateText = text
                     scene.add(text);
                 })
+            } else {
+                scene.remove(text)
             }
         }
 
@@ -228,7 +235,7 @@ export default function SolarSystem() {
                 rotateText.material.depthTest = false;
                 rotateText.material.depthWrite = false;
                 rotateText.onBeforeRender = function (renderer) { renderer.clearDepth(); };
-                rotateText.position.copy(controls.target)
+                rotateText.position.copy(controls.target).add(new THREE.Vector3(0,50,0))
                 rotateText.rotation.copy(camera.rotation)
             }
         }
@@ -246,7 +253,7 @@ export default function SolarSystem() {
 
             direction.subVectors(camera.position, controls.target)
             // Uncomment to enable zooming
-            direction.normalize().multiplyScalar(cameraOffset)
+            //direction.normalize().multiplyScalar(cameraOffset)
             camera.position.copy(direction.add(controls.target))
         }
 
