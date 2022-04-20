@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { useEffect, useRef } from 'react'
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
+import {TWEEN} from "three/examples/jsm/libs/tween.module.min";
 
 /**
  * Creates a solar system that can be interacted with
@@ -10,7 +11,6 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
  * @constructor
  */
 export default function SolarSystem() {
-
     const mountRef = useRef(null)
 
     const starTexturePath = 'textures/stars.jpg'
@@ -186,7 +186,7 @@ export default function SolarSystem() {
 
         /**
          * When user clicks over a planet, cameraTarget will change to the clicked planet. This function casts a raycast
-         * and checks if it hits something from objects-variable. If it does, change cameraTarget.
+         * and checks if it hits something from objects-variable. If it does, change cameraTarget with Tween.js transition.
          *
          * @param event to get the position of the pointer in client
          */
@@ -194,7 +194,28 @@ export default function SolarSystem() {
             pointer.set((event.clientX / window.innerWidth) * 2 - 1, - (event.clientY / window.innerHeight) * 2 + 1)
             raycaster.setFromCamera(pointer, camera)
             const intersects = raycaster.intersectObjects(objects, false)
-            if (intersects.length > 0) cameraTarget = intersects[0].object
+            if (intersects.length > 0) {
+                cameraTarget = intersects[0].object
+
+                const direction = new THREE.Vector3()
+                const cameraOffset = 80
+                cameraTarget.getWorldPosition(direction)
+                //console.log(direction)
+
+                new TWEEN.Tween(camera.position)
+                    .to(direction, 1000)
+                    .easing(TWEEN.Easing.Quadratic.Out)
+                    .onStart(() =>
+                        controls.enabled = false,
+                    )
+                    .onUpdate(() =>
+                        camera.lookAt(direction),
+                    )
+                    .onComplete(() =>
+                        controls.enabled = true,
+                    )
+                    .start()
+            }
         }
 
         /**
@@ -238,7 +259,7 @@ export default function SolarSystem() {
          */
         const animate = function () {
             requestAnimationFrame(animate)
-
+            TWEEN.update()
             const orbitSpeed = 0.1
 
             // Around own axis rotation
@@ -264,7 +285,10 @@ export default function SolarSystem() {
             neptune.planetGroup.rotateY(0.0001 * orbitSpeed)
             pluto.planetGroup.rotateY(0.00007 * orbitSpeed)
 
-            updateCamera()
+
+            if(controls.enabled) {
+                updateCamera()
+            }
             render()
         }
 
