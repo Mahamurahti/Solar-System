@@ -63,11 +63,11 @@ export default function Panorama() {
          * Resize the renderer that it will fit the window size always.
          */
         function onResize() {
-            windowHalf.set(WIDTH / 2, HEIGHT / 2)
+            windowHalf.set(window.innerWidth / 2, window.innerHeight / 2)
 
-            camera.aspect = WIDTH / HEIGHT
+            camera.aspect = window.innerWidth / window.innerHeight
             camera.updateProjectionMatrix()
-            renderer.setSize(WIDTH, HEIGHT)
+            renderer.setSize(window.innerWidth, window.innerHeight)
         }
         // End of credit
 

@@ -1,6 +1,8 @@
 import * as THREE from 'three'
 import { useEffect, useRef } from 'react'
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
+import { FontLoader } from "three/examples/jsm/loaders/FontLoader"
+import getDescription from "../helpers/getDescription"
 
 /**
  * Creates a solar system that can be interacted with
@@ -26,6 +28,7 @@ export default function SolarSystem() {
     const uranusTexturePath = 'textures/uranus.jpg'
     const uranusRingTexturePath = 'textures/uranus ring.png'
     const venusTexturePath = 'textures/venus.jpg'
+    const robotoFontPath = 'fonts/Roboto_Regular.json'
 
     useEffect(()  => {
         const WIDTH = window.innerWidth
@@ -76,12 +79,14 @@ export default function SolarSystem() {
             map: textureLoader.load(sunTexturePath)
         })
         const sun = new THREE.Mesh(sunGeometry, sunMaterial)
+        sun.name = "Sun"
         objects.push(sun)
         scene.add(sun)
 
         /**
          * Creates a planet with specified instructions given in parameters.
          *
+         * @param name of the planet
          * @param size of the planet
          * @param texture of the planet
          * @param position of the planet, dictates only starting position
@@ -91,7 +96,7 @@ export default function SolarSystem() {
          *        texture of the ring
          * @returns {{planet: Mesh, planetGroup: Object3D}}
          */
-        function createPlanet(size, texture, position, ring) {
+        function createPlanet(name, size, texture, position, ring) {
             const planetGeometry = new THREE.SphereGeometry(size, 30, 30)
             const planetMaterial = new THREE.MeshPhongMaterial({
                 map: textureLoader.load(texture)
@@ -118,6 +123,8 @@ export default function SolarSystem() {
                 ringMesh.rotation.x = -0.5 * Math.PI
             }
 
+            planet.name = name
+
             // Add planet to list of object in scene
             objects.push(planet)
             scene.add(planetGroup)
@@ -128,46 +135,44 @@ export default function SolarSystem() {
         }
 
         // Create planet in solar system (plus pluto)
-        const mercury = createPlanet(3.2, mercuryTexturePath, 28)
-        const venus = createPlanet(5.8, venusTexturePath, 44)
-        const earth = createPlanet(6, earthTexturePath, 62)
-        const mars = createPlanet(4, marsTexturePath, 78)
-        const jupiter = createPlanet(12, jupiterTexturePath, 100)
-        const saturn = createPlanet(10, saturnTexturePath, 138, {
+        const mercury = createPlanet("Mercury", 3.2, mercuryTexturePath, 28)
+        const venus = createPlanet("Venus", 5.8, venusTexturePath, 44)
+        const earth = createPlanet("Earth", 6, earthTexturePath, 62)
+        const mars = createPlanet("Mars", 4, marsTexturePath, 78)
+        const jupiter = createPlanet("Jupiter", 12, jupiterTexturePath, 100)
+        const saturn = createPlanet("Saturn", 10, saturnTexturePath, 138, {
             innerRadius: 10,
             outerRadius: 20,
             texture: saturnRingTexturePath
         })
-        const uranus = createPlanet(7, uranusTexturePath, 176, {
+        const uranus = createPlanet("Uranus", 7, uranusTexturePath, 176, {
             innerRadius: 7,
             outerRadius: 12,
             texture: uranusRingTexturePath
         })
-        const neptune = createPlanet(7, neptuneTexturePath, 200)
-        const pluto = createPlanet(2.8, plutoTexturePath, 216)
+        const neptune = createPlanet("Neptune", 7, neptuneTexturePath, 200)
+        const pluto = createPlanet("Pluto", 2.8, plutoTexturePath, 216)
 
         document.addEventListener('pointermove', onPointerMove)
         document.addEventListener('pointerdown', onPointerDown)
+        document.addEventListener('pointerup', onPointerUp)
 
+        let moved, intersect, text, cameraTarget = sun
         const raycaster = new THREE.Raycaster()
         const pointer = new THREE.Vector2()
-        let intersect
-        /**
-         * cameraTarget dictates where the camera is pointing. This scene must always have a cameraTarget.
-         * Default cameraTarget is the sun.
-         *
-         * @type {Mesh}
-         */
-        let cameraTarget = sun
 
         /**
          * When user hovers mouse over planet, it will be highlighted. This function casts a raycast and checks
          * if it hits something from objects-variable. If it does, it set the emission of the intersected object
          * to a reddish color. Reset emission when not hovered over anything.
          *
+         * If the the user has moved the pointer after pressing it down, it means the user is dragging, so set the
+         * moved-variable to true.
+         *
          * @param event to get the position of the pointer in client
          */
         function onPointerMove(event) {
+            moved = true
             pointer.set((event.clientX / window.innerWidth) * 2 - 1, - (event.clientY / window.innerHeight) * 2 + 1)
             raycaster.setFromCamera(pointer, camera)
             const intersects = raycaster.intersectObjects(objects, false)
@@ -185,16 +190,65 @@ export default function SolarSystem() {
         }
 
         /**
+         * When the user presses the mouse button down, the pointer has not moved yet so set it to false.
+         */
+        function onPointerDown() {
+            moved = false
+        }
+
+        /**
          * When user clicks over a planet, cameraTarget will change to the clicked planet. This function casts a raycast
          * and checks if it hits something from objects-variable. If it does, change cameraTarget.
          *
+         * Additionally creates a description for the planet above the clicked planet. Description is created on click
+         * and removed if clicking on another planet or clicking anywhere else than a planet. Dragging will not hide
+         * the description. For this the moved-variable is used to determine is the user dragging.
+         *
          * @param event to get the position of the pointer in client
          */
-        function onPointerDown(event) {
+        function onPointerUp(event) {
             pointer.set((event.clientX / window.innerWidth) * 2 - 1, - (event.clientY / window.innerHeight) * 2 + 1)
             raycaster.setFromCamera(pointer, camera)
             const intersects = raycaster.intersectObjects(objects, false)
-            if (intersects.length > 0) cameraTarget = intersects[0].object
+            if (intersects.length > 0) {
+                cameraTarget = intersects[0].object
+                scene.remove(text)
+                description = generateDescription()
+                scene.add(text)
+            } else {
+                if (!moved) scene.remove(text)
+            }
+        }
+
+        const fontLoader = new FontLoader()
+        let font
+        fontLoader.load(robotoFontPath, function (robotoFont) {
+            font = robotoFont
+        })
+
+        function generateDescription() {
+            const fontMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
+            const message = getDescription(cameraTarget.name)
+            const shapes = font.generateShapes(message, 4);
+            const geometry = new THREE.ShapeGeometry(shapes);
+            geometry.computeBoundingBox();
+            const xMid = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
+            geometry.translate(xMid, 0, 0);
+            text = new THREE.Mesh(geometry, fontMaterial)
+            return text
+        }
+
+        let description = null;
+
+        function updateText()  {
+            if (description !== null) {
+                description.renderOrder = 999
+                description.material.depthTest = false;
+                description.material.depthWrite = false;
+                description.onBeforeRender = function (renderer) { renderer.clearDepth(); };
+                description.position.copy(controls.target).add(new THREE.Vector3(0,50,0))
+                description.rotation.copy(camera.rotation)
+            }
         }
 
         /**
@@ -203,14 +257,14 @@ export default function SolarSystem() {
          */
         function updateCamera() {
             const direction = new THREE.Vector3()
-            const cameraOffset = 80
+            //const cameraOffset = 80
 
             cameraTarget.getWorldPosition(controls.target)
             controls.update()
 
             direction.subVectors(camera.position, controls.target)
             // Uncomment to enable zooming
-            direction.normalize().multiplyScalar(cameraOffset)
+            //direction.normalize().multiplyScalar(cameraOffset)
             camera.position.copy(direction.add(controls.target))
         }
 
@@ -220,9 +274,9 @@ export default function SolarSystem() {
          * Scale renderer and aspect ratio to screen size on resize.
          */
         function onResize() {
-            camera.aspect = WIDTH / HEIGHT
+            camera.aspect = window.innerWidth / window.innerHeight
             camera.updateProjectionMatrix()
-            renderer.setSize(WIDTH, HEIGHT)
+            renderer.setSize(window.innerWidth, window.innerHeight)
         }
 
         /**
@@ -264,6 +318,7 @@ export default function SolarSystem() {
             neptune.planetGroup.rotateY(0.0001 * orbitSpeed)
             pluto.planetGroup.rotateY(0.00007 * orbitSpeed)
 
+            updateText()
             updateCamera()
             render()
         }

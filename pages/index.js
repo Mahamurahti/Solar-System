@@ -74,7 +74,7 @@ export default function Home() {
           </div>
 
           <div className={styles.card}>
-            <a href="https://bit.ly/3vs64pT" target="_blank">
+            <a href="https://bit.ly/3vs64pT" target="_blank" rel="noreferrer">
               <h2>
                 <div className={styles.arrow}>&lt;</div>
                 {' '}Surprise{' '}
