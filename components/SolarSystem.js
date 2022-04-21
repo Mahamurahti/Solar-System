@@ -156,23 +156,17 @@ export default function SolarSystem() {
         document.addEventListener('pointerdown', onPointerDown)
         document.addEventListener('pointerup', onPointerUp)
 
-        let moved
+        let moved, intersect, text, cameraTarget = sun
         const raycaster = new THREE.Raycaster()
         const pointer = new THREE.Vector2()
-        let intersect
-        let text
-        /**
-         * cameraTarget dictates where the camera is pointing. This scene must always have a cameraTarget.
-         * Default cameraTarget is the sun.
-         *
-         * @type {Mesh}
-         */
-        let cameraTarget = sun
 
         /**
          * When user hovers mouse over planet, it will be highlighted. This function casts a raycast and checks
          * if it hits something from objects-variable. If it does, it set the emission of the intersected object
          * to a reddish color. Reset emission when not hovered over anything.
+         *
+         * If the the user has moved the pointer after pressing it down, it means the user is dragging, so set the
+         * moved-variable to true.
          *
          * @param event to get the position of the pointer in client
          */
@@ -195,15 +189,22 @@ export default function SolarSystem() {
         }
 
         /**
-         * When user clicks over a planet, cameraTarget will change to the clicked planet. This function casts a raycast
-         * and checks if it hits something from objects-variable. If it does, change cameraTarget.
-         *
-         * @param event to get the position of the pointer in client
+         * When the user presses the mouse button down, the pointer has not moved yet so set it to false.
          */
-        function onPointerDown(event) {
+        function onPointerDown() {
             moved = false
         }
 
+        /**
+         * When user clicks over a planet, cameraTarget will change to the clicked planet. This function casts a raycast
+         * and checks if it hits something from objects-variable. If it does, change cameraTarget.
+         *
+         * Additionally creates a description for the planet above the clicked planet. Description is created on click
+         * and removed if clicking on another planet or clicking anywhere else than a planet. Dragging will not hide
+         * the description. For this the moved-variable is used to determine is the user dragging.
+         *
+         * @param event to get the position of the pointer in client
+         */
         function onPointerUp(event) {
             pointer.set((event.clientX / window.innerWidth) * 2 - 1, - (event.clientY / window.innerHeight) * 2 + 1)
             raycaster.setFromCamera(pointer, camera)
@@ -223,7 +224,7 @@ export default function SolarSystem() {
                     const xMid = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
                     geometry.translate(xMid, 0, 0);
                     text = new THREE.Mesh(geometry, fontMaterial)
-                    rotateText = text
+                    description = text
                     scene.add(text)
                 })
             } else {
@@ -231,16 +232,16 @@ export default function SolarSystem() {
             }
         }
 
-        let rotateText = null;
+        let description = null;
 
         function updateText()  {
-            if (rotateText !== null) {
-                rotateText.renderOrder = 999
-                rotateText.material.depthTest = false;
-                rotateText.material.depthWrite = false;
-                rotateText.onBeforeRender = function (renderer) { renderer.clearDepth(); };
-                rotateText.position.copy(controls.target).add(new THREE.Vector3(0,50,0))
-                rotateText.rotation.copy(camera.rotation)
+            if (description !== null) {
+                description.renderOrder = 999
+                description.material.depthTest = false;
+                description.material.depthWrite = false;
+                description.onBeforeRender = function (renderer) { renderer.clearDepth(); };
+                description.position.copy(controls.target).add(new THREE.Vector3(0,50,0))
+                description.rotation.copy(camera.rotation)
             }
         }
 
@@ -250,7 +251,7 @@ export default function SolarSystem() {
          */
         function updateCamera() {
             const direction = new THREE.Vector3()
-            const cameraOffset = 80
+            //const cameraOffset = 80
 
             cameraTarget.getWorldPosition(controls.target)
             controls.update()
