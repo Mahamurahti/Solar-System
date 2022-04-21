@@ -1,5 +1,16 @@
 import * as THREE from "three";
 
+/**
+ * Creates a celestial body.
+ *
+ * @author Timo Tamminiemi
+ * @param name of the celestial body
+ * @param size of the celestial body
+ * @param texture of the celestial body
+ * @param position of the celestial body in the solar system
+ * @param ring of the celestial body (optional)
+ * @returns {{body: Mesh, group: Object3D}}
+ */
 export default function createCelestialBody(name, size, texture, position, ring) {
 
     const textureLoader = new THREE.TextureLoader()

@@ -1,6 +1,14 @@
 import * as THREE from "three";
 import getDescription from "../../helpers/getDescription";
 
+/**
+ * Creates description for celestial body.
+ *
+ * @author Eric Keränen
+ * @param font of the description
+ * @param target for which celestial body is the description for
+ * @returns {Mesh}
+ */
 export default function generateDescription(font, target) {
     const fontMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
     const message = getDescription(target.name)
