@@ -1,4 +1,4 @@
-import SolarSystem from "../components/Solarsystem";
+import SolarSystem from "../components/SolarSystem/SolarSystem";
 
 /**
  * Creates explorable solar system
@@ -6,6 +6,6 @@ import SolarSystem from "../components/Solarsystem";
  * @author Timo Tamminiemi
  * @returns {JSX.Element}
  */
-export default function explore() {
+export default function Explore() {
     return <SolarSystem />
 }
