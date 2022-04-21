@@ -86,6 +86,7 @@ export default function SolarSystem() {
         /**
          * Creates a planet with specified instructions given in parameters.
          *
+         * @param name of the planet
          * @param size of the planet
          * @param texture of the planet
          * @param position of the planet, dictates only starting position
@@ -268,9 +269,9 @@ export default function SolarSystem() {
          * Scale renderer and aspect ratio to screen size on resize.
          */
         function onResize() {
-            camera.aspect = WIDTH / HEIGHT
+            camera.aspect = window.innerWidth / window.innerHeight
             camera.updateProjectionMatrix()
-            renderer.setSize(WIDTH, HEIGHT)
+            renderer.setSize(window.innerWidth, window.innerHeight)
         }
 
         /**
