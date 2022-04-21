@@ -154,10 +154,13 @@ export default function SolarSystem() {
 
         document.addEventListener('pointermove', onPointerMove)
         document.addEventListener('pointerdown', onPointerDown)
+        document.addEventListener('pointerup', onPointerUp)
 
+        let moved
         const raycaster = new THREE.Raycaster()
         const pointer = new THREE.Vector2()
         let intersect
+        let text
         /**
          * cameraTarget dictates where the camera is pointing. This scene must always have a cameraTarget.
          * Default cameraTarget is the sun.
@@ -174,6 +177,7 @@ export default function SolarSystem() {
          * @param event to get the position of the pointer in client
          */
         function onPointerMove(event) {
+            moved = true
             pointer.set((event.clientX / window.innerWidth) * 2 - 1, - (event.clientY / window.innerHeight) * 2 + 1)
             raycaster.setFromCamera(pointer, camera)
             const intersects = raycaster.intersectObjects(objects, false)
@@ -190,8 +194,6 @@ export default function SolarSystem() {
             }
         }
 
-        let text;
-
         /**
          * When user clicks over a planet, cameraTarget will change to the clicked planet. This function casts a raycast
          * and checks if it hits something from objects-variable. If it does, change cameraTarget.
@@ -199,18 +201,20 @@ export default function SolarSystem() {
          * @param event to get the position of the pointer in client
          */
         function onPointerDown(event) {
+            moved = false
+        }
+
+        function onPointerUp(event) {
             pointer.set((event.clientX / window.innerWidth) * 2 - 1, - (event.clientY / window.innerHeight) * 2 + 1)
             raycaster.setFromCamera(pointer, camera)
             const intersects = raycaster.intersectObjects(objects, false)
             if (intersects.length > 0) {
                 cameraTarget = intersects[0].object
-                console.log(cameraTarget)
                 const fontLoader = new FontLoader();
                 fontLoader.load(robotoFontPath, function (font) {
                     scene.remove(text)
                     const fontMaterial = new THREE.LineBasicMaterial({
-                        color: 0x006699,
-                        side: THREE.DoubleSide
+                        color: 0xff0000,
                     });
                     const message = getDescription(cameraTarget.name)
                     const shapes = font.generateShapes(message, 4);
@@ -220,10 +224,10 @@ export default function SolarSystem() {
                     geometry.translate(xMid, 0, 0);
                     text = new THREE.Mesh(geometry, fontMaterial)
                     rotateText = text
-                    scene.add(text);
+                    scene.add(text)
                 })
             } else {
-                scene.remove(text)
+                if (!moved) scene.remove(text)
             }
         }
 
