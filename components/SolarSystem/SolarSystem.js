@@ -50,13 +50,25 @@ export default function SolarSystem() {
          */
         const controls = new OrbitControls(camera, renderer.domElement)
 
+        /**
+         * Ambient light to lighten up the scene artificially, meaning even the dark side of planets is slightly visible.
+         * @type {AmbientLight}
+         */
         const ambientLight = new THREE.AmbientLight(0xFFFFFF, .2)
         scene.add(ambientLight)
 
+        /**
+         * Point light is the origin of the solar systems light. The point light is inside of the sun.
+         * @type {PointLight}
+         */
         const pointLight = new THREE.PointLight(0xFFFFFF, 1.9, 300)
         scene.add(pointLight)
 
         const composerParams = { strength: .9, radius: .9, threshold: .85 }
+        /**
+         * Composer gives the scene a bloom effect.
+         * @type {EffectComposer}
+         */
         const composer = createComposer(scene, camera, renderer, composerParams)
         
         mountRef.current?.appendChild(renderer.domElement)
