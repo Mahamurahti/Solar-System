@@ -20,6 +20,8 @@ export default function createCelestialBody(name, size, texture, position, ring)
         map: textureLoader.load(texture)
     })
     const body = new THREE.Mesh(bodyGeometry, bodyMaterial)
+    body.receiveShadow = true
+    body.castShadow = true
     const group = new THREE.Object3D()
 
     group.add(body)
