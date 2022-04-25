@@ -22,6 +22,11 @@ export default function createDescription(font, target) {
 
     const description = new THREE.Mesh(geometry, fontMaterial)
 
+    // Make sure descriptions always renders above everything
+    description.renderOrder = 999
+    description.material.depthTest = false
+    description.material.depthWrite = false
+
     // Description is transparent by default.
     description.material.transparent = true
     description.material.opacity = 0
