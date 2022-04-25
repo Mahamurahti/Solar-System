@@ -1,5 +1,6 @@
 import * as THREE from "three"
 import getDescription from "../../helpers/getDescription"
+import { TWEEN } from "three/examples/jsm/libs/tween.module.min";
 
 /**
  * Creates description for celestial body.
@@ -13,12 +14,22 @@ export default function createDescription(font, target) {
     const fontMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 })
     const message = getDescription(target.name)
     const shapes = font.generateShapes(message, 4)
-    
+
     const geometry = new THREE.ShapeGeometry(shapes)
     geometry.computeBoundingBox()
     const xMid = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x)
     geometry.translate(xMid, 0, 0)
 
     const description = new THREE.Mesh(geometry, fontMaterial)
+
+    // Description is transparent by default.
+    description.material.transparent = true
+    description.material.opacity = 0
+
+    // Description is faded in upon creation
+    new TWEEN.Tween(description.material)
+        .to({ opacity: 1 }, 1000)
+        .start()
+
     return description
 }

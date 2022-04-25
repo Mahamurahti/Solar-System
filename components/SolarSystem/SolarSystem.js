@@ -181,12 +181,10 @@ export default function SolarSystem() {
         function onPointerUp() {
             raycaster.setFromCamera(pointer, camera)
             const intersects = raycaster.intersectObjects(interactable, false)
-            if (intersects.length > 0) {
+            if (intersects.length > 0 && !isDragging) {
                 cameraTarget = intersects[0].object
                 tweenCamera()
-            } else {
-                if (!isDragging) scene.remove(description)
-            }
+            } else if (!isDragging) scene.remove(description)
         }
 
         /**
@@ -195,21 +193,31 @@ export default function SolarSystem() {
         function tweenCamera() {
             const direction = new THREE.Vector3()
             const cameraOffset = 80
+            const randomDistance = Math.random() * 60 + 90
             cameraTarget.getWorldPosition(direction)
+            // Remove any already present descriptions
             scene.remove(description)
+            // Start camera transitions to target
             new TWEEN.Tween(camera.position)
-                .to({x: direction.x, y: direction.y + cameraOffset, z: direction.z + cameraOffset}, 1000)
+                .to({
+                    x: direction.x + randomDistance,
+                    y: direction.y + cameraOffset,
+                    z: direction.z + cameraOffset
+                }, 1000)
                 .easing(TWEEN.Easing.Quadratic.InOut)
                 .onStart(() =>
-                    controls.enabled = false,
+                    // Disable orbit controls for transition duration
+                    controls.enabled = false
                 )
                 .onUpdate(() =>
-                    camera.lookAt(direction),
+                    // Always look at target while in transition
+                    camera.lookAt(direction)
                 )
-                .onComplete(() =>
-                        controls.enabled = true,
+                .onComplete(() => {
+                    // Enable orbit controls when transition ends
+                    controls.enabled = true
                     controls.update()
-                )
+                })
                 .start()
             description = createDescription(font, cameraTarget)
             scene.add(description)
@@ -358,7 +366,6 @@ export default function SolarSystem() {
             pluto.group.rotateY(0.00007 * orbitSpeed)
 
             updateDescription()
-            if(controls.enabled) updateCamera()
             updateCamera()
             //render()
             composer.render()
