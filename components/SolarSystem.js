@@ -148,6 +148,7 @@ export default function SolarSystem() {
 
         document.addEventListener('pointermove', onPointerMove)
         document.addEventListener('pointerdown', onPointerDown)
+        document.addEventListener('keydown', onKeyDown)
 
         const raycaster = new THREE.Raycaster()
         const pointer = new THREE.Vector2()
@@ -186,7 +187,7 @@ export default function SolarSystem() {
 
         /**
          * When user clicks over a planet, cameraTarget will change to the clicked planet. This function casts a raycast
-         * and checks if it hits something from objects-variable. If it does, change cameraTarget with Tween.js camera transition.
+         * and checks if it hits something from objects-variable. If it does, change cameraTarget and call tweenCamera.
          *
          * @param event to get the position of the pointer in client
          */
@@ -196,24 +197,81 @@ export default function SolarSystem() {
             const intersects = raycaster.intersectObjects(objects, false)
             if (intersects.length > 0) {
                 cameraTarget = intersects[0].object
+                tweenCamera()
+            }
+        }
 
-                const direction = new THREE.Vector3()
-                const cameraOffset = 80
-                cameraTarget.getWorldPosition(direction)
+        /**
+         * Gets camera position and cameraTargets position and animates transition of camera between points.
+         */
+        function tweenCamera() {
+            const direction = new THREE.Vector3()
+            const cameraOffset = 80
+            cameraTarget.getWorldPosition(direction)
 
-                new TWEEN.Tween(camera.position)
-                    .to({x: direction.x, y: direction.y + cameraOffset, z: direction.z + cameraOffset}, 1000)
-                    .easing(TWEEN.Easing.Quadratic.InOut)
-                    .onStart(() =>
-                        controls.enabled = false,
-                    )
-                    .onUpdate(() =>
-                        camera.lookAt(direction),
-                    )
-                    .onComplete(() =>
-                        controls.enabled = true
-                    )
-                    .start()
+            new TWEEN.Tween(camera.position)
+                .to({x: direction.x, y: direction.y + cameraOffset, z: direction.z + cameraOffset}, 1000)
+                .easing(TWEEN.Easing.Quadratic.InOut)
+                .onStart(() =>
+                    controls.enabled = false,
+                )
+                .onUpdate(() =>
+                    camera.lookAt(direction),
+                )
+                .onComplete(() =>
+                    controls.enabled = true,
+                    controls.update()
+                )
+                .start()
+        }
+
+        /**
+         * When number is pressed on keyboard cameraTarget will be changed to corresponding planet and tween called.
+         * @param event to change cameraTarget to correspond a pressed key
+         */
+        function onKeyDown(event) {
+            let pressedKey = event.key
+            switch(pressedKey) {
+                case '1':
+                    cameraTarget = sun
+                    tweenCamera()
+                    break;
+                case '2':
+                    cameraTarget = mercury.planet
+                    tweenCamera()
+                    break;
+                case '3':
+                    cameraTarget = venus.planet
+                    tweenCamera()
+                    break;
+                case '4':
+                    cameraTarget = earth.planet
+                    tweenCamera()
+                    break;
+                case '5':
+                    cameraTarget = mars.planet
+                    tweenCamera()
+                    break;
+                case '6':
+                    cameraTarget = jupiter.planet
+                    tweenCamera()
+                    break;
+                case '7':
+                    cameraTarget = saturn.planet
+                    tweenCamera()
+                    break;
+                case '8':
+                    cameraTarget = uranus.planet
+                    tweenCamera()
+                    break;
+                case '9':
+                    cameraTarget = neptune.planet
+                    tweenCamera()
+                    break;
+                case '0':
+                    cameraTarget = pluto.planet
+                    tweenCamera()
+                    break;
             }
         }
 
