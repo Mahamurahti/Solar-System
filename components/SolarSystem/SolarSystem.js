@@ -6,7 +6,7 @@ import getTexturePath from "../../helpers/getTexturePath"
 import createCelestialBody from "./createCelestialBody"
 import createDescription from "./createDescription"
 import createComposer from "./createComposer"
-import { TWEEN } from "three/examples/jsm/libs/tween.module.min";
+import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
 
 /**
  * Creates a solar system that can be interacted with
@@ -181,26 +181,31 @@ export default function SolarSystem() {
         function onPointerUp() {
             raycaster.setFromCamera(pointer, camera)
             const intersects = raycaster.intersectObjects(interactable, false)
-            if (intersects.length > 0 && !isDragging) {
-                cameraTarget = intersects[0].object
-                tweenCamera()
-            } else if (!isDragging) scene.remove(description)
+
+            if (!isDragging) {
+                if (intersects.length > 0) transitionToTarget(intersects[0].object)
+                else scene.remove(description)
+            }
         }
 
         /**
          * Gets camera position and cameraTargets position and animates transition of camera between points.
          */
-        function tweenCamera() {
+        function transitionToTarget(target) {
+            cameraTarget = target
             const direction = new THREE.Vector3()
-            const cameraOffset = 80
-            const randomDistance = Math.random() * 60 + 90
             cameraTarget.getWorldPosition(direction)
+
+            const cameraOffset = 80
+            const xDistance = Math.random() * 60 + 90
+
             // Remove any already present descriptions
             scene.remove(description)
+
             // Start camera transitions to target
             new TWEEN.Tween(camera.position)
                 .to({
-                    x: direction.x + randomDistance,
+                    x: direction.x + xDistance,
                     y: direction.y + cameraOffset,
                     z: direction.z + cameraOffset
                 }, 1000)
@@ -219,6 +224,8 @@ export default function SolarSystem() {
                     controls.update()
                 })
                 .start()
+
+            // Add targets description to scene
             description = createDescription(font, cameraTarget)
             scene.add(description)
         }
@@ -230,46 +237,28 @@ export default function SolarSystem() {
         function onKeyDown(event) {
             let pressedKey = event.key
             switch(pressedKey) {
-                case '1':
-                    cameraTarget = sun.body
-                    tweenCamera()
-                    break;
-                case '2':
-                    cameraTarget = mercury.body
-                    tweenCamera()
-                    break;
-                case '3':
-                    cameraTarget = venus.body
-                    tweenCamera()
-                    break;
-                case '4':
-                    cameraTarget = earth.body
-                    tweenCamera()
-                    break;
-                case '5':
-                    cameraTarget = mars.body
-                    tweenCamera()
-                    break;
-                case '6':
-                    cameraTarget = jupiter.body
-                    tweenCamera()
-                    break;
-                case '7':
-                    cameraTarget = saturn.body
-                    tweenCamera()
-                    break;
-                case '8':
-                    cameraTarget = uranus.body
-                    tweenCamera()
-                    break;
-                case '9':
-                    cameraTarget = neptune.body
-                    tweenCamera()
-                    break;
-                case '0':
-                    cameraTarget = pluto.body
-                    tweenCamera()
-                    break;
+                case '1': transitionToTarget(sun.body)
+                    break
+                case '2': transitionToTarget(mercury.body)
+                    break
+                case '3': transitionToTarget(venus.body)
+                    break
+                case '4': transitionToTarget(earth.body)
+                    break
+                case '5': transitionToTarget(mars.body)
+                    break
+                case '6': transitionToTarget(jupiter.body)
+                    break
+                case '7': transitionToTarget(saturn.body)
+                    break
+                case '8': transitionToTarget(uranus.body)
+                    break
+                case '9': transitionToTarget(neptune.body)
+                    break
+                case '0': transitionToTarget(pluto.body)
+                    break
+                default: transitionToTarget(sun.body)
+                    break
             }
         }
 
@@ -299,9 +288,9 @@ export default function SolarSystem() {
         function updateDescription()  {
             if (description !== null) {
                 description.renderOrder = 999
-                description.material.depthTest = false;
-                description.material.depthWrite = false;
-                description.onBeforeRender = function (renderer) { renderer.clearDepth(); };
+                description.material.depthTest = false
+                description.material.depthWrite = false
+                description.onBeforeRender = function (renderer) { renderer.clearDepth() }
                 description.position.copy(controls.target).add(new THREE.Vector3(0,50,0))
                 description.rotation.copy(camera.rotation)
             }
