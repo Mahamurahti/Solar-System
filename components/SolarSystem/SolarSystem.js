@@ -34,7 +34,7 @@ export default function SolarSystem() {
          * Perspective camera for defining the "eyes" of the scene. We can look at the scene through the camera.
          * @type {PerspectiveCamera}
          */
-        const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 0.1, 1000)
+        const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, .1, 1000)
         camera.position.set(-90, 140, 140)
 
         /**
@@ -52,6 +52,10 @@ export default function SolarSystem() {
          * @type {OrbitControls}
          */
         const controls = new OrbitControls(camera, renderer.domElement)
+        controls.enableDamping = true
+        controls.dampingFactor = .05
+        controls.screenSpacePanning = true
+        controls.maxDistance = 600
 
         /**
          * Ambient light to lighten up the scene artificially, meaning even the dark side of planets is slightly visible.
@@ -66,13 +70,12 @@ export default function SolarSystem() {
          */
         const pointLight = new THREE.PointLight(0xFFFFFF, 1.9, 300)
         pointLight.castShadow = true
-        pointLight.shadow.mapSize.width = 4096
-        pointLight.shadow.mapSize.height = 4096
-        pointLight.shadow.camera.near = 10
-        pointLight.shadow.camera.far = 9000
+        const shadowResolution = 5120
+        pointLight.shadow.mapSize.width = shadowResolution
+        pointLight.shadow.mapSize.height = shadowResolution
         scene.add(pointLight)
 
-        const composerParams = { strength: .9, radius: .9, threshold: .85 }
+        const composerParams = { strength: .6, radius: .4, threshold: .85 }
         /**
          * Composer gives the scene a bloom effect.
          * @type {EffectComposer}
@@ -146,6 +149,7 @@ export default function SolarSystem() {
         function onPointerMove(event) {
             isDragging = true
             pointer.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1)
+
             raycaster.setFromCamera(pointer, camera)
             const intersects = raycaster.intersectObjects(interactable, false)
             if (intersects.length > 0) {
@@ -235,28 +239,30 @@ export default function SolarSystem() {
          * @param event to change cameraTarget to correspond a pressed key
          */
         function onKeyDown(event) {
-            let pressedKey = event.key
-            switch(pressedKey) {
-                case '1': transitionToTarget(sun.body)
-                    break
-                case '2': transitionToTarget(mercury.body)
-                    break
-                case '3': transitionToTarget(venus.body)
-                    break
-                case '4': transitionToTarget(earth.body)
-                    break
-                case '5': transitionToTarget(mars.body)
-                    break
-                case '6': transitionToTarget(jupiter.body)
-                    break
-                case '7': transitionToTarget(saturn.body)
-                    break
-                case '8': transitionToTarget(uranus.body)
-                    break
-                case '9': transitionToTarget(neptune.body)
-                    break
-                case '0': transitionToTarget(pluto.body)
-                    break
+            if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105)) {
+                let pressedKey = event.key
+                switch(pressedKey) {
+                    case '1': transitionToTarget(sun.body)
+                        break
+                    case '2': transitionToTarget(mercury.body)
+                        break
+                    case '3': transitionToTarget(venus.body)
+                        break
+                    case '4': transitionToTarget(earth.body)
+                        break
+                    case '5': transitionToTarget(mars.body)
+                        break
+                    case '6': transitionToTarget(jupiter.body)
+                        break
+                    case '7': transitionToTarget(saturn.body)
+                        break
+                    case '8': transitionToTarget(uranus.body)
+                        break
+                    case '9': transitionToTarget(neptune.body)
+                        break
+                    case '0': transitionToTarget(pluto.body)
+                        break
+                }
             }
         }
 
@@ -285,10 +291,7 @@ export default function SolarSystem() {
          */
         function updateDescription()  {
             if (description !== null) {
-                description.renderOrder = 999
-                description.material.depthTest = false
-                description.material.depthWrite = false
-                description.onBeforeRender = function (renderer) { renderer.clearDepth() }
+                // Description is above the target
                 description.position.copy(controls.target).add(new THREE.Vector3(0,50,0))
                 description.rotation.copy(camera.rotation)
             }

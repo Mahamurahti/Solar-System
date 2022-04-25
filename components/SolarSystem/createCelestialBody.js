@@ -15,7 +15,7 @@ export default function createCelestialBody(name, size, texture, position, ring)
 
     const textureLoader = new THREE.TextureLoader()
 
-    const bodyGeometry = new THREE.SphereGeometry(size, 30, 30)
+    const bodyGeometry = new THREE.SphereGeometry(size, 128, 128)
     const bodyMaterial = new THREE.MeshPhongMaterial({
         map: textureLoader.load(texture)
     })
