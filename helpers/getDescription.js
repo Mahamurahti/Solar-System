@@ -17,6 +17,8 @@ export default function getDescription(name) {
                 "While large amounts of water can be found throughout the Solar System, only Earth sustains\n" +
                 "liquid surface water. About 71% of Earth's surface is made up of the ocean, dwarfing Earth's\n" +
                 "polar ice, lakes, and rivers."
+        case "Moon":
+            return "This is Earths moon."
         case "Mars":
             return "Mars is the fourth planet from the Sun and the second-smallest planet in the Solar System,\n" +
                 "being larger than only Mercury. In English, Mars carries the name of the Roman god of war and\n" +

@@ -64,7 +64,8 @@ export default function SolarSystem() {
         const sun = createCelestialBody("Sun", 16, getTexturePath("Sun"), 0)
         const mercury = createCelestialBody("Mercury", 3.2, getTexturePath("Mercury"), 28)
         const venus = createCelestialBody("Venus", 5.8, getTexturePath("Venus"), 44)
-        const earth = createCelestialBody("Earth", 6, getTexturePath("Earth"), 62)
+        const moon = { size: (6 * 0.27), texture: getTexturePath("Moon"), name: "Moon"}
+        const earth = createCelestialBody("Earth", 6, getTexturePath("Earth"), 62, null, moon)
         const mars = createCelestialBody("Mars", 4, getTexturePath("Mars"), 78)
         const jupiter = createCelestialBody("Jupiter", 12, getTexturePath("Jupiter"), 100)
         const saturnRing = { innerRadius: 10, outerRadius: 20, texture: getTexturePath("Saturn").ring }
@@ -85,6 +86,10 @@ export default function SolarSystem() {
             scene.add(object.group)
             // Only the body is currently interactable (ring is not interactable)
             interactable.push(object.body)
+            if(object.moonMesh) {
+                interactable.push(object.moonMesh)
+            }
+
         }
 
         document.addEventListener('pointermove', onPointerMove)
@@ -331,6 +336,13 @@ export default function SolarSystem() {
             uranus.group.rotateY(0.0004 * orbitSpeed)
             neptune.group.rotateY(0.0001 * orbitSpeed)
             pluto.group.rotateY(0.00007 * orbitSpeed)
+
+            earth.moonMesh.rotateY(0.02)
+            let matrix = new THREE.Matrix4();
+            //Rotate the matrix
+            matrix.makeRotationY(Math.PI / 2 * 0.01);
+            earth.moonMesh.position.applyMatrix4(matrix)
+
 
             updateDescription()
             if(controls.enabled) {

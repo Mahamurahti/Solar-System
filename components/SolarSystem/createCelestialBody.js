@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import createMoon from "./createMoon";
+import createRing from "./createRing";
 
 /**
  * Creates a celestial body.
@@ -9,12 +11,13 @@ import * as THREE from "three";
  * @param texture of the celestial body
  * @param position of the celestial body in the solar system
  * @param ring of the celestial body (optional)
+ * @param moon of the celestial body
  * @returns {{body: Mesh, group: Object3D}}
  */
-export default function createCelestialBody(name, size, texture, position, ring) {
+export default function createCelestialBody(name, size, texture, position, ring, moon) {
 
     const textureLoader = new THREE.TextureLoader()
-
+    let moonMesh, ringMesh
     const bodyGeometry = new THREE.SphereGeometry(size, 30, 30)
     const bodyMaterial = new THREE.MeshPhongMaterial({
         map: textureLoader.load(texture)
@@ -25,23 +28,17 @@ export default function createCelestialBody(name, size, texture, position, ring)
     group.add(body)
 
     if(ring) {
-        const ringGeometry = new THREE.RingGeometry(
-            ring.innerRadius,
-            ring.outerRadius,
-            32
-        )
-        const ringMaterial = new THREE.MeshPhongMaterial({
-            map: textureLoader.load(ring.texture),
-            side: THREE.DoubleSide
-        })
-        const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial)
-        ringMesh.position.x = position
-        ringMesh.rotation.x = -0.5 * Math.PI
+        ringMesh = createRing(ring, position)
+
         group.add(ringMesh)
+    }
+    else if(moon) {
+        moonMesh = createMoon(moon)
+        body.add(moonMesh)
     }
 
     body.name = name
     body.position.x = position
 
-    return { body, group }
+    return { body, group, moonMesh }
 }
