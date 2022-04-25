@@ -5,6 +5,7 @@ import { FontLoader } from "three/examples/jsm/loaders/FontLoader"
 import getTexturePath from "../../helpers/getTexturePath"
 import createCelestialBody from "./createCelestialBody"
 import createDescription from "./createDescription"
+import {TWEEN} from "three/examples/jsm/libs/tween.module.min";
 
 /**
  * Creates a solar system that can be interacted with
@@ -89,6 +90,7 @@ export default function SolarSystem() {
         document.addEventListener('pointermove', onPointerMove)
         document.addEventListener('pointerdown', onPointerDown)
         document.addEventListener('pointerup', onPointerUp)
+        document.addEventListener('keydown', onKeyDown)
 
         // isDragging determines if the user is dragging their mouse
         let isDragging
@@ -156,11 +158,85 @@ export default function SolarSystem() {
             const intersects = raycaster.intersectObjects(interactable, false)
             if (intersects.length > 0) {
                 cameraTarget = intersects[0].object
-                scene.remove(description)
-                description = createDescription(font, cameraTarget)
-                scene.add(description)
+                tweenCamera()
             } else {
                 if (!isDragging) scene.remove(description)
+            }
+        }
+
+        /**
+         * Gets camera position and cameraTargets position and animates transition of camera between points.
+         */
+        function tweenCamera() {
+            const direction = new THREE.Vector3()
+            const cameraOffset = 80
+            cameraTarget.getWorldPosition(direction)
+            scene.remove(description)
+            new TWEEN.Tween(camera.position)
+                .to({x: direction.x, y: direction.y + cameraOffset, z: direction.z + cameraOffset}, 1000)
+                .easing(TWEEN.Easing.Quadratic.InOut)
+                .onStart(() =>
+                    controls.enabled = false,
+                )
+                .onUpdate(() =>
+                    camera.lookAt(direction),
+                )
+                .onComplete(() =>
+                        controls.enabled = true,
+                    controls.update()
+                )
+                .start()
+            description = createDescription(font, cameraTarget)
+            scene.add(description)
+        }
+
+        /**
+         * When number is pressed on keyboard cameraTarget will be changed to corresponding planet and tween called.
+         * @param event to change cameraTarget to correspond a pressed key
+         */
+        function onKeyDown(event) {
+            let pressedKey = event.key
+            switch(pressedKey) {
+                case '1':
+                    cameraTarget = sun.body
+                    tweenCamera()
+                    break;
+                case '2':
+                    cameraTarget = mercury.body
+                    tweenCamera()
+                    break;
+                case '3':
+                    cameraTarget = venus.body
+                    tweenCamera()
+                    break;
+                case '4':
+                    cameraTarget = earth.body
+                    tweenCamera()
+                    break;
+                case '5':
+                    cameraTarget = mars.body
+                    tweenCamera()
+                    break;
+                case '6':
+                    cameraTarget = jupiter.body
+                    tweenCamera()
+                    break;
+                case '7':
+                    cameraTarget = saturn.body
+                    tweenCamera()
+                    break;
+                case '8':
+                    cameraTarget = uranus.body
+                    tweenCamera()
+                    break;
+                case '9':
+                    cameraTarget = neptune.body
+                    tweenCamera()
+                    break;
+                case '0':
+                    cameraTarget = pluto.body
+                    tweenCamera()
+                    break;
             }
         }
 
@@ -230,7 +306,7 @@ export default function SolarSystem() {
          */
         const animate = function () {
             requestAnimationFrame(animate)
-
+            TWEEN.update()
             const orbitSpeed = 0.1
 
             // Around own axis rotation
@@ -257,7 +333,9 @@ export default function SolarSystem() {
             pluto.group.rotateY(0.00007 * orbitSpeed)
 
             updateDescription()
-            updateCamera()
+            if(controls.enabled) {
+                updateCamera()
+            }
             render()
         }
 
