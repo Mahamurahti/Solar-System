@@ -257,8 +257,6 @@ export default function SolarSystem() {
                     break
                 case '0': transitionToTarget(pluto.body)
                     break
-                default: transitionToTarget(sun.body)
-                    break
             }
         }
 
