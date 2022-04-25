@@ -43,6 +43,8 @@ export default function SolarSystem() {
         const renderer = new THREE.WebGLRenderer({ antialias: true })
         renderer.setSize(WIDTH, HEIGHT)
         renderer.setPixelRatio(window.devicePixelRatio)
+        renderer.shadowMap.enabled = true
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
         /**
          * Orbit controls gives access to orbit around the scene.
@@ -62,6 +64,11 @@ export default function SolarSystem() {
          * @type {PointLight}
          */
         const pointLight = new THREE.PointLight(0xFFFFFF, 1.9, 300)
+        pointLight.castShadow = true
+        pointLight.shadow.mapSize.width = 4096
+        pointLight.shadow.mapSize.height = 4096
+        pointLight.shadow.camera.near = 10
+        pointLight.shadow.camera.far = 9000
         scene.add(pointLight)
 
         const composerParams = { strength: .9, radius: .9, threshold: .85 }
@@ -88,7 +95,8 @@ export default function SolarSystem() {
         const pluto = createCelestialBody("Pluto", 2.8, getTexturePath("Pluto"), 216)
 
         sun.body.material.emissive.setHex(0xffd99c)
-        sun.body.material.emissiveIntensity = 1
+        sun.body.material.emissiveIntensity = .98
+        sun.body.castShadow = false
 
         const objects = [
             sun, mercury, venus, earth, mars,
