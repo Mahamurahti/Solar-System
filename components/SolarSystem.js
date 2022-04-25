@@ -186,7 +186,7 @@ export default function SolarSystem() {
 
         /**
          * When user clicks over a planet, cameraTarget will change to the clicked planet. This function casts a raycast
-         * and checks if it hits something from objects-variable. If it does, change cameraTarget with Tween.js transition.
+         * and checks if it hits something from objects-variable. If it does, change cameraTarget with Tween.js camera transition.
          *
          * @param event to get the position of the pointer in client
          */
@@ -200,11 +200,10 @@ export default function SolarSystem() {
                 const direction = new THREE.Vector3()
                 const cameraOffset = 80
                 cameraTarget.getWorldPosition(direction)
-                //console.log(direction)
 
                 new TWEEN.Tween(camera.position)
-                    .to(direction, 1000)
-                    .easing(TWEEN.Easing.Quadratic.Out)
+                    .to({x: direction.x, y: direction.y + cameraOffset, z: direction.z + cameraOffset}, 1000)
+                    .easing(TWEEN.Easing.Quadratic.InOut)
                     .onStart(() =>
                         controls.enabled = false,
                     )
@@ -212,7 +211,7 @@ export default function SolarSystem() {
                         camera.lookAt(direction),
                     )
                     .onComplete(() =>
-                        controls.enabled = true,
+                        controls.enabled = true
                     )
                     .start()
             }
@@ -230,8 +229,8 @@ export default function SolarSystem() {
             controls.update()
 
             direction.subVectors(camera.position, controls.target)
-            // Uncomment to enable zooming
-            direction.normalize().multiplyScalar(cameraOffset)
+            // Comment to enable zooming
+            //direction.normalize().multiplyScalar(cameraOffset)
             camera.position.copy(direction.add(controls.target))
         }
 
@@ -284,7 +283,6 @@ export default function SolarSystem() {
             uranus.planetGroup.rotateY(0.0004 * orbitSpeed)
             neptune.planetGroup.rotateY(0.0001 * orbitSpeed)
             pluto.planetGroup.rotateY(0.00007 * orbitSpeed)
-
 
             if(controls.enabled) {
                 updateCamera()
