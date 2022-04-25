@@ -5,6 +5,7 @@ import { FontLoader } from "three/examples/jsm/loaders/FontLoader"
 import getTexturePath from "../../helpers/getTexturePath"
 import createCelestialBody from "./createCelestialBody"
 import createDescription from "./createDescription"
+import createComposer from "./createComposer"
 
 /**
  * Creates a solar system that can be interacted with
@@ -49,14 +50,15 @@ export default function SolarSystem() {
          */
         const controls = new OrbitControls(camera, renderer.domElement)
 
-        // --- Change to hemisphere light and tweak settings, light comes from the sun --- //
-        const dirLight = new THREE.DirectionalLight(0xffffff)
-        scene.add(dirLight)
+        const ambientLight = new THREE.AmbientLight(0xFFFFFF, .2)
+        scene.add(ambientLight)
 
-        const pointLight = new THREE.PointLight(0xFFFFFF, 2, 300)
+        const pointLight = new THREE.PointLight(0xFFFFFF, 1.9, 300)
         scene.add(pointLight)
-        // ------------------------------------------------------------------------------- //
 
+        const composerParams = { strength: .9, radius: .9, threshold: .85 }
+        const composer = createComposer(scene, camera, renderer, composerParams)
+        
         mountRef.current?.appendChild(renderer.domElement)
 
         // Create all relevant celestial bodies in the solar system
@@ -72,6 +74,9 @@ export default function SolarSystem() {
         const uranus = createCelestialBody("Uranus", 7, getTexturePath("Uranus").body, 176, uranusRing)
         const neptune = createCelestialBody("Neptune", 7, getTexturePath("Neptune"), 200)
         const pluto = createCelestialBody("Pluto", 2.8, getTexturePath("Pluto"), 216)
+
+        sun.body.material.emissive.setHex(0xffd99c)
+        sun.body.material.emissiveIntensity = 1
 
         const objects = [
             sun, mercury, venus, earth, mars,
@@ -126,7 +131,7 @@ export default function SolarSystem() {
                     if (intersect) intersect.material.emissive.setHex(intersect.currentHex)
                     intersect = intersects[0].object
                     intersect.currentHex = intersect.material.emissive.getHex()
-                    intersect.material.emissive.setHex(0xff0000)
+                    intersect.material.emissive.setHex(0xFFDD00)
                 }
             } else {
                 if (intersect) intersect.material.emissive.setHex(intersect.currentHex)
@@ -258,7 +263,8 @@ export default function SolarSystem() {
 
             updateDescription()
             updateCamera()
-            render()
+            //render()
+            composer.render()
         }
 
         animate()
