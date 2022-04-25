@@ -11,13 +11,14 @@ import createRing from "./createRing";
  * @param texture of the celestial body
  * @param position of the celestial body in the solar system
  * @param ring of the celestial body (optional)
- * @param moon of the celestial body
+ * @param moon of the celestial body (optional)
  * @returns {{body: Mesh, group: Object3D}}
  */
 export default function createCelestialBody(name, size, texture, position, ring, moon) {
 
     const textureLoader = new THREE.TextureLoader()
-    let moonMesh, ringMesh
+    let moonMesh = []
+    let ringMesh
     const bodyGeometry = new THREE.SphereGeometry(size, 30, 30)
     const bodyMaterial = new THREE.MeshPhongMaterial({
         map: textureLoader.load(texture)
@@ -27,14 +28,16 @@ export default function createCelestialBody(name, size, texture, position, ring,
 
     group.add(body)
 
-    if(ring) {
+    if (ring) {
         ringMesh = createRing(ring, position)
 
         group.add(ringMesh)
     }
-    else if(moon) {
-        moonMesh = createMoon(moon)
-        body.add(moonMesh)
+    if (moon) {
+        for (let i =0; i<moon.length; i++) {
+            moonMesh[i] = createMoon(moon[i])
+            body.add(moonMesh[i])
+        }
     }
 
     body.name = name
