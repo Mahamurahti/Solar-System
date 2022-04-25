@@ -17,6 +17,8 @@ export default function getDescription(name) {
                 "While large amounts of water can be found throughout the Solar System, only Earth sustains\n" +
                 "liquid surface water. About 71% of Earth's surface is made up of the ocean, dwarfing Earth's\n" +
                 "polar ice, lakes, and rivers."
+        case "Moon":
+            return "This is Earths moon."
         case "Mars":
             return "Mars is the fourth planet from the Sun and the second-smallest planet in the Solar System,\n" +
                 "being larger than only Mercury. In English, Mars carries the name of the Roman god of war and\n" +
@@ -25,16 +27,29 @@ export default function getDescription(name) {
             return "Jupiter is the fifth planet from the Sun and the largest in the Solar System. It is a gas\n" +
                 "giant with a mass more than two and a half times that of all the other planets in the Solar\n" +
                 "System combined, but slightly less than one-thousandth the mass of the Sun."
+        case "Europa":
+            return "Europa is icy moon of Jupiter and is tidally locked, so it's same side faces always to Jupiter.\n" +
+                "Europa's size is 90% of Earth's moon. It has a hidden ocean."
         case "Saturn":
             return "Saturn is the sixth planet from the Sun and the second-largest in the Solar System, after\n" +
                 "Jupiter. It is a gas giant with an average radius of about nine and a half times that of Earth.\n" +
                 "It has only one-eighth the average density of Earth; however, with its larger volume, Saturn is\n" +
                 "over 95 times more massive."
+        case "Enceladus":
+            return "Enceladus is Saturn's sixth largest moon."
+        case "Titan":
+            return "Titan is Saturn's largest moon."
         case "Uranus":
             return "Uranus is the seventh planet from the Sun. Its name is a reference to the Greek god of the sky,\n" +
                 "Uranus, who, according to Greek mythology, was the great-grandfather of Ares, grandfather of\n" +
                 "Zeus and father of Cronus. It has the third-largest planetary radius and fourth-largest\n" +
                 "planetary mass in the Solar System."
+        case "Ariel":
+            return "Ariel is Uranus's fourth largest moon."
+        case "Titania":
+            return "Titania is Uranus's largest moon."
+        case "Oberon":
+            return "Oberon is Uranus's second largest moon."
         case "Neptune":
             return "Neptune is the eighth and farthest-known Solar planet from the Sun. In the Solar System,\n" +
                 "it is the fourth-largest planet by diameter, the third-most-massive planet, and the densest\n" +

@@ -11,5 +11,12 @@ export default function getTexturePath(name) {
         case "Uranus": return { body: 'textures/uranus.jpg', ring: 'textures/uranus ring.png' }
         case "Neptune": return 'textures/neptune.jpg'
         case "Pluto": return 'textures/pluto.jpg'
+        case "Moon": return 'textures/moon.jpg'
+        case "Europa": return 'textures/europa.jpg'
+        case "Enceladus": return 'textures/enceladus.jpg'
+        case "Titan": return 'textures/titan.jpg'
+        case "Ariel": return 'textures/ariel.webp'
+        case "Titania": return 'textures/titania.webp'
+        case "Oberon": return 'textures/oberon.webp'
     }
 }
