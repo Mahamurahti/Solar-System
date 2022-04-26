@@ -34,7 +34,7 @@ export default function SolarSystem() {
          * Perspective camera for defining the "eyes" of the scene. We can look at the scene through the camera.
          * @type {PerspectiveCamera}
          */
-        const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, .1, 1000)
+        const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, .1, 2000)
         camera.position.set(-90, 140, 140)
 
         /**
@@ -68,9 +68,9 @@ export default function SolarSystem() {
          * Point light is the origin of the solar systems light. The point light is inside of the sun.
          * @type {PointLight}
          */
-        const pointLight = new THREE.PointLight(0xFFFFFF, 1.9, 300)
+        const pointLight = new THREE.PointLight(0xFFFFFF, 1.9, 1500)
         pointLight.castShadow = true
-        const shadowResolution = 5120
+        const shadowResolution = 1280
         pointLight.shadow.mapSize.width = shadowResolution
         pointLight.shadow.mapSize.height = shadowResolution
         scene.add(pointLight)
@@ -85,29 +85,28 @@ export default function SolarSystem() {
         mountRef.current?.appendChild(renderer.domElement)
 
         // Create all relevant celestial bodies in the solar system
-        const sun = createCelestialBody("Sun", 16, getTexturePath("Sun"), 0)
-        const mercury = createCelestialBody("Mercury", 3.2, getTexturePath("Mercury"), 28)
-        const venus = createCelestialBody("Venus", 5.8, getTexturePath("Venus"), 44)
-        const moon = { size: (6 * 0.27), texture: getTexturePath("Moon"), name: "Moon", offset: 10, offsetAxis: 'x'}
-        const earthMoon = [moon]
-        const earth = createCelestialBody("Earth", 6, getTexturePath("Earth"), 62, null, earthMoon)
-        const mars = createCelestialBody("Mars", 4, getTexturePath("Mars"), 78)
-        const europa = {size: (6 * 0.27 * 0.9), texture: getTexturePath("Europa"), name: "Europa", offset: -16, offsetAxis: 'x'}
-        const jupiterMoons = [europa]
-        const jupiter = createCelestialBody("Jupiter", 12, getTexturePath("Jupiter"), 100, null, jupiterMoons)
-        const saturnRing = { innerRadius: 10, outerRadius: 20, texture: getTexturePath("Saturn").ring }
-        const enceladus = {size:(6 * 0.27 / 2), texture: getTexturePath("Enceladus"), name: "Enceladus", offset: 20, offsetAxis: 'x'}
-        const titan = {size: 3.5, texture: getTexturePath("Titan"), name: "Titan", offset: -20, offsetAxis: 'x'}
-        const saturnMoons =  [enceladus, titan]
-        const saturn = createCelestialBody("Saturn", 10, getTexturePath("Saturn").body, 138, saturnRing, saturnMoons)
-        const uranusRing = { innerRadius: 7, outerRadius: 12, texture: getTexturePath("Uranus").ring }
-        const ariel = {size: 6 * 0.27 / 2, texture: getTexturePath("Ariel"), name: "Ariel", offset: -10, offsetAxis: 'x'}
-        const titania = {size: 6 * 0.1235, texture: getTexturePath("Titania"), name: "Titania", offset: 12, offsetAxis: 'x'}
-        const oberon = {size: 6 * 0.1135, texture: getTexturePath("Oberon"), name: "Oberon", offset: 12, offsetAxis: 'z'}
-        const uranusMoons = [ariel, titania, oberon]
-        const uranus = createCelestialBody("Uranus", 7, getTexturePath("Uranus").body, 176, uranusRing, uranusMoons)
-        const neptune = createCelestialBody("Neptune", 7, getTexturePath("Neptune"), 200)
-        const pluto = createCelestialBody("Pluto", 2.8, getTexturePath("Pluto"), 216)
+        const sun = createCelestialBody("Sun", 100, getTexturePath("Sun"), 0)
+        const mercury = createCelestialBody("Mercury", 1.8, getTexturePath("Mercury"), -119)
+        const venus = createCelestialBody("Venus", 4.75, getTexturePath("Venus"), 136)
+        const earthMoon = [{size: 1.35, texture: getTexturePath("Moon"), name: "Moon", offset: 7, offsetAxis: 'x'}]
+        const earth = createCelestialBody("Earth", 5, getTexturePath("Earth"), -150, null, earthMoon)
+        let marsMoons = [{size: 0.25, texture: getTexturePath("Phobos"), offset: 4, offsetAxis: 'x'},
+        {size: 0.125, texture: getTexturePath("Deimos"), offset: -6, offsetAxis: 'x'}]
+        const mars = createCelestialBody("Mars", 2.66, getTexturePath("Mars"), 175, null, marsMoons)
+        const jupiterMoons = [{size: 1.25, texture: getTexturePath("Europa"), name: "Europa", offset: -156, offsetAxis: 'x'}]
+        const jupiter = createCelestialBody("Jupiter", 56, getTexturePath("Jupiter"), -360, null, jupiterMoons)
+        const saturnRing = { innerRadius: 47, outerRadius: 94, texture: getTexturePath("Saturn").ring }
+        const saturnMoons =  [{size: 0.65, texture: getTexturePath("Enceladus"), name: "Enceladus", offset: 100, offsetAxis: 'x'},
+            {size: 2.02, texture: getTexturePath("Titan"), name: "Titan", offset: -140, offsetAxis: 'x'}]
+        const saturn = createCelestialBody("Saturn", 47, getTexturePath("Saturn").body, 625, saturnRing, saturnMoons)
+        const uranusRing = { innerRadius: 20.3, outerRadius: 34.8, texture: getTexturePath("Uranus").ring }
+        const uranusMoons = [{size: 0.65, texture: getTexturePath("Ariel"), name: "Ariel", offset: -26, offsetAxis: 'x'},
+            {size: 0.741, texture: getTexturePath("Titania"), name: "Titania", offset: 25, offsetAxis: 'x'},
+            {size: 0.681, texture: getTexturePath("Oberon"), name: "Oberon", offset: 22, offsetAxis: 'z'}]
+        const uranus = createCelestialBody("Uranus", 20.3, getTexturePath("Uranus").body, -1060, uranusRing, uranusMoons)
+        const neptune = createCelestialBody("Neptune", 19.4, getTexturePath("Neptune"), 1605)
+        let plutoMoons = [{size: 1.4, texture: getTexturePath("Kharon"), name: "Kharon", offset: -5, offsetAxis: 'z'}]
+        const pluto = createCelestialBody("Pluto", 2.8, getTexturePath("Pluto"), -2050, null, plutoMoons)
 
         sun.body.material.emissive.setHex(0xffd99c)
         sun.body.material.emissiveIntensity = .98
@@ -120,9 +119,9 @@ export default function SolarSystem() {
         const interactable = []
 
         for (const object of objects) {
-            // Add group to scene (celestial body and ring if the body has one)
+            // Add group to scene (celestial body, moons and ring if the body has one)
             scene.add(object.group)
-            // Only the body is currently interactable (ring is not interactable)
+            // Only the body and moons are currently interactable (ring is not interactable)
             interactable.push(object.body)
             if(object.moonMesh) {
                 for (let i =0; i<object.moonMesh.length; i++) {
@@ -131,7 +130,7 @@ export default function SolarSystem() {
             }
 
         }
-        console.log(saturn)
+
         document.addEventListener('pointermove', onPointerMove)
         document.addEventListener('pointerdown', onPointerDown)
         document.addEventListener('pointerup', onPointerUp)
@@ -348,9 +347,10 @@ export default function SolarSystem() {
             requestAnimationFrame(animate)
             TWEEN.update()
             const orbitSpeed = 0.1
+            const negateDirection = Math.PI / -2
 
             // Around own axis rotation
-            /*sun.body.rotateY(0.004)
+            sun.body.rotateY(0.004)
             mercury.body.rotateY(0.004)
             venus.body.rotateY(0.002)
             earth.body.rotateY(0.02)
@@ -370,19 +370,21 @@ export default function SolarSystem() {
             saturn.group.rotateY(0.0009 * orbitSpeed)
             uranus.group.rotateY(0.0004 * orbitSpeed)
             neptune.group.rotateY(0.0001 * orbitSpeed)
-            pluto.group.rotateY(0.00007 * orbitSpeed)*/
+            pluto.group.rotateY(0.00007 * orbitSpeed)
 
-            //earth.moonMesh.rotateY(0.02)
-            let matrix = new THREE.Matrix4();
-            //Rotate the matrix
-            matrix.makeRotationY(Math.PI / 2 * 0.01);
-            earth.moonMesh[0].position.applyMatrix4(matrix)
-            jupiter.moonMesh[0].position.applyMatrix4(matrix)
-            saturn.moonMesh[0].position.applyMatrix4(matrix)
-            saturn.moonMesh[1].position.applyMatrix4(matrix)
-            uranus.moonMesh[0].position.applyMatrix4(matrix)
-            uranus.moonMesh[1].position.applyMatrix4(matrix)
-            uranus.moonMesh[2].position.applyMatrix4(matrix)
+            // Rotate the matrix, which is applied to the moons
+            const matrix = new THREE.Matrix4()
+            earth.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.012 * negateDirection))
+            mars.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection))
+            mars.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.023 * negateDirection))
+            jupiter.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.026 * negateDirection))
+            saturn.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection))
+            saturn.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.023 * negateDirection))
+            uranus.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.016 * negateDirection))
+            uranus.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.017 * negateDirection))
+            uranus.moonMesh[2].position.applyMatrix4(matrix.makeRotationY(0.018 * negateDirection))
+            pluto.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection))
+
 
             updateDescription()
             updateCamera()

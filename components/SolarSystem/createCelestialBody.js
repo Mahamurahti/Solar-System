@@ -3,7 +3,7 @@ import createMoon from "./createMoon";
 import createRing from "./createRing";
 
 /**
- * Creates a celestial body.
+ * Creates a celestial body, adds ring and moon by callig their own function and randomizes starting position in solar system.
  *
  * @author Timo Tamminiemi
  * @param name of the celestial body
@@ -31,9 +31,22 @@ export default function createCelestialBody(name, size, texture, position, ring,
 
     group.add(body)
 
-    if (ring) {
-        ringMesh = createRing(ring, position)
+    body.name = name
+    let ringPosition
+    let axis = Math.floor(Math.random() * 2)  === 0
+    if(axis) {
+        body.position.x = position
+        ringPosition = {x: body.position.x, y: body.position.y, z: body.position.z}
+    } else {
+        body.position.z = position
+        ringPosition = {x: body.position.x, y: body.position.y, z: body.position.z}
+    }
 
+    if (ring) {
+        ringMesh = createRing(ring, ringPosition)
+        if (body.name === 'Uranus') {
+            ringMesh.rotation.y = 90
+        }
         group.add(ringMesh)
     }
     if (moon) {
@@ -42,9 +55,5 @@ export default function createCelestialBody(name, size, texture, position, ring,
             body.add(moonMesh[i])
         }
     }
-
-    body.name = name
-    body.position.x = position
-
     return { body, group, moonMesh }
 }

@@ -23,6 +23,10 @@ export default function getDescription(name) {
             return "Mars is the fourth planet from the Sun and the second-smallest planet in the Solar System,\n" +
                 "being larger than only Mercury. In English, Mars carries the name of the Roman god of war and\n" +
                 "is often called the \"Red Planet\"."
+        case "Deimos":
+            return "Deimos is the outer and smaller of Mars’s two moons."
+        case "Phobos":
+            return "Phobos is the inner and larger of Mars’s two moons."
         case "Jupiter":
             return "Jupiter is the fifth planet from the Sun and the largest in the Solar System. It is a gas\n" +
                 "giant with a mass more than two and a half times that of all the other planets in the Solar\n" +
@@ -58,5 +62,7 @@ export default function getDescription(name) {
             return "Pluto is a dwarf planet in the Kuiper belt, a ring of bodies beyond the orbit of Neptune.\n" +
                 "It was the first object discovered in the Kuiper belt and remains the largest known body in that\n" +
                 "area. After Pluto was discovered in 1930, it was declared the ninth planet from the Sun."
+        case "Kharon":
+            return "Kharon is weird one it is considered as Pluto's moon or as dwarf planet like Pluto itself."
     }
 }

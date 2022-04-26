@@ -1,5 +1,11 @@
 import * as THREE from 'three'
 
+/**
+ * Creates ring for celestial bodies that need it.
+ * @param ring
+ * @param position
+ * @returns {Mesh}
+ */
 export default function createRing(ring, position) {
     const textureLoader = new THREE.TextureLoader()
 
@@ -13,8 +19,10 @@ export default function createRing(ring, position) {
         side: THREE.DoubleSide
     })
     const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial)
-    ringMesh.position.x = position
+    ringMesh.position.x = position.x
+    ringMesh.position.z = position.z
     ringMesh.rotation.x = -0.5 * Math.PI
+
 
     return ringMesh
 }
