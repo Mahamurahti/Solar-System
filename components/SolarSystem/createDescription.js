@@ -34,6 +34,12 @@ export default function createDescription(font, target) {
     return description
 }
 
+/**
+ * descriptionFadeIn fades in the description by setting the description opacity to 1 (default opacity is 0).
+ * Adds the description to the scene at the start of the animation.
+ * @param scene is the destination of the description
+ * @param description is whats material will be faded in
+ */
 export function descriptionFadeIn(scene, description) {
     new TWEEN.Tween(description.material)
         .to({ opacity: 1 }, 1000)
@@ -41,6 +47,12 @@ export function descriptionFadeIn(scene, description) {
         .start()
 }
 
+/**
+ * descriptionFadeOut fades out the description by setting the description opacity to 0.
+ * Removes the description from the scene at the end of the animation.
+ * @param scene is the place from where the description will be removed
+ * @param description is whats material will be faded out
+ */
 export function descriptionFadeOut(scene, description) {
     new TWEEN.Tween(description.material)
         .to({ opacity: 0 }, 1000)

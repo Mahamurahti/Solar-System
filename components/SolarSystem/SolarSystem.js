@@ -9,7 +9,7 @@ import createComposer from "./createComposer"
 import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
 
 /**
- * Creates a solar system that can be interacted with
+ * Creates a solar system that can be interacted with.
  *
  * @author Timo Tamminiemi & Eric Keränen
  * @returns {JSX.Element}
@@ -24,7 +24,7 @@ export default function SolarSystem() {
         const HEIGHT = window.innerHeight
 
         /**
-         * Scene for displaying 3D graphics.
+         * Scene for displaying 3D graphics. Scene has a cubemap of stars as background.
          * @type {Scene}
          */
         const scene = new THREE.Scene()
@@ -38,7 +38,7 @@ export default function SolarSystem() {
         camera.position.set(-90, 140, 140)
 
         /**
-         * Renderer renders the scene through the camera.
+         * Renderer renders the scene through the camera. Renderer has shadows enabled.
          * @type {WebGLRenderer}
          */
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
@@ -62,25 +62,27 @@ export default function SolarSystem() {
         controls.dampingFactor = .05
         controls.screenSpacePanning = true
         controls.maxDistance = 600
+        // Prevent spastic description behaviour at extremes of polar angles
         controls.maxPolarAngle = Math.PI - .01
         controls.minPolarAngle = .01
 
         /**
-         * Ambient light to lighten up the scene artificially, meaning even the dark side of planets is slightly visible.
+         * Ambient light to lighten up the scene artificially, meaning even the dark sides of celestial bodies
+         * are slightly visible.
          * @type {AmbientLight}
          */
         const ambientLight = new THREE.AmbientLight(0xFFFFFF, .2)
         scene.add(ambientLight)
 
         /**
-         * Point light is the origin of the solar systems light. The point light is inside of the sun.
+         * Point light is the origin of the solar systems light. The point light is inside of the sun. Point light
+         * is the light that makes other objects cast shadows.
          * @type {PointLight}
          */
         const pointLight = new THREE.PointLight(0xFFFFFF, 1.9, 300)
         pointLight.castShadow = true
         const shadowResolution = 5120
-        pointLight.shadow.mapSize.width = shadowResolution
-        pointLight.shadow.mapSize.height = shadowResolution
+        pointLight.shadow.mapSize.width = pointLight.shadow.mapSize.height = shadowResolution
         scene.add(pointLight)
 
         const composerParams = { strength: .6, radius: .4, threshold: .85 }
@@ -115,6 +117,7 @@ export default function SolarSystem() {
         const neptune = createCelestialBody("Neptune", 7, getTexturePath("Neptune"), 200)
         const pluto = createCelestialBody("Pluto", 2.8, getTexturePath("Pluto"), 216)
 
+        // Sun has default emission to make bloom effect
         sun.body.material.emissive.setHex(0xffd99c)
         sun.body.material.emissiveIntensity = .98
         sun.body.castShadow = false
@@ -196,26 +199,31 @@ export default function SolarSystem() {
         }
 
         /**
-         * onPointerUp is called when the user releases their mouse button up. When this happens a raycast is is cast
-         * from the camera  to the point where the mouse is. This point is updated in  onPointerMove-function. If the
-         * raycast hits something the target of the camera will be set as the first hit object. A description of the
-         * first hit object will be created. If the scene already had a description for some other celestial body, it
-         * will be removed. Then the description of the hit object will be displayed. If the user releases their mouse
-         * button up and the raycast hits nothing and the user is not dragging (aka orbiting) the description will
-         * be removed.
+         * onPointerUp is called when the user releases their mouse button up. onPointerUp-function will execute its
+         * functionality only if the user has not dragged their mouse after mouse button is pressed down. If the user
+         * has dragged their mouse after mouse button is pressed down, nothing will happen. If the user just presses
+         * the mouse button (and doesn't drag) a raycast is fired off to the point of the mouse. If the raycast hits
+         * something that is interactable a transition to the object will happen. If nothing was hit and there is a
+         * description in the scene, it will be removed.
          */
         function onPointerUp() {
-            raycaster.setFromCamera(pointer, camera)
-            const intersects = raycaster.intersectObjects(interactable, false)
-
             if (!isDragging) {
+                raycaster.setFromCamera(pointer, camera)
+                const intersects = raycaster.intersectObjects(interactable, false)
+
                 if (intersects.length > 0) transitionToTarget(intersects[0].object)
                 else if (description) descriptionFadeOut(scene, description)
             }
         }
 
         /**
-         * Gets camera position and cameraTargets position and animates transition of camera between points.
+         * transitionToTarget is called whenever the user has successfully clicked on an interactable object. In this
+         * function the target of the camera will change to the clicked object and a tween animation will start.
+         * In this animation the camera will move to specified location near the clicked object. y- and z-axis will
+         * always have a certain amount of offset, but the x-axis will be random between 90 - 150 units. When the
+         * animation starts, orbit controls are disabled and any description in the scene is removed, during the
+         * animation the camera should always look at the target and when the animation is complete, the targets
+         * description will be created and faded in above the target.
          */
         function transitionToTarget(target) {
             cameraTarget = target
@@ -254,10 +262,12 @@ export default function SolarSystem() {
         }
 
         /**
-         * When number is pressed on keyboard cameraTarget will be changed to corresponding planet and tween called.
-         * @param event to change cameraTarget to correspond a pressed key
+         * When number is pressed on keyboard a transition to the specified target will occur.
+         * The if statement check that the pressed key must be either from keyboard numbers or numeric keypad keys.
+         * @param event to check which number was pressed
          */
         function onKeyDown(event) {
+            // Is the pressed number from keyboard numbers or numpad numbers
             if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105)) {
                 let pressedKey = event.key
                 switch(pressedKey) {
@@ -304,9 +314,8 @@ export default function SolarSystem() {
         }
 
         /**
-         * updateDescription keeps the description of celestial bodies rendered on top of everything (since the
-         * description is a mesh in the scene). Additionally the description is positioned a little above the
-         * celestial body. The description will always face the camera.
+         * updateDescription keeps the description is positioned a little above a celestial body.
+         * The description will always face the camera.
          */
         function updateDescription()  {
             if (description !== null) {
@@ -317,14 +326,13 @@ export default function SolarSystem() {
         }
 
         /**
-         * updateCamera track the camera target. This is done via orbit controls.
+         * updateCamera tracks the camera target. This is done via orbit controls.
          */
         function updateCamera() {
-            const direction = new THREE.Vector3()
-
             cameraTarget.getWorldPosition(controls.target)
             controls.update()
 
+            const direction = new THREE.Vector3()
             direction.subVectors(camera.position, controls.target)
             camera.position.copy(direction.add(controls.target))
         }
@@ -337,6 +345,10 @@ export default function SolarSystem() {
             renderer.render(scene, camera)
         }
 
+        /**
+         * requestID is only used for performance matters. If the context is lost (which we force when the component
+         * unmounts) the latest animation frame will be cancelled.
+         */
         let requestID
 
         /**
