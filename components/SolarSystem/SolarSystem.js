@@ -4,7 +4,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader"
 import getTexturePath from "../../helpers/getTexturePath"
 import createCelestialBody from "./createCelestialBody"
-import createDescription from "./createDescription"
+import createDescription, { descriptionFadeIn, descriptionFadeOut } from "./createDescription"
 import createComposer from "./createComposer"
 import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
 
@@ -208,7 +208,7 @@ export default function SolarSystem() {
 
             if (!isDragging) {
                 if (intersects.length > 0) transitionToTarget(intersects[0].object)
-                else scene.remove(description)
+                else descriptionFadeOut(scene, description)
             }
         }
 
@@ -223,9 +223,6 @@ export default function SolarSystem() {
             const cameraOffset = 80
             const xDistance = Math.random() * 60 + 90
 
-            // Remove any already present descriptions
-            scene.remove(description)
-
             // Start camera transitions to target
             new TWEEN.Tween(camera.position)
                 .to({
@@ -234,10 +231,11 @@ export default function SolarSystem() {
                     z: direction.z + cameraOffset
                 }, 1000)
                 .easing(TWEEN.Easing.Quadratic.InOut)
-                .onStart(() =>
+                .onStart(() => {
                     // Disable orbit controls for transition duration
                     controls.enabled = false
-                )
+                    if (description) scene.remove(description)
+                })
                 .onUpdate(() =>
                     // Always look at target while in transition
                     controls.target = direction
@@ -246,12 +244,11 @@ export default function SolarSystem() {
                     // Enable orbit controls when transition ends
                     controls.enabled = true
                     controls.update()
+                    // Add targets description to scene
+                    description = createDescription(font, cameraTarget)
+                    descriptionFadeIn(scene, description)
                 })
                 .start()
-
-            // Add targets description to scene
-            description = createDescription(font, cameraTarget)
-            scene.add(description)
         }
 
         /**

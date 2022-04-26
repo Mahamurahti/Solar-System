@@ -31,10 +31,19 @@ export default function createDescription(font, target) {
     description.material.transparent = true
     description.material.opacity = 0
 
-    // Description is faded in upon creation
+    return description
+}
+
+export function descriptionFadeIn(scene, description) {
     new TWEEN.Tween(description.material)
         .to({ opacity: 1 }, 1000)
+        .onStart(() => scene.add(description))
         .start()
+}
 
-    return description
+export function descriptionFadeOut(scene, description) {
+    new TWEEN.Tween(description.material)
+        .to({ opacity: 0 }, 1000)
+        .onComplete(() => scene.remove(description))
+        .start()
 }
