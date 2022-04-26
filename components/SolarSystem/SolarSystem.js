@@ -240,7 +240,7 @@ export default function SolarSystem() {
                 )
                 .onUpdate(() =>
                     // Always look at target while in transition
-                    camera.lookAt(direction)
+                    controls.target = direction
                 )
                 .onComplete(() => {
                     // Enable orbit controls when transition ends
@@ -355,7 +355,7 @@ export default function SolarSystem() {
             const orbitSpeed = 0.1
 
             // Around own axis rotation
-            /*sun.body.rotateY(0.004)
+            sun.body.rotateY(0.004)
             mercury.body.rotateY(0.004)
             venus.body.rotateY(0.002)
             earth.body.rotateY(0.02)
@@ -375,12 +375,11 @@ export default function SolarSystem() {
             saturn.group.rotateY(0.0009 * orbitSpeed)
             uranus.group.rotateY(0.0004 * orbitSpeed)
             neptune.group.rotateY(0.0001 * orbitSpeed)
-            pluto.group.rotateY(0.00007 * orbitSpeed)*/
+            pluto.group.rotateY(0.00007 * orbitSpeed)
 
-            //earth.moonMesh.rotateY(0.02)
-            let matrix = new THREE.Matrix4();
-            //Rotate the matrix
-            matrix.makeRotationY(Math.PI / 2 * 0.01);
+            const matrix = new THREE.Matrix4();
+            // Rotate the matrix, which is applied to the moons
+            matrix.makeRotationY(Math.PI / -2 * 0.022);
             earth.moonMesh[0].position.applyMatrix4(matrix)
             jupiter.moonMesh[0].position.applyMatrix4(matrix)
             saturn.moonMesh[0].position.applyMatrix4(matrix)
