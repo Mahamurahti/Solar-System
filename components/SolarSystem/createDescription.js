@@ -35,9 +35,9 @@ export default function createDescription(font, target) {
 }
 
 export function descriptionFadeIn(scene, description) {
-    scene.add(description)
     new TWEEN.Tween(description.material)
         .to({ opacity: 1 }, 1000)
+        .onStart(() => scene.add(description))
         .start()
 }
 

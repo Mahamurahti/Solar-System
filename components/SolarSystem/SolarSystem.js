@@ -62,6 +62,7 @@ export default function SolarSystem() {
         controls.dampingFactor = .05
         controls.screenSpacePanning = true
         controls.maxDistance = 600
+        controls.maxPolarAngle = Math.PI / .2;
 
         /**
          * Ambient light to lighten up the scene artificially, meaning even the dark side of planets is slightly visible.
@@ -208,7 +209,7 @@ export default function SolarSystem() {
 
             if (!isDragging) {
                 if (intersects.length > 0) transitionToTarget(intersects[0].object)
-                else descriptionFadeOut(scene, description)
+                else if (description) descriptionFadeOut(scene, description)
             }
         }
 
