@@ -221,9 +221,10 @@ export default function SolarSystem() {
          * function the target of the camera will change to the clicked object and a tween animation will start.
          * In this animation the camera will move to specified location near the clicked object. y- and z-axis will
          * always have a certain amount of offset, but the x-axis will be random between 90 - 150 units. When the
-         * animation starts, orbit controls are disabled and any description in the scene is removed, during the
-         * animation the camera should always look at the target and when the animation is complete, the targets
-         * description will be created and faded in above the target.
+         * animation starts, orbit controls are disabled, during the animation the camera should always look at the
+         * target and any description in the scene is removed (prevents creations of multiple descriptions if spam
+         * clicking) and when the animation is complete, the targets description will be created and faded in above
+         * the target.
          */
         function transitionToTarget(target) {
             cameraTarget = target
@@ -244,12 +245,12 @@ export default function SolarSystem() {
                 .onStart(() => {
                     // Disable orbit controls for transition duration
                     controls.enabled = false
-                    if (description) scene.remove(description)
                 })
-                .onUpdate(() =>
+                .onUpdate(() => {
                     // Always look at target while in transition
                     controls.target = direction
-                )
+                    if (description) scene.remove(description)
+                })
                 .onComplete(() => {
                     // Enable orbit controls when transition ends
                     controls.enabled = true
@@ -320,7 +321,7 @@ export default function SolarSystem() {
         function updateDescription()  {
             if (description !== null) {
                 // Description is above the target
-                description.position.copy(controls.target).add(new THREE.Vector3(0,50,0))
+                description.position.copy(controls.target).add(new THREE.Vector3(0,80,0))
                 description.rotation.copy(camera.rotation)
             }
         }
@@ -361,6 +362,7 @@ export default function SolarSystem() {
             requestID = requestAnimationFrame(animate)
             TWEEN.update()
             const orbitSpeed = 0.1
+            const negateDirection = Math.PI / -2
 
             // Around own axis rotation
             sun.body.rotateY(0.004)
@@ -385,16 +387,15 @@ export default function SolarSystem() {
             neptune.group.rotateY(0.0001 * orbitSpeed)
             pluto.group.rotateY(0.00007 * orbitSpeed)
 
-            const matrix = new THREE.Matrix4();
             // Rotate the matrix, which is applied to the moons
-            matrix.makeRotationY(Math.PI / -2 * 0.022);
-            earth.moonMesh[0].position.applyMatrix4(matrix)
-            jupiter.moonMesh[0].position.applyMatrix4(matrix)
-            saturn.moonMesh[0].position.applyMatrix4(matrix)
-            saturn.moonMesh[1].position.applyMatrix4(matrix)
-            uranus.moonMesh[0].position.applyMatrix4(matrix)
-            uranus.moonMesh[1].position.applyMatrix4(matrix)
-            uranus.moonMesh[2].position.applyMatrix4(matrix)
+            const matrix = new THREE.Matrix4()
+            earth.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.012 * negateDirection))
+            jupiter.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.026 * negateDirection))
+            saturn.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection))
+            saturn.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.023 * negateDirection))
+            uranus.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.016 * negateDirection))
+            uranus.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.017 * negateDirection))
+            uranus.moonMesh[2].position.applyMatrix4(matrix.makeRotationY(0.018 * negateDirection))
 
             updateDescription()
             updateCamera()
