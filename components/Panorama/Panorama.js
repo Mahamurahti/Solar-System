@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { useEffect, useRef } from 'react'
+import getTexturePath from "../../helpers/getTexturePath";
 
 /**
  * Creates a Panorama of a star field.
@@ -25,6 +26,7 @@ export default function Panorama() {
         const HEIGHT = window.innerHeight
 
         const scene = new THREE.Scene()
+        scene.background = new THREE.CubeTextureLoader().load(getTexturePath("Cubemap"))
 
         const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 0.1, 1000)
 
@@ -37,14 +39,6 @@ export default function Panorama() {
         })
 
         mountRef.current?.appendChild(renderer.domElement)
-
-        const cubemap = 'cubemap/'
-        const images = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png']
-        const loader = new THREE.CubeTextureLoader()
-        /**
-         * Load textures from 'cubemap' folder, creating a cubemap for the background of the scene.
-         */
-        scene.background = loader.setPath(cubemap).load(images)
 
         // Credit: https://jsfiddle.net/0rdekspn/
         const mouse = new THREE.Vector2()
@@ -73,7 +67,6 @@ export default function Panorama() {
             camera.updateProjectionMatrix()
             renderer.setSize(window.innerWidth, window.innerHeight)
         }
-        // End of credit
 
         let requestID
 
@@ -82,20 +75,18 @@ export default function Panorama() {
          * Render the scene every second (needed even though the scene is static)
          */
         const animate = function () {
+            requestID = requestAnimationFrame(animate)
+
             target.x = (1 - mouse.x) * 0.001
             target.y = (1 - mouse.y) * 0.001
             camera.rotation.x += 0.01 * (target.y - camera.rotation.x)
             camera.rotation.y += 0.01 * (target.x - camera.rotation.y)
 
-            requestID = requestAnimationFrame(animate)
             renderer.render(scene, camera)
         }
 
         animate()
 
-        /**
-         * Remove the renderer from the mount.
-         */
         return () => {
             mountRef.current?.removeChild(renderer.domElement)
             // Bad practice to force context loss, but gets the job done
