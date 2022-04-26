@@ -324,9 +324,6 @@ export default function SolarSystem() {
             controls.update()
 
             direction.subVectors(camera.position, controls.target)
-            // Uncomment to enable zooming
-            //const cameraOffset = 80
-            //direction.normalize().multiplyScalar(cameraOffset)
             camera.position.copy(direction.add(controls.target))
         }
 
