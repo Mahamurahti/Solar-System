@@ -81,7 +81,6 @@
     flex: 1 0 49%;
 
     margin: var(--gap-small);
-    padding: var(--gap-small);
     text-align: center;
     border: 3px solid var(--white);
     outline: 0 solid var(--primary-color);
@@ -106,6 +105,11 @@
     color: var(--secondary-color);
     border-color: var(--secondary-color);
     outline-color: var(--secondary-color);
+}
+
+.card_text {
+    margin: 0;
+    padding: var(--gap-medium);
 }
 
 .arrow {

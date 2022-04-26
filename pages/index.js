@@ -39,7 +39,7 @@ export default function Home() {
           <div className={styles.card}>
             <Link href="/explore">
               <a>
-                <h2>
+                <h2 className={styles.card_text}>
                   <div className={styles.arrow}>&lt;</div>
                   {' '}Explore{' '}
                   <div className={styles.arrow}>&gt;</div>
@@ -52,7 +52,7 @@ export default function Home() {
           <div className={styles.card}>
             <Link href="/">
               <a>
-                <h2>
+                <h2 className={styles.card_text}>
                   <div className={styles.arrow}>&lt;</div>
                   {' '}About{' '}
                   <div className={styles.arrow}>&gt;</div>
@@ -64,7 +64,7 @@ export default function Home() {
           <div className={styles.card}>
             <Link href="/">
               <a>
-                <h2>
+                <h2 className={styles.card_text}>
                   <div className={styles.arrow}>&lt;</div>
                   {' '}Technologies{' '}
                   <div className={styles.arrow}>&gt;</div>
@@ -75,7 +75,7 @@ export default function Home() {
 
           <div className={styles.card}>
             <a href="https://bit.ly/3vs64pT" target="_blank" rel="noreferrer">
-              <h2>
+              <h2 className={styles.card_text}>
                 <div className={styles.arrow}>&lt;</div>
                 {' '}Surprise{' '}
                 <div className={styles.arrow}>&gt;</div>
