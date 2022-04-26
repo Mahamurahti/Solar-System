@@ -41,11 +41,17 @@ export default function SolarSystem() {
          * Renderer renders the scene through the camera.
          * @type {WebGLRenderer}
          */
-        const renderer = new THREE.WebGLRenderer({ antialias: true })
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
         renderer.setSize(WIDTH, HEIGHT)
         renderer.setPixelRatio(window.devicePixelRatio)
         renderer.shadowMap.enabled = true
         renderer.shadowMap.type = THREE.PCFSoftShadowMap
+        renderer.getContext().canvas.addEventListener('webglcontextlost', function(event) {
+            event.preventDefault()
+            cancelAnimationFrame(requestID)
+        })
+
+        mountRef.current?.appendChild(renderer.domElement)
 
         /**
          * Orbit controls gives access to orbit around the scene.
@@ -81,8 +87,6 @@ export default function SolarSystem() {
          * @type {EffectComposer}
          */
         const composer = createComposer(scene, camera, renderer, composerParams)
-        
-        mountRef.current?.appendChild(renderer.domElement)
 
         // Create all relevant celestial bodies in the solar system
         const sun = createCelestialBody("Sun", 16, getTexturePath("Sun"), 0)
@@ -131,7 +135,6 @@ export default function SolarSystem() {
             }
 
         }
-        console.log(saturn)
         document.addEventListener('pointermove', onPointerMove)
         document.addEventListener('pointerdown', onPointerDown)
         document.addEventListener('pointerup', onPointerUp)
@@ -338,6 +341,8 @@ export default function SolarSystem() {
             renderer.render(scene, camera)
         }
 
+        let requestID
+
         /**
          * animate animates the scene. Animation frames are requested and called continuously. Every celestial body
          * is rotated around their own axis and all other celestial bodies except the sun are rotated around the origin
@@ -345,7 +350,7 @@ export default function SolarSystem() {
          * rendered.
          */
         const animate = function () {
-            requestAnimationFrame(animate)
+            requestID = requestAnimationFrame(animate)
             TWEEN.update()
             const orbitSpeed = 0.1
 
@@ -392,7 +397,11 @@ export default function SolarSystem() {
 
         animate()
 
-        return () => mountRef.current?.removeChild(renderer.domElement)
+        return () => {
+            mountRef.current?.removeChild(renderer.domElement)
+            // Bad practice to force context loss, but gets the job done
+            renderer.forceContextLoss()
+        }
     }, [])
 
     return <div ref={mountRef} />

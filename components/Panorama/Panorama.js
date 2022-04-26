@@ -1,7 +1,6 @@
 import * as THREE from 'three'
 import { useEffect, useRef } from 'react'
 
-
 /**
  * Creates a Panorama of a star field.
  *
@@ -26,8 +25,18 @@ export default function Panorama() {
         const HEIGHT = window.innerHeight
 
         const scene = new THREE.Scene()
+
         const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 0.1, 1000)
+
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
+        renderer.setSize(WIDTH, HEIGHT)
+        renderer.setPixelRatio(window.devicePixelRatio)
+        renderer.getContext().canvas.addEventListener('webglcontextlost', function(event) {
+            event.preventDefault()
+            cancelAnimationFrame(requestID)
+        })
+
+        mountRef.current?.appendChild(renderer.domElement)
 
         const cubemap = 'cubemap/'
         const images = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png']
@@ -36,11 +45,6 @@ export default function Panorama() {
          * Load textures from 'cubemap' folder, creating a cubemap for the background of the scene.
          */
         scene.background = loader.setPath(cubemap).load(images)
-
-        renderer.setPixelRatio(window.devicePixelRatio)
-        renderer.setSize(WIDTH, HEIGHT)
-
-        mountRef.current?.appendChild(renderer.domElement)
 
         // Credit: https://jsfiddle.net/0rdekspn/
         const mouse = new THREE.Vector2()
@@ -71,6 +75,8 @@ export default function Panorama() {
         }
         // End of credit
 
+        let requestID
+
         /**
          * Rotate camera depending on the mouse position.
          * Render the scene every second (needed even though the scene is static)
@@ -81,7 +87,7 @@ export default function Panorama() {
             camera.rotation.x += 0.01 * (target.y - camera.rotation.x)
             camera.rotation.y += 0.01 * (target.x - camera.rotation.y)
 
-            requestAnimationFrame(animate)
+            requestID = requestAnimationFrame(animate)
             renderer.render(scene, camera)
         }
 
@@ -90,7 +96,11 @@ export default function Panorama() {
         /**
          * Remove the renderer from the mount.
          */
-        return () => mountRef.current?.removeChild(renderer.domElement)
+        return () => {
+            mountRef.current?.removeChild(renderer.domElement)
+            // Bad practice to force context loss, but gets the job done
+            renderer.forceContextLoss()
+        }
     }, [])
 
     return <div ref={mountRef} style={{position: "fixed"}}/>
