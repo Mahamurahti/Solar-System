@@ -1,6 +1,6 @@
-import * as THREE from "three";
-import createMoon from "./createMoon";
-import createRing from "./createRing";
+import * as THREE from "three"
+import createMoon from "./createMoon"
+import createRing from "./createRing"
 
 /**
  * Creates a celestial body.
@@ -37,7 +37,7 @@ export default function createCelestialBody(name, size, texture, position, ring,
         group.add(ringMesh)
     }
     if (moon) {
-        for (let i =0; i<moon.length; i++) {
+        for (let i = 0; i < moon.length; i++) {
             moonMesh[i] = createMoon(moon[i])
             body.add(moonMesh[i])
         }

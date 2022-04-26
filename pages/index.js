@@ -17,7 +17,7 @@ export default function Home() {
     <>
       <Head>
         <title>Solar System</title>
-        <meta name="description" content="Explore the solar system!" />
+        <meta name="description" content="Solar System exploration web application" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
