@@ -11,7 +11,7 @@ export default function Explore() {
     return (
         <>
             <Head>
-                <title>Explore Solar System</title>
+                <title>Explore the Solar System</title>
                 <meta name="description" content="Explore the Solar System" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
