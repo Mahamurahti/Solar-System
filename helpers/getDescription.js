@@ -142,7 +142,7 @@ export default function getDescription(name) {
                 "its atmosphere. It is referred to as one of the solar system's two ice giant planets. Being composed\n" +
                 "primarily of gases and liquids, it has no well-defined \"solid surface\". The planet orbits the Sun\n" +
                 "once every 164.8 years at an average distance of 4.5 billion km. It is named after the Roman god of\n" +
-                "the sea. Uranus' weather patterns are driven by the strongest sustained winds of any planet in the\n" +
+                "the sea. Neptune's weather patterns are driven by the strongest sustained winds of any planet in the\n" +
                 "Solar System, with recorded wind speeds as high as 2,100 km/h"
         case "Pluto":
             return "Pluto is a dwarf planet in the Kuiper belt, a ring of bodies beyond the orbit of Neptune. It was\n" +
