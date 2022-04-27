@@ -24,5 +24,8 @@ export default function createMoon(name, size, texture, offset, offsetAxis) {
     if (offsetAxis === 'x') moonMesh.position.x = offset
     if (offsetAxis === 'z') moonMesh.position.z = offset
 
+    moonMesh.receiveShadow = true
+    moonMesh.castShadow = true
+
     return moonMesh
 }

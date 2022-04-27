@@ -28,5 +28,8 @@ export default function createRing(name, radii, texture, position) {
     ringMesh.position.x = position
     ringMesh.rotation.x = -0.5 * Math.PI
 
+    ringMesh.receiveShadow = true
+    ringMesh.castShadow = true
+
     return ringMesh
 }
