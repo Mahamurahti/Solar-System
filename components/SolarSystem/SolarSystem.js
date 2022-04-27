@@ -32,11 +32,12 @@ export default function SolarSystem() {
         const scene = new THREE.Scene()
         scene.background = new THREE.CubeTextureLoader().load(Array(6).fill(getTexturePath("Stars")))
 
+        const renderDistance = 3000
         /**
          * Perspective camera for defining the "eyes" of the scene. We can look at the scene through the camera.
          * @type {PerspectiveCamera}
          */
-        const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, .1, 2000)
+        const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, .1, renderDistance)
         camera.position.set(-90, 140, 140)
 
         /**
@@ -81,7 +82,7 @@ export default function SolarSystem() {
          * is the light that makes other objects cast shadows.
          * @type {PointLight}
          */
-        const pointLight = new THREE.PointLight(0xFFFFFF, 1.9, 1500)
+        const pointLight = new THREE.PointLight(0xFFFFFF, .9, renderDistance)
         pointLight.castShadow = true
         const shadowResolution = 5120
         pointLight.shadow.mapSize.width = pointLight.shadow.mapSize.height = shadowResolution
