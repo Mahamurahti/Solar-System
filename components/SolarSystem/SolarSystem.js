@@ -9,6 +9,7 @@ import createDescription, { descriptionFadeIn, descriptionFadeOut } from "./crea
 import createComposer from "./createComposer"
 import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
 import styles from '../../styles/SolarSystem.module.sass'
+import Stats from "three/examples/jsm/libs/stats.module";
 
 /**
  * Creates a solar system that can be interacted with.
@@ -24,6 +25,9 @@ export default function SolarSystem() {
     useEffect(()  => {
         const WIDTH = window.innerWidth
         const HEIGHT = window.innerHeight
+
+        const stats = new Stats()
+        document.body.appendChild(stats.dom)
 
         /**
          * Scene for displaying 3D graphics. Scene has a cubemap of stars as background.
@@ -465,6 +469,7 @@ export default function SolarSystem() {
         const animate = function () {
             requestID = requestAnimationFrame(animate)
             TWEEN.update()
+            stats.update()
             const orbitSpeed = stopOrbit ? 0 : 0.05
             const negateDirection = Math.PI / -2
             const rotateSpeed = 0.2
