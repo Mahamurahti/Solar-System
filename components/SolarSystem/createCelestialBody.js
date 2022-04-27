@@ -26,8 +26,6 @@ export default function createCelestialBody(name, size, texture, position, moonP
         map: textureLoader.load(texture)
     })
     const body = new THREE.Mesh(bodyGeometry, bodyMaterial)
-    body.receiveShadow = true
-    body.castShadow = true
     const group = new THREE.Object3D()
 
     group.add(body)
@@ -61,6 +59,9 @@ export default function createCelestialBody(name, size, texture, position, moonP
 
     body.name = name
     body.position.x = position
+
+    body.receiveShadow = true
+    body.castShadow = true
 
     return { body, moons, ring, group }
 }
