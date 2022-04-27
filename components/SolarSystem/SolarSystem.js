@@ -100,9 +100,9 @@ export default function SolarSystem() {
             {size: 2.02, texture: getTexturePath("Titan"), name: "Titan", offset: -140, offsetAxis: 'x'}]
         const saturn = createCelestialBody("Saturn", 47, getTexturePath("Saturn").body, 625, saturnRing, saturnMoons)
         const uranusRing = { innerRadius: 20.3, outerRadius: 34.8, texture: getTexturePath("Uranus").ring }
-        const uranusMoons = [{size: 0.65, texture: getTexturePath("Ariel"), name: "Ariel", offset: -26, offsetAxis: 'x'},
-            {size: 0.741, texture: getTexturePath("Titania"), name: "Titania", offset: 25, offsetAxis: 'x'},
-            {size: 0.681, texture: getTexturePath("Oberon"), name: "Oberon", offset: 22, offsetAxis: 'z'}]
+        const uranusMoons = [{size: 0.65, texture: getTexturePath("Ariel"), name: "Ariel", offset: -39, offsetAxis: 'x'},
+            {size: 0.741, texture: getTexturePath("Titania"), name: "Titania", offset: 42, offsetAxis: 'x'},
+            {size: 0.681, texture: getTexturePath("Oberon"), name: "Oberon", offset: 37, offsetAxis: 'z'}]
         const uranus = createCelestialBody("Uranus", 20.3, getTexturePath("Uranus").body, -1060, uranusRing, uranusMoons)
         const neptune = createCelestialBody("Neptune", 19.4, getTexturePath("Neptune"), 1605)
         let plutoMoons = [{size: 1.4, texture: getTexturePath("Kharon"), name: "Kharon", offset: -5, offsetAxis: 'z'}]
@@ -255,7 +255,8 @@ export default function SolarSystem() {
          * @param event to change cameraTarget to correspond a pressed key
          */
         function onKeyDown(event) {
-            if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105)) {
+            const keys = [69, 73, 79, 80, 81, 82, 84, 85, 87, 89]
+            if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || keys.includes(event.keyCode)) {
                 let pressedKey = event.key
                 switch(pressedKey) {
                     case '1': transitionToTarget(sun.body)
@@ -277,6 +278,26 @@ export default function SolarSystem() {
                     case '9': transitionToTarget(neptune.body)
                         break
                     case '0': transitionToTarget(pluto.body)
+                        break
+                    case 'q': transitionToTarget(earth.moonMesh[0])
+                        break
+                    case 'w': transitionToTarget(mars.moonMesh[0])
+                        break
+                    case 'e': transitionToTarget(mars.moonMesh[1])
+                        break
+                    case 'r': transitionToTarget(jupiter.moonMesh[0])
+                        break
+                    case 't': transitionToTarget(saturn.moonMesh[0])
+                        break
+                    case 'y': transitionToTarget(saturn.moonMesh[1])
+                        break
+                    case 'u': transitionToTarget(uranus.moonMesh[0])
+                        break
+                    case 'i': transitionToTarget(uranus.moonMesh[1])
+                        break
+                    case 'o': transitionToTarget(uranus.moonMesh[2])
+                        break
+                    case 'p': transitionToTarget(pluto.moonMesh[0])
                         break
                 }
             }
@@ -348,18 +369,19 @@ export default function SolarSystem() {
             TWEEN.update()
             const orbitSpeed = 0.1
             const negateDirection = Math.PI / -2
+            const rotateSpeed = 0.2
 
             // Around own axis rotation
-            sun.body.rotateY(0.004)
-            mercury.body.rotateY(0.004)
-            venus.body.rotateY(0.002)
-            earth.body.rotateY(0.02)
-            mars.body.rotateY(0.018)
-            jupiter.body.rotateY(0.04)
-            saturn.body.rotateY(0.038)
-            uranus.body.rotateY(0.03)
-            neptune.body.rotateY(0.032)
-            pluto.body.rotateY(0.008)
+            sun.body.rotateY(0.004 * rotateSpeed)
+            mercury.body.rotateY(0.004 * rotateSpeed)
+            venus.body.rotateY(0.002 * rotateSpeed)
+            earth.body.rotateY(0.02 * rotateSpeed)
+            mars.body.rotateY(0.018 * rotateSpeed)
+            jupiter.body.rotateY(0.04 * rotateSpeed)
+            saturn.body.rotateY(0.038 * rotateSpeed)
+            uranus.body.rotateY(0.03 * rotateSpeed)
+            neptune.body.rotateY(0.032 * rotateSpeed)
+            pluto.body.rotateY(0.008 * rotateSpeed)
 
             // Around sun rotation
             mercury.group.rotateY(0.04 * orbitSpeed)
@@ -374,16 +396,16 @@ export default function SolarSystem() {
 
             // Rotate the matrix, which is applied to the moons
             const matrix = new THREE.Matrix4()
-            earth.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.012 * negateDirection))
-            mars.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection))
-            mars.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.023 * negateDirection))
-            jupiter.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.026 * negateDirection))
-            saturn.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection))
-            saturn.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.023 * negateDirection))
-            uranus.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.016 * negateDirection))
-            uranus.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.017 * negateDirection))
-            uranus.moonMesh[2].position.applyMatrix4(matrix.makeRotationY(0.018 * negateDirection))
-            pluto.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection))
+            earth.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.012 * negateDirection * rotateSpeed))
+            mars.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection * rotateSpeed))
+            mars.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.023 * negateDirection * rotateSpeed))
+            jupiter.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.026 * negateDirection * rotateSpeed))
+            saturn.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection * rotateSpeed))
+            saturn.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.025 * negateDirection * rotateSpeed))
+            uranus.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.016 * negateDirection * rotateSpeed))
+            uranus.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.017 * negateDirection * rotateSpeed))
+            uranus.moonMesh[2].position.applyMatrix4(matrix.makeRotationY(0.018 * negateDirection * rotateSpeed))
+            pluto.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection * rotateSpeed))
 
 
             updateDescription()
