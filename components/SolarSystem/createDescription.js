@@ -13,7 +13,7 @@ import { TWEEN } from "three/examples/jsm/libs/tween.module.min";
 export default function createDescription(font, target) {
     const fontMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 })
     const message = getDescription(target.name)
-    const shapes = font.generateShapes(message, 4)
+    const shapes = font.generateShapes(message, 6)
 
     const geometry = new THREE.ShapeGeometry(shapes)
     geometry.computeBoundingBox()

@@ -121,7 +121,7 @@ export default function SolarSystem() {
         const uranusMoons = [ariel, titania, oberon]
         const uranus = createCelestialBody("Uranus", 20.3, getTexturePath("Uranus").body, -1060, uranusMoons, uranusRing)
         const neptune = createCelestialBody("Neptune", 19.4, getTexturePath("Neptune"), 1605)
-        const kharon = {size: 1.4, texture: getTexturePath("Kharon"), name: "Kharon", offset: -5, offsetAxis: 'z'}
+        const kharon = { name: "Kharon", size: 1.4, texture: getTexturePath("Kharon"), offset: -5, offsetAxis: 'z' }
         const plutoMoons = [kharon]
         const pluto = createCelestialBody("Pluto", 2.8, getTexturePath("Pluto"), -2050, plutoMoons)
 
@@ -241,8 +241,8 @@ export default function SolarSystem() {
             const direction = new THREE.Vector3()
             cameraTarget.getWorldPosition(direction)
 
-            const cameraOffset = 80
-            const xDistance = Math.random() * 60 + 90
+            const cameraOffset = 100
+            const xDistance = Math.random() * 20 + 250
 
             // Start camera transitions to target
             new TWEEN.Tween(camera.position)
@@ -288,7 +288,8 @@ export default function SolarSystem() {
             // Is the pressed number from keyboard numbers or numpad numbers
 
             const keycode = event.keyCode
-            if (keycodes.isKeyboardNumber(keycode) ||
+            if (
+                keycodes.isKeyboardNumber(keycode) ||
                 keycodes.isNumpadNumber(keycode) ||
                 keycodes.isSpace(keycode) ||
                 keycodes.isQWERTYUIOP(keycode)
@@ -410,7 +411,9 @@ export default function SolarSystem() {
         function updateDescription()  {
             if (description !== null) {
                 // Description is above the target
-                description.position.copy(controls.target).add(new THREE.Vector3(0,160,0))
+                const radius = cameraTarget.geometry.parameters.radius
+                const yOffset = radius > 40 ? 180 : 160
+                description.position.copy(controls.target).add(new THREE.Vector3(0, yOffset, 0))
                 description.rotation.copy(camera.rotation)
             }
         }
@@ -455,7 +458,7 @@ export default function SolarSystem() {
         const animate = function () {
             requestID = requestAnimationFrame(animate)
             TWEEN.update()
-            const orbitSpeed = 0.1
+            const orbitSpeed = 0.05
             const negateDirection = Math.PI / -2
             const rotateSpeed = 0.2
 
