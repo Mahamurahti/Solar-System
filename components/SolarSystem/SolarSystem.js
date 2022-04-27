@@ -349,7 +349,7 @@ export default function SolarSystem() {
                         break
                     case 'e':
                         transitionToTarget(mars.moons[1])
-                        showToast(mars.moons[0].name.toUpperCase())
+                        showToast(mars.moons[1].name.toUpperCase())
                         break
                     case 'r':
                         transitionToTarget(jupiter.moons[0])
