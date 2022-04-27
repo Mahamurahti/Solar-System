@@ -43,7 +43,7 @@ export default function getDescription(name) {
         case "Mars":
             return "Mars is the fourth planet from the Sun and the second-smallest planet in the Solar System, being\n" +
                 "larger than only Mercury. In English, Mars carries the name of the Roman god of war. Mars' red\n" +
-                "appearance is caused by the iron oxide prevalent on Mars's surface, which gives it a striking\n" +
+                "appearance is caused by the iron oxide prevalent on Mars' surface, which gives it a striking\n" +
                 "reddish appearance in the sky. Mars is a terrestrial planet with a thin atmosphere, with surface\n" +
                 "features such as impact craters, valleys, dunes, and polar ice caps. The days and seasons on Mars are\n" +
                 "comparable to those of Earth as the planets have a similar rotation period and tilt of the rotational\n" +
@@ -131,7 +131,7 @@ export default function getDescription(name) {
             return "Oberon is the outermost major moon of the planet Uranus. It is the second-largest and second most\n" +
                 "massive of the Uranian moons, and the ninth most massive moon in the Solar System. Oberon is named\n" +
                 "after the mythical king of the fairies who appears as a character in Shakespeare's A Midsummer Night's\n" +
-                "Dream. Its orbit lies partially outside Uranus's magnetosphere. It is likely that Oberon formed from\n" +
+                "Dream. Its orbit lies partially outside Uranus' magnetosphere. It is likely that Oberon formed from\n" +
                 "the accretion disk that surrounded Uranus just after the planet's formation. It is likely that many\n" +
                 "other moons of Uranus were also formed this way."
         case "Neptune":
@@ -149,8 +149,8 @@ export default function getDescription(name) {
                 "the first object discovered in the Kuiper belt and remains the largest known body in that area. After\n" +
                 "Pluto was discovered in 1930, it was declared the ninth planet from the Sun. However, beginning in\n" +
                 "the 1990s, its status as a planet was questioned following the discovery of several objects of similar\n" +
-                "size in the Kuiper belt leading the Pluto to being reclassified as a dwarf planet in 2006. Pluto's\n" +
-                "orbit is 4.5 to 7.3 billion km from the Sun and therefore Pluto comes periodically close to the Sun\n" +
+                "size in the Kuiper belt leading Pluto to being reclassified as a dwarf planet in 2006. Pluto's\n" +
+                "orbit is 4.5 to 7.3 billion km from the Sun and therefore Pluto comes periodically closer to the Sun\n" +
                 "than Neptune. Light takes 5.5 hours to reach Pluto at its average distance (5.91 billion km)."
     }
 }
