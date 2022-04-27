@@ -98,8 +98,8 @@ export default function SolarSystem() {
         const venus = createCelestialBody("Venus", 4.75, getTexturePath("Venus"), 136)
         const earthMoon = [{size: 1.35, texture: getTexturePath("Moon"), name: "Moon", offset: 7, offsetAxis: 'x'}]
         const earth = createCelestialBody("Earth", 5, getTexturePath("Earth"), -150, null, earthMoon)
-        let marsMoons = [{size: 0.25, texture: getTexturePath("Phobos"), offset: 4, offsetAxis: 'x'},
-        {size: 0.125, texture: getTexturePath("Deimos"), offset: -6, offsetAxis: 'x'}]
+        let marsMoons = [{size: 0.25, texture: getTexturePath("Phobos"), name: "Phobos", offset: 4, offsetAxis: 'x'},
+        {size: 0.125, texture: getTexturePath("Deimos"), name: "Deimos", offset: -6, offsetAxis: 'x'}]
         const mars = createCelestialBody("Mars", 2.66, getTexturePath("Mars"), 175, null, marsMoons)
         const jupiterMoons = [{size: 1.25, texture: getTexturePath("Europa"), name: "Europa", offset: -156, offsetAxis: 'x'}]
         const jupiter = createCelestialBody("Jupiter", 56, getTexturePath("Jupiter"), -360, null, jupiterMoons)
