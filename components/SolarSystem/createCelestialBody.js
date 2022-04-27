@@ -3,35 +3,34 @@ import createMoon from "./createMoon"
 import createRing from "./createRing"
 
 /**
- * Creates a celestial body, adds ring and moon by callig their own function and randomizes starting position in solar system.
+ * Creates a celestial body. Accompanies celestial body with a ring and moons, if the celestial body has either or both.
+ * Final positions of celestial bodies is random.
  *
  * @author Timo Tamminiemi
  * @param name of the celestial body
  * @param size of the celestial body
  * @param texture of the celestial body
  * @param position of the celestial body in the solar system
- * @param ring of the celestial body (optional)
- * @param moon of the celestial body (optional)
- * @returns {{body: Mesh, group: Object3D}}
+ * @param moonParams of the celestial body (optional)
+ * @param ringParams of the celestial body (optional)
+ * @returns {{body: Mesh, moons: [], ring: Mesh, group: Object3D}}
  */
-export default function createCelestialBody(name, size, texture, position, ring, moon) {
+export default function createCelestialBody(name, size, texture, position, moonParams, ringParams) {
 
     const textureLoader = new THREE.TextureLoader()
 
-    let moonMesh = []
-    let ringMesh
+    let moons = []
+    let ring
+
     const bodyGeometry = new THREE.SphereGeometry(size, 128, 128)
     const bodyMaterial = new THREE.MeshPhongMaterial({
         map: textureLoader.load(texture)
     })
     const body = new THREE.Mesh(bodyGeometry, bodyMaterial)
-    body.receiveShadow = true
-    body.castShadow = true
     const group = new THREE.Object3D()
 
     group.add(body)
 
-    body.name = name
     let ringPosition
     let axis = Math.floor(Math.random() * 2)  === 0
     if(axis) {
@@ -42,18 +41,37 @@ export default function createCelestialBody(name, size, texture, position, ring,
         ringPosition = {x: body.position.x, y: body.position.y, z: body.position.z}
     }
 
-    if (ring) {
-        ringMesh = createRing(ring, ringPosition)
-        if (body.name === 'Uranus') {
-            ringMesh.rotation.y = 90
+    if (ringParams) {
+        const radii = {
+            innerRadius: ringParams.innerRadius,
+            outerRadius: ringParams.outerRadius
         }
-        group.add(ringMesh)
+        ring = createRing(
+            name,
+            radii,
+            ringParams.texture,
+            ringPosition
+        )
+        group.add(ring)
     }
-    if (moon) {
-        for (let i = 0; i < moon.length; i++) {
-            moonMesh[i] = createMoon(moon[i])
-            body.add(moonMesh[i])
+    if (moonParams) {
+        for (const param of moonParams) {
+            const moon = createMoon(
+                param.name,
+                param.size,
+                param.texture,
+                param.offset,
+                param.offsetAxis
+            )
+            moons.push(moon)
+            body.add(moon)
         }
     }
-    return { body, group, moonMesh }
+
+    body.name = name
+
+    body.receiveShadow = true
+    body.castShadow = true
+
+    return { body, moons, ring, group }
 }

@@ -3,10 +3,12 @@ import { useEffect, useRef } from 'react'
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader"
 import getTexturePath from "../../helpers/getTexturePath"
+import * as keycodes from "../../helpers/getKeyCodes"
 import createCelestialBody from "./createCelestialBody"
 import createDescription, { descriptionFadeIn, descriptionFadeOut } from "./createDescription"
 import createComposer from "./createComposer"
 import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
+import styles from '../../styles/SolarSystem.module.sass'
 
 /**
  * Creates a solar system that can be interacted with.
@@ -93,28 +95,35 @@ export default function SolarSystem() {
         const composer = createComposer(scene, camera, renderer, composerParams)
 
         // Create all relevant celestial bodies in the solar system
+
         const sun = createCelestialBody("Sun", 100, getTexturePath("Sun"), 0)
         const mercury = createCelestialBody("Mercury", 1.8, getTexturePath("Mercury"), -119)
         const venus = createCelestialBody("Venus", 4.75, getTexturePath("Venus"), 136)
-        const earthMoon = [{size: 1.35, texture: getTexturePath("Moon"), name: "Moon", offset: 7, offsetAxis: 'x'}]
-        const earth = createCelestialBody("Earth", 5, getTexturePath("Earth"), -150, null, earthMoon)
-        let marsMoons = [{size: 0.25, texture: getTexturePath("Phobos"), name: "Phobos", offset: 4, offsetAxis: 'x'},
-        {size: 0.125, texture: getTexturePath("Deimos"), name: "Deimos", offset: -6, offsetAxis: 'x'}]
-        const mars = createCelestialBody("Mars", 2.66, getTexturePath("Mars"), 175, null, marsMoons)
-        const jupiterMoons = [{size: 1.25, texture: getTexturePath("Europa"), name: "Europa", offset: -156, offsetAxis: 'x'}]
-        const jupiter = createCelestialBody("Jupiter", 56, getTexturePath("Jupiter"), -360, null, jupiterMoons)
+        const moon = { name: "Moon", size: 1.35, texture: getTexturePath("Moon"), offset: 7, offsetAxis: 'x'}
+        const earthMoons = [moon]
+        const earth = createCelestialBody("Earth", 5, getTexturePath("Earth"), -150, earthMoons)
+        const phobos = { name: "Phobos", size: 0.25, texture: getTexturePath("Phobos"), offset: 4, offsetAxis: 'x' }
+        const deimos = { name: "Deimos", size: 0.125, texture: getTexturePath("Deimos"), offset: -6, offsetAxis: 'x' }
+        const marsMoons = [phobos, deimos]
+        const mars = createCelestialBody("Mars", 2.66, getTexturePath("Mars"), 175, marsMoons)
+        const europa = { name: "Europa", size: 1.25, texture: getTexturePath("Europa"), offset: -156, offsetAxis: 'x' }
+        const jupiterMoons = [europa]
+        const jupiter = createCelestialBody("Jupiter", 56, getTexturePath("Jupiter"), -360, jupiterMoons)
         const saturnRing = { innerRadius: 47, outerRadius: 94, texture: getTexturePath("Saturn").ring }
-        const saturnMoons =  [{size: 0.65, texture: getTexturePath("Enceladus"), name: "Enceladus", offset: 100, offsetAxis: 'x'},
-            {size: 2.02, texture: getTexturePath("Titan"), name: "Titan", offset: -140, offsetAxis: 'x'}]
-        const saturn = createCelestialBody("Saturn", 47, getTexturePath("Saturn").body, 625, saturnRing, saturnMoons)
+        const enceladus = { name: "Enceladus", size: 0.65, texture: getTexturePath("Enceladus"), offset: 100, offsetAxis: 'x'}
+        const titan = { name: "Titan", size: 2.02, texture: getTexturePath("Titan"), offset: -140, offsetAxis: 'x' }
+        const saturnMoons =  [enceladus, titan]
+        const saturn = createCelestialBody("Saturn", 47, getTexturePath("Saturn").body, 625, saturnMoons, saturnRing)
         const uranusRing = { innerRadius: 20.3, outerRadius: 34.8, texture: getTexturePath("Uranus").ring }
-        const uranusMoons = [{size: 0.65, texture: getTexturePath("Ariel"), name: "Ariel", offset: -39, offsetAxis: 'x'},
-            {size: 0.741, texture: getTexturePath("Titania"), name: "Titania", offset: 42, offsetAxis: 'x'},
-            {size: 0.681, texture: getTexturePath("Oberon"), name: "Oberon", offset: 37, offsetAxis: 'z'}]
-        const uranus = createCelestialBody("Uranus", 20.3, getTexturePath("Uranus").body, -1060, uranusRing, uranusMoons)
+        const ariel = { name: "Ariel", size: 0.65, texture: getTexturePath("Ariel"), offset: -39, offsetAxis: 'x' }
+        const titania = { name: "Titania", size: 0.741, texture: getTexturePath("Titania"), offset: 42, offsetAxis: 'x' }
+        const oberon = { name: "Oberon", size: 0.681, texture: getTexturePath("Oberon"), offset: 37, offsetAxis: 'z' }
+        const uranusMoons = [ariel, titania, oberon]
+        const uranus = createCelestialBody("Uranus", 20.3, getTexturePath("Uranus").body, -1060, uranusMoons, uranusRing)
         const neptune = createCelestialBody("Neptune", 19.4, getTexturePath("Neptune"), 1605)
-        let plutoMoons = [{size: 1.4, texture: getTexturePath("Kharon"), name: "Kharon", offset: -5, offsetAxis: 'z'}]
-        const pluto = createCelestialBody("Pluto", 2.8, getTexturePath("Pluto"), -2050, null, plutoMoons)
+        const kharon = {size: 1.4, texture: getTexturePath("Kharon"), name: "Kharon", offset: -5, offsetAxis: 'z'}
+        const plutoMoons = [kharon]
+        const pluto = createCelestialBody("Pluto", 2.8, getTexturePath("Pluto"), -2050, plutoMoons)
 
         // Sun has default emission to make bloom effect
         sun.body.material.emissive.setHex(0xffd99c)
@@ -128,16 +137,14 @@ export default function SolarSystem() {
         const interactable = []
 
         for (const object of objects) {
-            // Add group to scene (celestial body, moons and ring if the body has one)
+            // Add group to scene (celestial body, moons of celestial body and ring if it has one)
             scene.add(object.group)
-            // Only the body and moons are currently interactable (ring is not interactable)
+            // Add body of celestial body to be interactable
             interactable.push(object.body)
-            if(object.moonMesh) {
-                for (let i =0; i<object.moonMesh.length; i++) {
-                    interactable.push(object.moonMesh[i])
-                }
-            }
-
+            // If the celestial body has moons, add all moon to be interactable
+            if(object.moons) for (const moon of object.moons) interactable.push(moon)
+            // If the celestial body has a ring, add it to be interactable
+            if(object.ring) interactable.push(object.ring)
         }
 
         document.addEventListener('pointermove', onPointerMove)
@@ -227,6 +234,9 @@ export default function SolarSystem() {
          * the target.
          */
         function transitionToTarget(target) {
+            // Cancel all other animations before starting transition
+            TWEEN.removeAll()
+
             cameraTarget = target
             const direction = new THREE.Vector3()
             cameraTarget.getWorldPosition(direction)
@@ -262,6 +272,13 @@ export default function SolarSystem() {
                 .start()
         }
 
+        const toast = document.querySelector('p')
+        function showToast(message) {
+            toast.innerHTML = message
+            toast.style.opacity = '1'
+            setTimeout(() => toast.style.opacity = '0', 1000)
+        }
+
         /**
          * When number is pressed on keyboard a transition to the specified target will occur.
          * The if statement check that the pressed key must be either from keyboard numbers or numeric keypad keys.
@@ -270,49 +287,99 @@ export default function SolarSystem() {
         function onKeyDown(event) {
             // Is the pressed number from keyboard numbers or numpad numbers
 
-            const keys = [69, 73, 79, 80, 81, 82, 84, 85, 87, 89]
-            if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || keys.includes(event.keyCode)) {
-                let pressedKey = event.key
+            const keycode = event.keyCode
+            if (keycodes.isKeyboardNumber(keycode) ||
+                keycodes.isNumpadNumber(keycode) ||
+                keycodes.isSpace(keycode) ||
+                keycodes.isQWERTYUIOP(keycode)
+            ) {
+                const pressedKey = event.key
                 switch(pressedKey) {
-                    case '1': transitionToTarget(sun.body)
+                    case '1':
+                        transitionToTarget(sun.body)
+                        showToast(sun.body.name.toUpperCase())
                         break
-                    case '2': transitionToTarget(mercury.body)
+                    case '2':
+                        transitionToTarget(mercury.body)
+                        showToast(mercury.body.name.toUpperCase())
                         break
-                    case '3': transitionToTarget(venus.body)
+                    case '3':
+                        transitionToTarget(venus.body)
+                        showToast(venus.body.name.toUpperCase())
                         break
-                    case '4': transitionToTarget(earth.body)
+                    case '4':
+                        transitionToTarget(earth.body)
+                        showToast(earth.body.name.toUpperCase())
                         break
-                    case '5': transitionToTarget(mars.body)
+                    case '5':
+                        transitionToTarget(mars.body)
+                        showToast(mars.body.name.toUpperCase())
                         break
-                    case '6': transitionToTarget(jupiter.body)
+                    case '6':
+                        transitionToTarget(jupiter.body)
+                        showToast(jupiter.body.name.toUpperCase())
                         break
-                    case '7': transitionToTarget(saturn.body)
+                    case '7':
+                        transitionToTarget(saturn.body)
+                        showToast(saturn.body.name.toUpperCase())
                         break
-                    case '8': transitionToTarget(uranus.body)
+                    case '8':
+                        transitionToTarget(uranus.body)
+                        showToast(uranus.body.name.toUpperCase())
                         break
-                    case '9': transitionToTarget(neptune.body)
+                    case '9':
+                        transitionToTarget(neptune.body)
+                        showToast(neptune.body.name.toUpperCase())
                         break
-                    case '0': transitionToTarget(pluto.body)
+                    case '0':
+                        transitionToTarget(pluto.body)
+                        showToast(pluto.body.name.toUpperCase())
                         break
-                    case 'q': transitionToTarget(earth.moonMesh[0])
+                    case 'q':
+                        transitionToTarget(earth.moons[0])
+                        showToast(earth.moons[0].name.toUpperCase())
                         break
-                    case 'w': transitionToTarget(mars.moonMesh[0])
+                    case 'w':
+                        transitionToTarget(mars.moons[0])
+                        showToast(mars.moons[0].name.toUpperCase())
                         break
-                    case 'e': transitionToTarget(mars.moonMesh[1])
+                    case 'e':
+                        transitionToTarget(mars.moons[1])
+                        showToast(mars.moons[0].name.toUpperCase())
                         break
-                    case 'r': transitionToTarget(jupiter.moonMesh[0])
+                    case 'r':
+                        transitionToTarget(jupiter.moons[0])
+                        showToast(jupiter.moons[0].name.toUpperCase())
                         break
-                    case 't': transitionToTarget(saturn.moonMesh[0])
+                    case 't':
+                        transitionToTarget(saturn.moons[0])
+                        showToast(saturn.moons[0].name.toUpperCase())
                         break
-                    case 'y': transitionToTarget(saturn.moonMesh[1])
+                    case 'y':
+                        transitionToTarget(saturn.moons[1])
+                        showToast(saturn.moons[1].name.toUpperCase())
                         break
-                    case 'u': transitionToTarget(uranus.moonMesh[0])
+                    case 'u':
+                        transitionToTarget(uranus.moons[0])
+                        showToast(uranus.moons[0].name.toUpperCase())
                         break
-                    case 'i': transitionToTarget(uranus.moonMesh[1])
+                    case 'i':
+                        transitionToTarget(uranus.moons[1])
+                        showToast(uranus.moons[1].name.toUpperCase())
                         break
-                    case 'o': transitionToTarget(uranus.moonMesh[2])
+                    case 'o':
+                        transitionToTarget(uranus.moons[2])
+                        showToast(uranus.moons[2].name.toUpperCase())
                         break
-                    case 'p': transitionToTarget(pluto.moonMesh[0])
+                    case 'p':
+                        transitionToTarget(pluto.moons[0])
+                        showToast(pluto.moons[0].name.toUpperCase())
+                        break
+                    case ' ':
+                        // Pressing space will lock the zoomLevel. This way the user can easily follow the celestial body
+                        lockZoom = !lockZoom
+                        if (lockZoom) zoomLevel = controls.target.distanceTo(controls.object.position)
+                        showToast(lockZoom ? "CAMERA LOCKED" : "CAMERA UNLOCKED")
                         break
                 }
             }
@@ -343,10 +410,12 @@ export default function SolarSystem() {
         function updateDescription()  {
             if (description !== null) {
                 // Description is above the target
-                description.position.copy(controls.target).add(new THREE.Vector3(0,80,0))
+                description.position.copy(controls.target).add(new THREE.Vector3(0,160,0))
                 description.rotation.copy(camera.rotation)
             }
         }
+
+        let lockZoom = false, zoomLevel
 
         /**
          * updateCamera tracks the camera target. This is done via orbit controls.
@@ -357,6 +426,9 @@ export default function SolarSystem() {
 
             const direction = new THREE.Vector3()
             direction.subVectors(camera.position, controls.target)
+
+            if (lockZoom) direction.normalize().multiplyScalar(zoomLevel)
+
             camera.position.copy(direction.add(controls.target))
         }
 
@@ -412,16 +484,16 @@ export default function SolarSystem() {
 
             // Rotate the matrix, which is applied to the moons
             const matrix = new THREE.Matrix4()
-            earth.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.012 * negateDirection * rotateSpeed))
-            mars.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection * rotateSpeed))
-            mars.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.023 * negateDirection * rotateSpeed))
-            jupiter.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.026 * negateDirection * rotateSpeed))
-            saturn.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection * rotateSpeed))
-            saturn.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.025 * negateDirection * rotateSpeed))
-            uranus.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.016 * negateDirection * rotateSpeed))
-            uranus.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.017 * negateDirection * rotateSpeed))
-            uranus.moonMesh[2].position.applyMatrix4(matrix.makeRotationY(0.018 * negateDirection * rotateSpeed))
-            pluto.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection * rotateSpeed))
+            earth.moons[0].position.applyMatrix4(matrix.makeRotationY(0.012 * negateDirection * rotateSpeed))
+            mars.moons[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection * rotateSpeed))
+            mars.moons[1].position.applyMatrix4(matrix.makeRotationY(0.023 * negateDirection * rotateSpeed))
+            jupiter.moons[0].position.applyMatrix4(matrix.makeRotationY(0.026 * negateDirection * rotateSpeed))
+            saturn.moons[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection * rotateSpeed))
+            saturn.moons[1].position.applyMatrix4(matrix.makeRotationY(0.025 * negateDirection * rotateSpeed))
+            uranus.moons[0].position.applyMatrix4(matrix.makeRotationY(0.016 * negateDirection * rotateSpeed))
+            uranus.moons[1].position.applyMatrix4(matrix.makeRotationY(0.017 * negateDirection * rotateSpeed))
+            uranus.moons[2].position.applyMatrix4(matrix.makeRotationY(0.018 * negateDirection * rotateSpeed))
+            pluto.moons[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection * rotateSpeed))
 
             updateDescription()
             updateCamera()
@@ -430,6 +502,7 @@ export default function SolarSystem() {
         }
 
         animate()
+        console.log(toast)
 
         return () => {
             mountRef.current?.removeChild(renderer.domElement)
@@ -438,5 +511,10 @@ export default function SolarSystem() {
         }
     }, [])
 
-    return <div ref={mountRef} />
+    return (
+        <>
+            <p className={styles.toast}>TOAST</p>
+            <div ref={mountRef} />
+        </>
+    )
 }

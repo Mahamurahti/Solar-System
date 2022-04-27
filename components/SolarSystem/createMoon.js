@@ -1,25 +1,31 @@
 import * as THREE from 'three'
 
 /**
- * Creates moon object for planet
- * @param moonParams parametres given
+ * Creates a moon object for a celestial body
+ *
+ * @author Timo Tamminiemi
+ * @param name of the moon
+ * @param size of the moon
+ * @param texture of the moon
+ * @param offset of the moon from the parent celestial body
+ * @param offsetAxis offset from which axis
  * @returns {Mesh}
  */
-export default function createMoon(moonParams) {
-    let moonMesh
+export default function createMoon(name, size, texture, offset, offsetAxis) {
     const textureLoader = new THREE.TextureLoader()
-    const moonGeometry = new THREE.SphereGeometry(moonParams.size, 30,30)
+
+    const moonGeometry = new THREE.SphereGeometry(size, 64,64)
     const moonMaterial = new THREE.MeshPhongMaterial({
-        map: textureLoader.load(moonParams.texture),
+        map: textureLoader.load(texture),
     })
-    moonMesh = new THREE.Mesh(moonGeometry, moonMaterial)
-    moonMesh.name = moonParams.name
-    const axisOffset = moonParams.offsetAxis
-    if (axisOffset === 'x') {
-        moonMesh.position.x = moonParams.offset
-    } if (axisOffset === 'z') {
-        moonMesh.position.z = moonParams.offset
-    }
+    const moonMesh = new THREE.Mesh(moonGeometry, moonMaterial)
+    moonMesh.name = name
+
+    if (offsetAxis === 'x') moonMesh.position.x = offset
+    if (offsetAxis === 'z') moonMesh.position.z = offset
+
+    moonMesh.receiveShadow = true
+    moonMesh.castShadow = true
 
     return moonMesh
 }

@@ -43,7 +43,7 @@ export default function getDescription(name) {
         case "Mars":
             return "Mars is the fourth planet from the Sun and the second-smallest planet in the Solar System, being\n" +
                 "larger than only Mercury. In English, Mars carries the name of the Roman god of war. Mars' red\n" +
-                "appearance is caused by the iron oxide prevalent on Mars's surface, which gives it a striking\n" +
+                "appearance is caused by the iron oxide prevalent on Mars' surface, which gives it a striking\n" +
                 "reddish appearance in the sky. Mars is a terrestrial planet with a thin atmosphere, with surface\n" +
                 "features such as impact craters, valleys, dunes, and polar ice caps. The days and seasons on Mars are\n" +
                 "comparable to those of Earth as the planets have a similar rotation period and tilt of the rotational\n" +
@@ -76,6 +76,14 @@ export default function getDescription(name) {
                 "planet's most notable feature is its prominent ring system, which is composed mainly of ice\n" +
                 "particles, with a smaller amount of rocky debris and dust. At least 83 moons are known to orbit\n" +
                 "Saturn, of which 53 are officially named; this does not include the hundreds of moonlets in its rings."
+        case "SaturnRing":
+            return "The rings of Saturn are the most extensive ring system of any planet in the Solar System. They\n" +
+                "consist of countless small particles, ranging in size from micrometers to meters, that orbit around\n" +
+                "Saturn. The ring particles are made almost entirely of water ice, with a trace component of rocky\n" +
+                "material. Saturn's rings make up an enormous, complex structure. From edge-to-edge, the ring system\n" +
+                "would not even fit in the distance between Earth and the Moon. The seven main rings are labeled in\n" +
+                "the order in which they were discovered. From the planet outward, they are D, C, B, A, F, G and E.\n" +
+                "The major rings have a diameter of 270,000 km, yet their thickness does not exceed 100 metres"
         case "Enceladus":
             return "Enceladus is the sixth-largest moon of Saturn. It is about 500 kilometers in diameter, about a\n" +
                 "tenth of that of Saturn's largest moon, Titan. Enceladus is mostly covered by fresh, clean ice,\n" +
@@ -102,6 +110,13 @@ export default function getDescription(name) {
                 "giants, ice giants also lack a well defined \"solid surface\". Uranus has the coldest planetary atmosphere\n" +
                 "in the Solar System, with a minimum temperature of −224 °C. Like the other giant planets, Uranus has\n" +
                 "a ring system, a magnetosphere, and numerous moons."
+        case "UranusRing":
+            return "The rings of Uranus are intermediate in complexity between the more extensive set around Saturn\n" +
+                "and the simpler systems around Jupiter and Neptune. The rings of Uranus are thought to be relatively\n" +
+                "young, and not more than 600 million years old. The Uranian ring system probably originated from the\n" +
+                "collisional fragmentation of several moons that once existed around the planet. The Uranian ring system\n" +
+                "consists of 13 faint rings and 27 small moons as it rotates at a nearly 90-degree angle from the plane\n" +
+                "of its orbit. This unique tilt makes Uranus appear to spin on its side, orbiting the Sun like a rolling ball."
         case "Ariel":
             return "Ariel is the fourth-largest of the 27 known moons of Uranus. Ariel orbits and rotates in the\n" +
                 "equatorial plane of Uranus, which is almost perpendicular to the orbit of Uranus and so has an extreme\n" +
@@ -120,7 +135,7 @@ export default function getDescription(name) {
             return "Oberon is the outermost major moon of the planet Uranus. It is the second-largest and second most\n" +
                 "massive of the Uranian moons, and the ninth most massive moon in the Solar System. Oberon is named\n" +
                 "after the mythical king of the fairies who appears as a character in Shakespeare's A Midsummer Night's\n" +
-                "Dream. Its orbit lies partially outside Uranus's magnetosphere. It is likely that Oberon formed from\n" +
+                "Dream. Its orbit lies partially outside Uranus' magnetosphere. It is likely that Oberon formed from\n" +
                 "the accretion disk that surrounded Uranus just after the planet's formation. It is likely that many\n" +
                 "other moons of Uranus were also formed this way."
         case "Neptune":
@@ -131,15 +146,15 @@ export default function getDescription(name) {
                 "its atmosphere. It is referred to as one of the solar system's two ice giant planets. Being composed\n" +
                 "primarily of gases and liquids, it has no well-defined \"solid surface\". The planet orbits the Sun\n" +
                 "once every 164.8 years at an average distance of 4.5 billion km. It is named after the Roman god of\n" +
-                "the sea. Uranus' weather patterns are driven by the strongest sustained winds of any planet in the\n" +
+                "the sea. Neptune's weather patterns are driven by the strongest sustained winds of any planet in the\n" +
                 "Solar System, with recorded wind speeds as high as 2,100 km/h"
         case "Pluto":
             return "Pluto is a dwarf planet in the Kuiper belt, a ring of bodies beyond the orbit of Neptune. It was\n" +
                 "the first object discovered in the Kuiper belt and remains the largest known body in that area. After\n" +
                 "Pluto was discovered in 1930, it was declared the ninth planet from the Sun. However, beginning in\n" +
                 "the 1990s, its status as a planet was questioned following the discovery of several objects of similar\n" +
-                "size in the Kuiper belt leading the Pluto to being reclassified as a dwarf planet in 2006. Pluto's\n" +
-                "orbit is 4.5 to 7.3 billion km from the Sun and therefore Pluto comes periodically close to the Sun\n" +
+                "size in the Kuiper belt leading Pluto to being reclassified as a dwarf planet in 2006. Pluto's\n" +
+                "orbit is 4.5 to 7.3 billion km from the Sun and therefore Pluto comes periodically closer to the Sun\n" +
                 "than Neptune. Light takes 5.5 hours to reach Pluto at its average distance (5.91 billion km)."
         case "Kharon":
             return "Kharon is weird one it is considered as Pluto's moon or as dwarf planet like Pluto itself."
