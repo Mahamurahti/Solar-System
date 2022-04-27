@@ -242,7 +242,7 @@ export default function SolarSystem() {
             cameraTarget.getWorldPosition(direction)
 
             const cameraOffset = 100
-            const xDistance = Math.random() * 20 + 250
+            const xDistance = Math.random() * 40 + 275
 
             // Start camera transitions to target
             new TWEEN.Tween(camera.position)
@@ -273,10 +273,11 @@ export default function SolarSystem() {
         }
 
         const toast = document.querySelector('p')
+        const timeout = () => toast.style.opacity = '0'
         function showToast(message) {
             toast.innerHTML = message
             toast.style.opacity = '1'
-            setTimeout(() => toast.style.opacity = '0', 1000)
+            setTimeout(() => timeout(), 1000)
         }
 
         /**
@@ -292,7 +293,8 @@ export default function SolarSystem() {
                 keycodes.isKeyboardNumber(keycode) ||
                 keycodes.isNumpadNumber(keycode) ||
                 keycodes.isSpace(keycode) ||
-                keycodes.isQWERTYUIOP(keycode)
+                keycodes.isQWERTYUIOP(keycode) ||
+                keycodes.isControl(keycode)
             ) {
                 const pressedKey = event.key
                 switch(pressedKey) {
@@ -376,11 +378,15 @@ export default function SolarSystem() {
                         transitionToTarget(pluto.moons[0])
                         showToast(pluto.moons[0].name.toUpperCase())
                         break
-                    case ' ':
+                    case 'Control':
                         // Pressing space will lock the zoomLevel. This way the user can easily follow the celestial body
                         lockZoom = !lockZoom
                         if (lockZoom) zoomLevel = controls.target.distanceTo(controls.object.position)
                         showToast(lockZoom ? "CAMERA LOCKED" : "CAMERA UNLOCKED")
+                        break
+                    case ' ':
+                        stopOrbit = !stopOrbit
+                        showToast(stopOrbit ? "ORBITING STOPPED" : "ORBITING RESUMED")
                         break
                 }
             }
@@ -447,7 +453,7 @@ export default function SolarSystem() {
          * requestID is only used for performance matters. If the context is lost (which we force when the component
          * unmounts) the latest animation frame will be cancelled.
          */
-        let requestID
+        let requestID, stopOrbit = false
 
         /**
          * animate animates the scene. Animation frames are requested and called continuously. Every celestial body
@@ -458,7 +464,7 @@ export default function SolarSystem() {
         const animate = function () {
             requestID = requestAnimationFrame(animate)
             TWEEN.update()
-            const orbitSpeed = 0.05
+            const orbitSpeed = stopOrbit ? 0 : 0.05
             const negateDirection = Math.PI / -2
             const rotateSpeed = 0.2
 
@@ -487,7 +493,7 @@ export default function SolarSystem() {
 
             // Rotate the matrix, which is applied to the moons
             const matrix = new THREE.Matrix4()
-            earth.moons[0].position.applyMatrix4(matrix.makeRotationY(0.012 * negateDirection * rotateSpeed))
+            earth.moons[0].position.applyMatrix4(matrix.makeRotationY(0.016 * negateDirection * rotateSpeed))
             mars.moons[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection * rotateSpeed))
             mars.moons[1].position.applyMatrix4(matrix.makeRotationY(0.023 * negateDirection * rotateSpeed))
             jupiter.moons[0].position.applyMatrix4(matrix.makeRotationY(0.026 * negateDirection * rotateSpeed))
