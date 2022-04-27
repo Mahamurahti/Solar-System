@@ -8,6 +8,7 @@ import createCelestialBody from "./createCelestialBody"
 import createDescription, { descriptionFadeIn, descriptionFadeOut } from "./createDescription"
 import createComposer from "./createComposer"
 import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
+import styles from '../../styles/SolarSystem.module.css'
 
 /**
  * Creates a solar system that can be interacted with.
@@ -264,6 +265,13 @@ export default function SolarSystem() {
                 .start()
         }
 
+        const toast = document.querySelector('p')
+        function showToast(message) {
+            toast.innerHTML = message
+            toast.style.opacity = '1'
+            setTimeout(() => toast.style.opacity = '0', 1000)
+        }
+
         /**
          * When number is pressed on keyboard a transition to the specified target will occur.
          * The if statement check that the pressed key must be either from keyboard numbers or numeric keypad keys.
@@ -275,30 +283,51 @@ export default function SolarSystem() {
             if (keycodes.isKeyboardNumber(keycode) || keycodes.isNumpadNumber(keycode) || keycodes.isSpace(keycode)) {
                 const pressedKey = event.key
                 switch(pressedKey) {
-                    case '1': transitionToTarget(sun.body)
+                    case '1':
+                        transitionToTarget(sun.body)
+                        showToast(sun.body.name.toUpperCase())
                         break
-                    case '2': transitionToTarget(mercury.body)
+                    case '2':
+                        transitionToTarget(mercury.body)
+                        showToast(mercury.body.name.toUpperCase())
                         break
-                    case '3': transitionToTarget(venus.body)
+                    case '3':
+                        transitionToTarget(venus.body)
+                        showToast(venus.body.name.toUpperCase())
                         break
-                    case '4': transitionToTarget(earth.body)
+                    case '4':
+                        transitionToTarget(earth.body)
+                        showToast(earth.body.name.toUpperCase())
                         break
-                    case '5': transitionToTarget(mars.body)
+                    case '5':
+                        transitionToTarget(mars.body)
+                        showToast(mars.body.name.toUpperCase())
                         break
-                    case '6': transitionToTarget(jupiter.body)
+                    case '6':
+                        transitionToTarget(jupiter.body)
+                        showToast(jupiter.body.name.toUpperCase())
                         break
-                    case '7': transitionToTarget(saturn.body)
+                    case '7':
+                        transitionToTarget(saturn.body)
+                        showToast(saturn.body.name.toUpperCase())
                         break
-                    case '8': transitionToTarget(uranus.body)
+                    case '8':
+                        transitionToTarget(uranus.body)
+                        showToast(uranus.body.name.toUpperCase())
                         break
-                    case '9': transitionToTarget(neptune.body)
+                    case '9':
+                        transitionToTarget(neptune.body)
+                        showToast(neptune.body.name.toUpperCase())
                         break
-                    case '0': transitionToTarget(pluto.body)
+                    case '0':
+                        transitionToTarget(pluto.body)
+                        showToast(pluto.body.name.toUpperCase())
                         break
                     case ' ':
                         // Pressing space will lock the zoomLevel. This way the user can easily follow the celestial body
                         lockZoom = !lockZoom
                         if (lockZoom) zoomLevel = controls.target.distanceTo(controls.object.position)
+                        showToast(lockZoom ? "CAMERA LOCKED" : "CAMERA UNLOCKED")
                         break
                 }
             }
@@ -417,6 +446,7 @@ export default function SolarSystem() {
         }
 
         animate()
+        console.log(toast)
 
         return () => {
             mountRef.current?.removeChild(renderer.domElement)
@@ -425,5 +455,10 @@ export default function SolarSystem() {
         }
     }, [])
 
-    return <div ref={mountRef} />
+    return (
+        <>
+            <p className={styles.toast}>TOAST</p>
+            <div ref={mountRef} />
+        </>
+    )
 }
