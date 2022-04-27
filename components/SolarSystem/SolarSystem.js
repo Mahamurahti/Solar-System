@@ -96,24 +96,24 @@ export default function SolarSystem() {
         const sun = createCelestialBody("Sun", 16, getTexturePath("Sun"), 0)
         const mercury = createCelestialBody("Mercury", 3.2, getTexturePath("Mercury"), 28)
         const venus = createCelestialBody("Venus", 5.8, getTexturePath("Venus"), 44)
-        const moon = { size: (6 * 0.27), texture: getTexturePath("Moon"), name: "Moon", offset: 10, offsetAxis: 'x'}
+        const moon = { name: "Moon", size: (6 * 0.27), texture: getTexturePath("Moon"), offset: 10, offsetAxis: 'x' }
         const earthMoon = [moon]
-        const earth = createCelestialBody("Earth", 6, getTexturePath("Earth"), 62, null, earthMoon)
+        const earth = createCelestialBody("Earth", 6, getTexturePath("Earth"), 62, earthMoon)
         const mars = createCelestialBody("Mars", 4, getTexturePath("Mars"), 78)
-        const europa = {size: (6 * 0.27 * 0.9), texture: getTexturePath("Europa"), name: "Europa", offset: -16, offsetAxis: 'x'}
+        const europa = { name: "Europa", size: (6 * 0.27 * 0.9), texture: getTexturePath("Europa"), offset: -16, offsetAxis: 'x' }
         const jupiterMoons = [europa]
-        const jupiter = createCelestialBody("Jupiter", 12, getTexturePath("Jupiter"), 100, null, jupiterMoons)
+        const jupiter = createCelestialBody("Jupiter", 12, getTexturePath("Jupiter"), 100, jupiterMoons)
         const saturnRing = { innerRadius: 10, outerRadius: 20, texture: getTexturePath("Saturn").ring }
-        const enceladus = {size:(6 * 0.27 / 2), texture: getTexturePath("Enceladus"), name: "Enceladus", offset: 20, offsetAxis: 'x'}
-        const titan = {size: 3.5, texture: getTexturePath("Titan"), name: "Titan", offset: -20, offsetAxis: 'x'}
+        const enceladus = { name: "Enceladus", size:(6 * 0.27 / 2), texture: getTexturePath("Enceladus"), offset: 20, offsetAxis: 'x' }
+        const titan = { name: "Titan", size: 3.5, texture: getTexturePath("Titan"), offset: -20, offsetAxis: 'x' }
         const saturnMoons =  [enceladus, titan]
-        const saturn = createCelestialBody("Saturn", 10, getTexturePath("Saturn").body, 138, saturnRing, saturnMoons)
+        const saturn = createCelestialBody("Saturn", 10, getTexturePath("Saturn").body, 138, saturnMoons, saturnRing)
         const uranusRing = { innerRadius: 7, outerRadius: 12, texture: getTexturePath("Uranus").ring }
-        const ariel = {size: 6 * 0.27 / 2, texture: getTexturePath("Ariel"), name: "Ariel", offset: -10, offsetAxis: 'x'}
-        const titania = {size: 6 * 0.1235, texture: getTexturePath("Titania"), name: "Titania", offset: 12, offsetAxis: 'x'}
-        const oberon = {size: 6 * 0.1135, texture: getTexturePath("Oberon"), name: "Oberon", offset: 12, offsetAxis: 'z'}
+        const ariel = { name: "Ariel", size: 6 * 0.27 / 2, texture: getTexturePath("Ariel"), offset: -10, offsetAxis: 'x' }
+        const titania = { name: "Titania", size: 6 * 0.1235, texture: getTexturePath("Titania"), offset: 12, offsetAxis: 'x' }
+        const oberon = { name: "Oberon", size: 6 * 0.1135, texture: getTexturePath("Oberon"), offset: 12, offsetAxis: 'z' }
         const uranusMoons = [ariel, titania, oberon]
-        const uranus = createCelestialBody("Uranus", 7, getTexturePath("Uranus").body, 176, uranusRing, uranusMoons)
+        const uranus = createCelestialBody("Uranus", 7, getTexturePath("Uranus").body, 176, uranusMoons, uranusRing)
         const neptune = createCelestialBody("Neptune", 7, getTexturePath("Neptune"), 200)
         const pluto = createCelestialBody("Pluto", 2.8, getTexturePath("Pluto"), 216)
 
@@ -129,16 +129,15 @@ export default function SolarSystem() {
         const interactable = []
 
         for (const object of objects) {
-            // Add group to scene (celestial body and ring if the body has one)
+            // Add group to scene (celestial body, moons of celestial body and ring if it has one)
             scene.add(object.group)
-            // Only the body is currently interactable (ring is not interactable)
+            // Add body of celestial body to be interactable
             interactable.push(object.body)
-            if(object.moonMesh) {
-                for (let i =0; i<object.moonMesh.length; i++) {
-                    interactable.push(object.moonMesh[i])
+            if(object.moons) {
+                for (const moon of object.moons) {
+                    interactable.push(moon)
                 }
             }
-
         }
         document.addEventListener('pointermove', onPointerMove)
         document.addEventListener('pointerdown', onPointerDown)
@@ -389,13 +388,13 @@ export default function SolarSystem() {
 
             // Rotate the matrix, which is applied to the moons
             const matrix = new THREE.Matrix4()
-            earth.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.012 * negateDirection))
-            jupiter.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.026 * negateDirection))
-            saturn.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection))
-            saturn.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.023 * negateDirection))
-            uranus.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.016 * negateDirection))
-            uranus.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.017 * negateDirection))
-            uranus.moonMesh[2].position.applyMatrix4(matrix.makeRotationY(0.018 * negateDirection))
+            earth.moons[0].position.applyMatrix4(matrix.makeRotationY(0.012 * negateDirection))
+            jupiter.moons[0].position.applyMatrix4(matrix.makeRotationY(0.026 * negateDirection))
+            saturn.moons[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection))
+            saturn.moons[1].position.applyMatrix4(matrix.makeRotationY(0.023 * negateDirection))
+            uranus.moons[0].position.applyMatrix4(matrix.makeRotationY(0.016 * negateDirection))
+            uranus.moons[1].position.applyMatrix4(matrix.makeRotationY(0.017 * negateDirection))
+            uranus.moons[2].position.applyMatrix4(matrix.makeRotationY(0.018 * negateDirection))
 
             updateDescription()
             updateCamera()

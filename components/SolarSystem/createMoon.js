@@ -2,23 +2,23 @@ import * as THREE from 'three'
 
 /**
  * Creates moon object for planet
- * @param moonParams parametres given
+ * @param moon parametres given
  * @returns {Mesh}
  */
-export default function createMoon(moonParams) {
-    let moonMesh
+export default function createMoon(moon) {
     const textureLoader = new THREE.TextureLoader()
-    const moonGeometry = new THREE.SphereGeometry(moonParams.size, 30,30)
+
+    const moonGeometry = new THREE.SphereGeometry(moon.size, 64,64)
     const moonMaterial = new THREE.MeshPhongMaterial({
-        map: textureLoader.load(moonParams.texture),
+        map: textureLoader.load(moon.texture),
     })
-    moonMesh = new THREE.Mesh(moonGeometry, moonMaterial)
-    moonMesh.name = moonParams.name
-    const axisOffset = moonParams.offsetAxis
+    const moonMesh = new THREE.Mesh(moonGeometry, moonMaterial)
+    moonMesh.name = moon.name
+    const axisOffset = moon.offsetAxis
     if (axisOffset === 'x') {
-        moonMesh.position.x = moonParams.offset
+        moonMesh.position.x = moon.offset
     } if (axisOffset === 'z') {
-        moonMesh.position.z = moonParams.offset
+        moonMesh.position.z = moon.offset
     }
 
     return moonMesh
