@@ -33,7 +33,10 @@ export default function createCelestialBody(name, size, texture, position, moonP
     group.add(body)
 
     if (ringParams) {
-        const radii = { innerRadius: ringParams.innerRadius, outerRadius: ringParams.outerRadius }
+        const radii = {
+            innerRadius: ringParams.innerRadius,
+            outerRadius: ringParams.outerRadius
+        }
         ring = createRing(
             name,
             radii,
