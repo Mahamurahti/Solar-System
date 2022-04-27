@@ -121,7 +121,7 @@ export default function SolarSystem() {
         const uranusMoons = [ariel, titania, oberon]
         const uranus = createCelestialBody("Uranus", 20.3, getTexturePath("Uranus").body, -1060, uranusMoons, uranusRing)
         const neptune = createCelestialBody("Neptune", 19.4, getTexturePath("Neptune"), 1605)
-        const kharon = {size: 1.4, texture: getTexturePath("Kharon"), name: "Kharon", offset: -5, offsetAxis: 'z'}
+        const kharon = { name: "Kharon", size: 1.4, texture: getTexturePath("Kharon"), offset: -5, offsetAxis: 'z' }
         const plutoMoons = [kharon]
         const pluto = createCelestialBody("Pluto", 2.8, getTexturePath("Pluto"), -2050, plutoMoons)
 
