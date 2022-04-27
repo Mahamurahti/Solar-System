@@ -9,3 +9,8 @@ export function isNumpadNumber(keycode) {
 export function isSpace(keycode) {
     return keycode === 32
 }
+
+export function isQWERTYUIOP(keycode) {
+    const keys = [69, 73, 79, 80, 81, 82, 84, 85, 87, 89]
+    return keys.includes(keycode)
+}
