@@ -32,11 +32,12 @@ export default function SolarSystem() {
         const scene = new THREE.Scene()
         scene.background = new THREE.CubeTextureLoader().load(Array(6).fill(getTexturePath("Stars")))
 
+        const renderDistance = 3000
         /**
          * Perspective camera for defining the "eyes" of the scene. We can look at the scene through the camera.
          * @type {PerspectiveCamera}
          */
-        const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, .1, 2000)
+        const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, .1, renderDistance)
         camera.position.set(-90, 140, 140)
 
         /**
@@ -81,7 +82,7 @@ export default function SolarSystem() {
          * is the light that makes other objects cast shadows.
          * @type {PointLight}
          */
-        const pointLight = new THREE.PointLight(0xFFFFFF, 1.9, 1500)
+        const pointLight = new THREE.PointLight(0xFFFFFF, .9, renderDistance)
         pointLight.castShadow = true
         const shadowResolution = 5120
         pointLight.shadow.mapSize.width = pointLight.shadow.mapSize.height = shadowResolution
@@ -241,8 +242,8 @@ export default function SolarSystem() {
             const direction = new THREE.Vector3()
             cameraTarget.getWorldPosition(direction)
 
-            const cameraOffset = 80
-            const xDistance = Math.random() * 60 + 90
+            const cameraOffset = 100
+            const xDistance = Math.random() * 40 + 275
 
             // Start camera transitions to target
             new TWEEN.Tween(camera.position)
@@ -273,10 +274,11 @@ export default function SolarSystem() {
         }
 
         const toast = document.querySelector('p')
+        const timeout = () => toast.style.opacity = '0'
         function showToast(message) {
             toast.innerHTML = message
             toast.style.opacity = '1'
-            setTimeout(() => toast.style.opacity = '0', 1000)
+            setTimeout(() => timeout(), 1000)
         }
 
         /**
@@ -288,10 +290,12 @@ export default function SolarSystem() {
             // Is the pressed number from keyboard numbers or numpad numbers
 
             const keycode = event.keyCode
-            if (keycodes.isKeyboardNumber(keycode) ||
+            if (
+                keycodes.isKeyboardNumber(keycode) ||
                 keycodes.isNumpadNumber(keycode) ||
                 keycodes.isSpace(keycode) ||
-                keycodes.isQWERTYUIOP(keycode)
+                keycodes.isQWERTYUIOP(keycode) ||
+                keycodes.isControl(keycode)
             ) {
                 const pressedKey = event.key
                 switch(pressedKey) {
@@ -375,11 +379,15 @@ export default function SolarSystem() {
                         transitionToTarget(pluto.moons[0])
                         showToast(pluto.moons[0].name.toUpperCase())
                         break
-                    case ' ':
+                    case 'Control':
                         // Pressing space will lock the zoomLevel. This way the user can easily follow the celestial body
                         lockZoom = !lockZoom
                         if (lockZoom) zoomLevel = controls.target.distanceTo(controls.object.position)
                         showToast(lockZoom ? "CAMERA LOCKED" : "CAMERA UNLOCKED")
+                        break
+                    case ' ':
+                        stopOrbit = !stopOrbit
+                        showToast(stopOrbit ? "ORBITING STOPPED" : "ORBITING RESUMED")
                         break
                 }
             }
@@ -410,7 +418,9 @@ export default function SolarSystem() {
         function updateDescription()  {
             if (description !== null) {
                 // Description is above the target
-                description.position.copy(controls.target).add(new THREE.Vector3(0,160,0))
+                const radius = cameraTarget.geometry.parameters.radius
+                const yOffset = radius > 40 ? 180 : 160
+                description.position.copy(controls.target).add(new THREE.Vector3(0, yOffset, 0))
                 description.rotation.copy(camera.rotation)
             }
         }
@@ -444,7 +454,7 @@ export default function SolarSystem() {
          * requestID is only used for performance matters. If the context is lost (which we force when the component
          * unmounts) the latest animation frame will be cancelled.
          */
-        let requestID
+        let requestID, stopOrbit = false
 
         /**
          * animate animates the scene. Animation frames are requested and called continuously. Every celestial body
@@ -455,7 +465,7 @@ export default function SolarSystem() {
         const animate = function () {
             requestID = requestAnimationFrame(animate)
             TWEEN.update()
-            const orbitSpeed = 0.1
+            const orbitSpeed = stopOrbit ? 0 : 0.05
             const negateDirection = Math.PI / -2
             const rotateSpeed = 0.2
 
@@ -484,7 +494,7 @@ export default function SolarSystem() {
 
             // Rotate the matrix, which is applied to the moons
             const matrix = new THREE.Matrix4()
-            earth.moons[0].position.applyMatrix4(matrix.makeRotationY(0.012 * negateDirection * rotateSpeed))
+            earth.moons[0].position.applyMatrix4(matrix.makeRotationY(0.016 * negateDirection * rotateSpeed))
             mars.moons[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection * rotateSpeed))
             mars.moons[1].position.applyMatrix4(matrix.makeRotationY(0.023 * negateDirection * rotateSpeed))
             jupiter.moons[0].position.applyMatrix4(matrix.makeRotationY(0.026 * negateDirection * rotateSpeed))

@@ -31,15 +31,11 @@ export default function createCelestialBody(name, size, texture, position, moonP
 
     group.add(body)
 
-    let ringPosition
-    let axis = Math.floor(Math.random() * 2)  === 0
-    if(axis) {
-        body.position.x = position
-        ringPosition = {x: body.position.x, y: body.position.y, z: body.position.z}
-    } else {
-        body.position.z = position
-        ringPosition = {x: body.position.x, y: body.position.y, z: body.position.z}
-    }
+    const axis = Math.floor(Math.random() * 2)  === 0
+    if(axis) body.position.x = position
+    else body.position.z = position
+
+    const ringPosition = { x: body.position.x, y: body.position.y, z: body.position.z }
 
     if (ringParams) {
         const radii = {
