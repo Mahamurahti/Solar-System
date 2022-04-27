@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react'
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader"
 import getTexturePath from "../../helpers/getTexturePath"
+import * as keycodes from "../../helpers/getKeyCodes"
 import createCelestialBody from "./createCelestialBody"
 import createDescription, { descriptionFadeIn, descriptionFadeOut } from "./createDescription"
 import createComposer from "./createComposer"
@@ -267,8 +268,9 @@ export default function SolarSystem() {
          */
         function onKeyDown(event) {
             // Is the pressed number from keyboard numbers or numpad numbers
-            if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105)) {
-                let pressedKey = event.key
+            const keycode = event.keyCode
+            if (keycodes.isKeyboardNumber(keycode) || keycodes.isNumpadNumber(keycode) || keycodes.isSpace(keycode)) {
+                const pressedKey = event.key
                 switch(pressedKey) {
                     case '1': transitionToTarget(sun.body)
                         break
@@ -289,6 +291,11 @@ export default function SolarSystem() {
                     case '9': transitionToTarget(neptune.body)
                         break
                     case '0': transitionToTarget(pluto.body)
+                        break
+                    case ' ':
+                        // Pressing space will lock the zoomLevel. This way the user can easily follow the celestial body
+                        lockZoom = !lockZoom
+                        if (lockZoom) zoomLevel = controls.target.distanceTo(controls.object.position)
                         break
                 }
             }
@@ -324,6 +331,8 @@ export default function SolarSystem() {
             }
         }
 
+        let lockZoom = false, zoomLevel
+
         /**
          * updateCamera tracks the camera target. This is done via orbit controls.
          */
@@ -333,6 +342,9 @@ export default function SolarSystem() {
 
             const direction = new THREE.Vector3()
             direction.subVectors(camera.position, controls.target)
+
+            if (lockZoom) direction.normalize().multiplyScalar(zoomLevel)
+
             camera.position.copy(direction.add(controls.target))
         }
 
