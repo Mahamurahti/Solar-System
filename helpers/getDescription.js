@@ -48,6 +48,10 @@ export default function getDescription(name) {
                 "features such as impact craters, valleys, dunes, and polar ice caps. The days and seasons on Mars are\n" +
                 "comparable to those of Earth as the planets have a similar rotation period and tilt of the rotational\n" +
                 "axis relative to the ecliptic plane."
+        case "Deimos":
+            return "Deimos is the outer and smaller of Mars’s two moons."
+        case "Phobos":
+            return "Phobos is the inner and larger of Mars’s two moons."
         case "Jupiter":
             return "Jupiter is the fifth planet from the Sun and the largest in the Solar System. It is a gas giant\n" +
                 "with a mass more than two and a half times that of all the other planets in the Solar System\n" +
@@ -137,5 +141,7 @@ export default function getDescription(name) {
                 "size in the Kuiper belt leading the Pluto to being reclassified as a dwarf planet in 2006. Pluto's\n" +
                 "orbit is 4.5 to 7.3 billion km from the Sun and therefore Pluto comes periodically close to the Sun\n" +
                 "than Neptune. Light takes 5.5 hours to reach Pluto at its average distance (5.91 billion km)."
+        case "Kharon":
+            return "Kharon is weird one it is considered as Pluto's moon or as dwarf planet like Pluto itself."
     }
 }

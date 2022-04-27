@@ -22,5 +22,8 @@ export default function getTexturePath(name) {
         case "Ariel": return 'textures/ariel.webp'
         case "Titania": return 'textures/titania.webp'
         case "Oberon": return 'textures/oberon.webp'
+        case "Deimos": return 'textures/deimos.jpg'
+        case "Phobos": return 'textures/phobos.jpg'
+        case "Kharon": return 'textures/kharon.jpg'
     }
 }
