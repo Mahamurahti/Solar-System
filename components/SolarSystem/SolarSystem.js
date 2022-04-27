@@ -226,6 +226,9 @@ export default function SolarSystem() {
          * the target.
          */
         function transitionToTarget(target) {
+            // Cancel all other animations before starting transition
+            TWEEN.removeAll()
+
             cameraTarget = target
             const direction = new THREE.Vector3()
             cameraTarget.getWorldPosition(direction)
