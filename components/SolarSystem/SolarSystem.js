@@ -8,7 +8,7 @@ import createCelestialBody from "./createCelestialBody"
 import createDescription, { descriptionFadeIn, descriptionFadeOut } from "./createDescription"
 import createComposer from "./createComposer"
 import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
-import styles from '../../styles/SolarSystem.module.css'
+import styles from '../../styles/SolarSystem.module.sass'
 
 /**
  * Creates a solar system that can be interacted with.
