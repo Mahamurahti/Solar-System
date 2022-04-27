@@ -72,6 +72,14 @@ export default function getDescription(name) {
                 "planet's most notable feature is its prominent ring system, which is composed mainly of ice\n" +
                 "particles, with a smaller amount of rocky debris and dust. At least 83 moons are known to orbit\n" +
                 "Saturn, of which 53 are officially named; this does not include the hundreds of moonlets in its rings."
+        case "SaturnRing":
+            return "The rings of Saturn are the most extensive ring system of any planet in the Solar System. They\n" +
+                "consist of countless small particles, ranging in size from micrometers to meters, that orbit around\n" +
+                "Saturn. The ring particles are made almost entirely of water ice, with a trace component of rocky\n" +
+                "material. Saturn's rings make up an enormous, complex structure. From edge-to-edge, the ring system\n" +
+                "would not even fit in the distance between Earth and the Moon. The seven main rings are labeled in\n" +
+                "the order in which they were discovered. From the planet outward, they are D, C, B, A, F, G and E.\n" +
+                "The major rings have a diameter of 270,000 km, yet their thickness does not exceed 100 metres"
         case "Enceladus":
             return "Enceladus is the sixth-largest moon of Saturn. It is about 500 kilometers in diameter, about a\n" +
                 "tenth of that of Saturn's largest moon, Titan. Enceladus is mostly covered by fresh, clean ice,\n" +
@@ -98,6 +106,13 @@ export default function getDescription(name) {
                 "giants, ice giants also lack a well defined \"solid surface\". Uranus has the coldest planetary atmosphere\n" +
                 "in the Solar System, with a minimum temperature of −224 °C. Like the other giant planets, Uranus has\n" +
                 "a ring system, a magnetosphere, and numerous moons."
+        case "UranusRing":
+            return "The rings of Uranus are intermediate in complexity between the more extensive set around Saturn\n" +
+                "and the simpler systems around Jupiter and Neptune. The rings of Uranus are thought to be relatively\n" +
+                "young, and not more than 600 million years old. The Uranian ring system probably originated from the\n" +
+                "collisional fragmentation of several moons that once existed around the planet. The Uranian ring system\n" +
+                "consists of 13 faint rings and 27 small moons as it rotates at a nearly 90-degree angle from the plane\n" +
+                "of its orbit. This unique tilt makes Uranus appear to spin on its side, orbiting the Sun like a rolling ball."
         case "Ariel":
             return "Ariel is the fourth-largest of the 27 known moons of Uranus. Ariel orbits and rotates in the\n" +
                 "equatorial plane of Uranus, which is almost perpendicular to the orbit of Uranus and so has an extreme\n" +

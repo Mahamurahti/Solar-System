@@ -133,11 +133,10 @@ export default function SolarSystem() {
             scene.add(object.group)
             // Add body of celestial body to be interactable
             interactable.push(object.body)
-            if(object.moons) {
-                for (const moon of object.moons) {
-                    interactable.push(moon)
-                }
-            }
+            // If the celestial body has moons, add all moon to be interactable
+            if(object.moons) for (const moon of object.moons) interactable.push(moon)
+            // If the celestial body has a ring, add it to be interactable
+            if(object.ring) interactable.push(object.ring)
         }
         document.addEventListener('pointermove', onPointerMove)
         document.addEventListener('pointerdown', onPointerDown)
