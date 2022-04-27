@@ -1,25 +1,28 @@
 import * as THREE from 'three'
 
 /**
- * Creates moon object for planet
- * @param moon parametres given
+ * Creates a moon object for a celestial body
+ *
+ * @author Timo Tamminiemi
+ * @param name of the moon
+ * @param size of the moon
+ * @param texture of the moon
+ * @param offset of the moon from the parent celestial body
+ * @param offsetAxis offset from which axis
  * @returns {Mesh}
  */
-export default function createMoon(moon) {
+export default function createMoon(name, size, texture, offset, offsetAxis) {
     const textureLoader = new THREE.TextureLoader()
 
-    const moonGeometry = new THREE.SphereGeometry(moon.size, 64,64)
+    const moonGeometry = new THREE.SphereGeometry(size, 64,64)
     const moonMaterial = new THREE.MeshPhongMaterial({
-        map: textureLoader.load(moon.texture),
+        map: textureLoader.load(texture),
     })
     const moonMesh = new THREE.Mesh(moonGeometry, moonMaterial)
-    moonMesh.name = moon.name
-    const axisOffset = moon.offsetAxis
-    if (axisOffset === 'x') {
-        moonMesh.position.x = moon.offset
-    } if (axisOffset === 'z') {
-        moonMesh.position.z = moon.offset
-    }
+    moonMesh.name = name
+
+    if (offsetAxis === 'x') moonMesh.position.x = offset
+    if (offsetAxis === 'z') moonMesh.position.z = offset
 
     return moonMesh
 }
