@@ -10,6 +10,7 @@ import createComposer from "./createComposer"
 import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
 import styles from '../../styles/SolarSystem.module.sass'
 import Stats from "three/examples/jsm/libs/stats.module";
+import getDescription from "../../helpers/getDescription";
 
 /**
  * Creates a solar system that can be interacted with.
@@ -126,8 +127,8 @@ export default function SolarSystem() {
         const uranusMoons = [ariel, titania, oberon]
         const uranus = createCelestialBody("Uranus", 20.3, getTexturePath("Uranus").body, -1060, uranusMoons, uranusRing)
         const neptune = createCelestialBody("Neptune", 19.4, getTexturePath("Neptune"), 1605)
-        const kharon = { name: "Kharon", size: 1.4, texture: getTexturePath("Kharon"), offset: -5, offsetAxis: 'z' }
-        const plutoMoons = [kharon]
+        const charon = { name: "Charon", size: 1.4, texture: getTexturePath("Charon"), offset: -5, offsetAxis: 'z' }
+        const plutoMoons = [charon]
         const pluto = createCelestialBody("Pluto", 2.8, getTexturePath("Pluto"), -2050, plutoMoons)
 
         // Sun has default emission to make bloom effect
@@ -277,7 +278,7 @@ export default function SolarSystem() {
                 .start()
         }
 
-        const toast = document.querySelector('p')
+        const toast = document.getElementById('toast')
         const timeout = () => toast.style.opacity = '0'
         function showToast(message) {
             toast.innerHTML = message
@@ -517,7 +518,6 @@ export default function SolarSystem() {
         }
 
         animate()
-        console.log(toast)
 
         return () => {
             mountRef.current?.removeChild(renderer.domElement)
@@ -526,9 +526,27 @@ export default function SolarSystem() {
         }
     }, [])
 
+    function handleClick() {
+        const controlsText = document.getElementById('controls_text')
+        const controlsButton = document.getElementById('controls_button')
+        const opacity = controlsText.style.opacity
+        if (opacity === '1') {
+            controlsText.style.opacity = '0'
+            controlsButton.style.transform = 'rotate(360deg)'
+        } else {
+            controlsText.style.opacity = '1'
+            controlsButton.style.transform = 'rotate(180deg)'
+        }
+        controlsButton.blur()
+    }
+
     return (
         <>
-            <p className={styles.toast}>TOAST</p>
+            <p className={styles.toast} id="toast">TOAST</p>
+            <div className={styles.controls_container}>
+                <p className={styles.controls_text} id="controls_text">{getDescription("Controls")}</p>
+                <button className={styles.controls_button} id="controls_button" onClick={handleClick}>&lt;</button>
+            </div>
             <div ref={mountRef} />
         </>
     )

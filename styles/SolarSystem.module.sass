@@ -1,5 +1,10 @@
 @use "variables" as var
 
+@mixin flex-center
+    display: flex
+    justify-content: center
+    align-items: center
+
 .toast
     position: absolute
     bottom: 10px
@@ -8,3 +13,36 @@
     opacity: 0
     transition: opacity .1s ease-in-out
     font-size: var.$text-size-large
+    pointer-events: none
+
+.controls_container
+    @include flex-center
+    position: absolute
+    right: 10px
+    height: 100vh
+    width: 400px
+    pointer-events: none
+
+.controls_button
+    pointer-events: all
+    tab-index: -1
+    margin-left: var.$gap-medium
+    width: var.$gap-large
+    height: var.$gap-large
+    font-size: var.$text-size-large
+    background: none
+    color: var.$white
+    border: transparent
+    border-radius: 50%
+    &:hover
+        border: 3px solid var.$primary-color
+    &:active
+        border: 3px solid var.$secondary-color
+    transition: all .2s ease-in-out
+
+.controls_text
+    text-align: right
+    white-space: pre-line
+    line-height: 1.6
+    opacity: 0
+    transition: all .2s ease-in-out
