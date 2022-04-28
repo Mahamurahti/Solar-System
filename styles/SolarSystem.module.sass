@@ -23,6 +23,10 @@
     width: 400px
     pointer-events: none
 
+@media (max-width: 600px)
+    .controls_container
+        width: 250px
+
 .controls_button
     pointer-events: all
     tab-index: -1
@@ -46,3 +50,7 @@
     line-height: 1.6
     opacity: 0
     transition: all .2s ease-in-out
+
+@media (max-width: 600px)
+    .controls_container
+        font-size:  var.$text-size-small
