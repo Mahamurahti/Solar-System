@@ -7,7 +7,9 @@ import createCelestialBody from "./createCelestialBody"
 import createDescription, { descriptionFadeIn, descriptionFadeOut } from "./createDescription"
 import createComposer from "./createComposer"
 import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
+import {VRButton} from "three/examples/jsm/webxr/VRButton";
 import Stats from "three/examples/jsm/libs/stats.module";
+import {XRControllerModelFactory} from "three/examples/jsm/webxr/XRControllerModelFactory";
 
 /**
  * Creates a solar system that can be interacted with.
@@ -16,7 +18,7 @@ import Stats from "three/examples/jsm/libs/stats.module";
  * @returns {JSX.Element}
  * @constructor
  */
-export default function SolarSystem() {
+export default function SolarSystemVR() {
 
     const mountRef = useRef(null)
 
@@ -35,8 +37,8 @@ export default function SolarSystem() {
          * Perspective camera for defining the "eyes" of the scene. We can look at the scene through the camera.
          * @type {PerspectiveCamera}
          */
-        const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, .1, 2000)
-        camera.position.set(-90, 140, 140)
+        const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, .1, 1000)
+        camera.position.set(-20, 30, 30)
 
         /**
          * Renderer renders the scene through the camera. Renderer has shadows enabled.
@@ -45,8 +47,8 @@ export default function SolarSystem() {
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
         renderer.setSize(WIDTH, HEIGHT)
         renderer.setPixelRatio(window.devicePixelRatio)
-        renderer.shadowMap.enabled = true
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap
+        //renderer.shadowMap.enabled = true
+        //renderer.shadowMap.type = THREE.PCFSoftShadowMap
         renderer.getContext().canvas.addEventListener('webglcontextlost', function(event) {
             event.preventDefault()
             cancelAnimationFrame(requestID)
@@ -80,13 +82,16 @@ export default function SolarSystem() {
          * is the light that makes other objects cast shadows.
          * @type {PointLight}
          */
-        const pointLight = new THREE.PointLight(0xFFFFFF, 1.9, 1500)
+        const pointLight = new THREE.PointLight(0xFFFFFF, 1.9, 230)
         pointLight.castShadow = true
-        const shadowResolution = 5120
+        const shadowResolution = 640
         pointLight.shadow.mapSize.width = pointLight.shadow.mapSize.height = shadowResolution
         scene.add(pointLight)
 
         const composerParams = { strength: .6, radius: .4, threshold: .85 }
+
+        const stats = new Stats()
+        document.body.appendChild(stats.dom)
         /**
          * Composer gives the scene a bloom effect.
          * @type {EffectComposer}
@@ -94,28 +99,28 @@ export default function SolarSystem() {
         const composer = createComposer(scene, camera, renderer, composerParams)
 
         // Create all relevant celestial bodies in the solar system
-        const sun = createCelestialBody("Sun", 100, getTexturePath("Sun"), 0)
-        const mercury = createCelestialBody("Mercury", 1.8, getTexturePath("Mercury"), -119)
-        const venus = createCelestialBody("Venus", 4.75, getTexturePath("Venus"), 136)
-        const earthMoon = [{size: 1.35, texture: getTexturePath("Moon"), name: "Moon", offset: 7, offsetAxis: 'x'}]
-        const earth = createCelestialBody("Earth", 5, getTexturePath("Earth"), -150, null, earthMoon)
-        let marsMoons = [{size: 0.25, texture: getTexturePath("Phobos"), name: "Phobos", offset: 4, offsetAxis: 'x'},
-        {size: 0.125, texture: getTexturePath("Deimos"), name: "Deimos", offset: -6, offsetAxis: 'x'}]
-        const mars = createCelestialBody("Mars", 2.66, getTexturePath("Mars"), 175, null, marsMoons)
-        const jupiterMoons = [{size: 1.25, texture: getTexturePath("Europa"), name: "Europa", offset: -156, offsetAxis: 'x'}]
-        const jupiter = createCelestialBody("Jupiter", 56, getTexturePath("Jupiter"), -360, null, jupiterMoons)
-        const saturnRing = { innerRadius: 47, outerRadius: 94, texture: getTexturePath("Saturn").ring }
-        const saturnMoons =  [{size: 0.65, texture: getTexturePath("Enceladus"), name: "Enceladus", offset: 100, offsetAxis: 'x'},
-            {size: 2.02, texture: getTexturePath("Titan"), name: "Titan", offset: -140, offsetAxis: 'x'}]
-        const saturn = createCelestialBody("Saturn", 47, getTexturePath("Saturn").body, 625, saturnRing, saturnMoons)
-        const uranusRing = { innerRadius: 20.3, outerRadius: 34.8, texture: getTexturePath("Uranus").ring }
-        const uranusMoons = [{size: 0.65, texture: getTexturePath("Ariel"), name: "Ariel", offset: -39, offsetAxis: 'x'},
-            {size: 0.741, texture: getTexturePath("Titania"), name: "Titania", offset: 42, offsetAxis: 'x'},
-            {size: 0.681, texture: getTexturePath("Oberon"), name: "Oberon", offset: 37, offsetAxis: 'z'}]
-        const uranus = createCelestialBody("Uranus", 20.3, getTexturePath("Uranus").body, -1060, uranusRing, uranusMoons)
-        const neptune = createCelestialBody("Neptune", 19.4, getTexturePath("Neptune"), 1605)
-        let plutoMoons = [{size: 1.4, texture: getTexturePath("Kharon"), name: "Kharon", offset: -5, offsetAxis: 'z'}]
-        const pluto = createCelestialBody("Pluto", 2.8, getTexturePath("Pluto"), -2050, null, plutoMoons)
+        const sun = createCelestialBody("Sun", 16/16, getTexturePath("Sun"), 0)
+        const mercury = createCelestialBody("Mercury", 3.2/16, getTexturePath("Mercury"), -28/16)
+        const venus = createCelestialBody("Venus", 5.8/16, getTexturePath("Venus"), 44/16)
+        const earthMoon = [{size: 1.35/16, texture: getTexturePath("Moon"), name: "Moon", offset: 10/16, offsetAxis: 'x'}]
+        const earth = createCelestialBody("Earth", 6/16, getTexturePath("Earth"), -62/16, null, earthMoon)
+        let marsMoons = [{size: 0.25/16, texture: getTexturePath("Phobos"), name: "Phobos", offset: 4/16, offsetAxis: 'x'},
+        {size: 0.125/16, texture: getTexturePath("Deimos"), name: "Deimos", offset: -6/16, offsetAxis: 'x'}]
+        const mars = createCelestialBody("Mars", 4/16, getTexturePath("Mars"), 78/16, null, marsMoons)
+        const jupiterMoons = [{size: 1.25/16, texture: getTexturePath("Europa"), name: "Europa", offset: -16/16, offsetAxis: 'x'}]
+        const jupiter = createCelestialBody("Jupiter", 12/16, getTexturePath("Jupiter"), -100/16, null, jupiterMoons)
+        const saturnRing = { innerRadius: 10/16, outerRadius: 20/16, texture: getTexturePath("Saturn").ring }
+        const saturnMoons =  [{size: 0.65/16, texture: getTexturePath("Enceladus"), name: "Enceladus", offset: 15/16, offsetAxis: 'x'},
+            {size: 2.02/16, texture: getTexturePath("Titan"), name: "Titan", offset: -20/16, offsetAxis: 'x'}]
+        const saturn = createCelestialBody("Saturn", 10/16, getTexturePath("Saturn").body, 138/16, saturnRing, saturnMoons)
+        const uranusRing = { innerRadius: 7/16, outerRadius: 12/16, texture: getTexturePath("Uranus").ring }
+        const uranusMoons = [{size: 0.65/16, texture: getTexturePath("Ariel"), name: "Ariel", offset: -10/16, offsetAxis: 'x'},
+            {size: 0.741/16, texture: getTexturePath("Titania"), name: "Titania", offset: 12/16, offsetAxis: 'x'},
+            {size: 0.681/16, texture: getTexturePath("Oberon"), name: "Oberon", offset: 12/16, offsetAxis: 'z'}]
+        const uranus = createCelestialBody("Uranus", 7/16, getTexturePath("Uranus").body, -176/16, uranusRing, uranusMoons)
+        const neptune = createCelestialBody("Neptune", 7/16, getTexturePath("Neptune"), 200/16)
+        let plutoMoons = [{size: 1.4/16, texture: getTexturePath("Kharon"), name: "Kharon", offset: -5/16, offsetAxis: 'z'}]
+        const pluto = createCelestialBody("Pluto", 2.8/16, getTexturePath("Pluto"), -216/16, null, plutoMoons)
 
         // Sun has default emission to make bloom effect
         sun.body.material.emissive.setHex(0xffd99c)
@@ -145,6 +150,44 @@ export default function SolarSystem() {
         document.addEventListener('pointerdown', onPointerDown)
         document.addEventListener('pointerup', onPointerUp)
         document.addEventListener('keydown', onKeyDown)
+        document.body.appendChild(VRButton.createButton(renderer))
+        renderer.xr.enabled = true
+
+        //Camera position when entered in VR
+        const cameraGroup = new THREE.Group()
+        cameraGroup.position.set(0, 3, 0)
+
+        //When user enters VR mode reposition the camera
+        renderer.xr.addEventListener('sessionstart', function () {
+            scene.add(cameraGroup)
+            cameraGroup.add(camera)
+        })
+        //When user exits VR mode reposition the camera
+        renderer.xr.addEventListener('sessionend', function () {
+            scene.remove(cameraGroup)
+            cameraGroup.remove(camera)
+        })
+
+        const geometry = new THREE.BufferGeometry();
+        geometry.setFromPoints( [ new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, - 5 ) ] );
+
+        const controller1 = renderer.xr.getController( 0 );
+        controller1.add( new THREE.Line( geometry ) );
+        scene.add( controller1 );
+
+        const controller2 = renderer.xr.getController( 1 );
+        controller2.add( new THREE.Line( geometry ) );
+        scene.add( controller2 );
+
+        const controllerModelFactory = new XRControllerModelFactory();
+
+        const controllerGrip1 = renderer.xr.getControllerGrip( 0 );
+        controllerGrip1.add( controllerModelFactory.createControllerModel( controllerGrip1 ) );
+        scene.add( controllerGrip1 );
+
+        const controllerGrip2 = renderer.xr.getControllerGrip( 1 );
+        controllerGrip2.add( controllerModelFactory.createControllerModel( controllerGrip2 ) );
+        scene.add( controllerGrip2 );
 
         // isDragging determines if the user is dragging their mouse
         let isDragging
@@ -376,69 +419,28 @@ export default function SolarSystem() {
         let requestID
 
         /**
-         * Stats component to see framerate
-         * @type {{REVISION: number, domElement: HTMLDivElement, dom: HTMLDivElement, showPanel: function(*): void, setMode: function(*): void, addPanel: function(*): *, update: function(): void, end: function(): number, begin: function(): void}}
-         */
-        const stats = new Stats()
-        document.body.appendChild(stats.dom)
-
-        /**
          * animate animates the scene. Animation frames are requested and called continuously. Every celestial body
          * is rotated around their own axis and all other celestial bodies except the sun are rotated around the origin
          * (the sun acts as the origin). Then the description is updated and the camera is updated. Lastly the scene is
          * rendered.
          */
         const animate = function () {
-            requestID = requestAnimationFrame(animate)
             TWEEN.update()
-            stats.update()
-            const orbitSpeed = 0.1
-            const negateDirection = Math.PI / -2
-            const rotateSpeed = 0.2
-
-            // Around own axis rotation
-            sun.body.rotateY(0.004 * rotateSpeed)
-            mercury.body.rotateY(0.004 * rotateSpeed)
-            venus.body.rotateY(0.002 * rotateSpeed)
-            earth.body.rotateY(0.02 * rotateSpeed)
-            mars.body.rotateY(0.018 * rotateSpeed)
-            jupiter.body.rotateY(0.04 * rotateSpeed)
-            saturn.body.rotateY(0.038 * rotateSpeed)
-            uranus.body.rotateY(0.03 * rotateSpeed)
-            neptune.body.rotateY(0.032 * rotateSpeed)
-            pluto.body.rotateY(0.008 * rotateSpeed)
-
-            // Around sun rotation
-            mercury.group.rotateY(0.04 * orbitSpeed)
-            venus.group.rotateY(0.015 * orbitSpeed)
-            earth.group.rotateY(0.01 * orbitSpeed)
-            mars.group.rotateY(0.008 * orbitSpeed)
-            jupiter.group.rotateY(0.002 * orbitSpeed)
-            saturn.group.rotateY(0.0009 * orbitSpeed)
-            uranus.group.rotateY(0.0004 * orbitSpeed)
-            neptune.group.rotateY(0.0001 * orbitSpeed)
-            pluto.group.rotateY(0.00007 * orbitSpeed)
-
-            // Rotate the matrix, which is applied to the moons
-            const matrix = new THREE.Matrix4()
-            earth.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.012 * negateDirection * rotateSpeed))
-            mars.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection * rotateSpeed))
-            mars.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.023 * negateDirection * rotateSpeed))
-            jupiter.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.026 * negateDirection * rotateSpeed))
-            saturn.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection * rotateSpeed))
-            saturn.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.025 * negateDirection * rotateSpeed))
-            uranus.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.016 * negateDirection * rotateSpeed))
-            uranus.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.017 * negateDirection * rotateSpeed))
-            uranus.moonMesh[2].position.applyMatrix4(matrix.makeRotationY(0.018 * negateDirection * rotateSpeed))
-            pluto.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection * rotateSpeed))
-
             updateDescription()
             updateCamera()
-            //render()
+            render()
             composer.render()
+            renderer.render(scene, camera)
         }
 
-        animate()
+        /**
+         * Rendering loop for vr render
+         */
+        renderer.setAnimationLoop(function() {
+            requestID = requestAnimationFrame(animate)
+            stats.update()
+
+        })
 
         return () => {
             mountRef.current?.removeChild(renderer.domElement)

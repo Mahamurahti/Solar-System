@@ -50,7 +50,7 @@ export default function Home() {
 
 
           <div className={styles.card}>
-            <Link href="/">
+            <Link href="/vr">
               <a>
                 <h2 className={styles.card_text}>
                   <div className={styles.arrow}>&lt;</div>
