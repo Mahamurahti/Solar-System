@@ -16,9 +16,9 @@ export default function createMoon(moonParams) {
     moonMesh.name = moonParams.name
     const axisOffset = moonParams.offsetAxis
     if (axisOffset === 'x') {
-        moonMesh.position.x = moonParams.offset
+        moonMesh.position.x = moonParams.position
     } if (axisOffset === 'z') {
-        moonMesh.position.z = moonParams.offset
+        moonMesh.position.z = moonParams.position
     }
 
     return moonMesh

@@ -38,7 +38,7 @@ export default function SolarSystemVR() {
          * @type {PerspectiveCamera}
          */
         const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, .1, 1000)
-        camera.position.set(-20, 30, 30)
+        camera.position.set(-10, 10, 10)
 
         /**
          * Renderer renders the scene through the camera. Renderer has shadows enabled.
@@ -47,8 +47,8 @@ export default function SolarSystemVR() {
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
         renderer.setSize(WIDTH, HEIGHT)
         renderer.setPixelRatio(window.devicePixelRatio)
-        //renderer.shadowMap.enabled = true
-        //renderer.shadowMap.type = THREE.PCFSoftShadowMap
+        renderer.shadowMap.enabled = true
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap
         renderer.getContext().canvas.addEventListener('webglcontextlost', function(event) {
             event.preventDefault()
             cancelAnimationFrame(requestID)
@@ -102,24 +102,24 @@ export default function SolarSystemVR() {
         const sun = createCelestialBody("Sun", 16/16, getTexturePath("Sun"), 0)
         const mercury = createCelestialBody("Mercury", 3.2/16, getTexturePath("Mercury"), -28/16)
         const venus = createCelestialBody("Venus", 5.8/16, getTexturePath("Venus"), 44/16)
-        const earthMoon = [{size: 1.35/16, texture: getTexturePath("Moon"), name: "Moon", offset: 10/16, offsetAxis: 'x'}]
+        const earthMoon = [{size: 1.35/16, texture: getTexturePath("Moon"), name: "Moon", position: 10/16, offsetAxis: 'x'}]
         const earth = createCelestialBody("Earth", 6/16, getTexturePath("Earth"), -62/16, null, earthMoon)
-        let marsMoons = [{size: 0.25/16, texture: getTexturePath("Phobos"), name: "Phobos", offset: 4/16, offsetAxis: 'x'},
-        {size: 0.125/16, texture: getTexturePath("Deimos"), name: "Deimos", offset: -6/16, offsetAxis: 'x'}]
+        let marsMoons = [{size: 0.25/16, texture: getTexturePath("Phobos"), name: "Phobos", position: 4/16, offsetAxis: 'x'},
+        {size: 0.125/16, texture: getTexturePath("Deimos"), name: "Deimos", position: -6/16, offsetAxis: 'x'}]
         const mars = createCelestialBody("Mars", 4/16, getTexturePath("Mars"), 78/16, null, marsMoons)
-        const jupiterMoons = [{size: 1.25/16, texture: getTexturePath("Europa"), name: "Europa", offset: -16/16, offsetAxis: 'x'}]
+        const jupiterMoons = [{size: 1.25/16, texture: getTexturePath("Europa"), name: "Europa", position: -16/16, offsetAxis: 'x'}]
         const jupiter = createCelestialBody("Jupiter", 12/16, getTexturePath("Jupiter"), -100/16, null, jupiterMoons)
         const saturnRing = { innerRadius: 10/16, outerRadius: 20/16, texture: getTexturePath("Saturn").ring }
-        const saturnMoons =  [{size: 0.65/16, texture: getTexturePath("Enceladus"), name: "Enceladus", offset: 15/16, offsetAxis: 'x'},
-            {size: 2.02/16, texture: getTexturePath("Titan"), name: "Titan", offset: -20/16, offsetAxis: 'x'}]
+        const saturnMoons =  [{size: 0.65/16, texture: getTexturePath("Enceladus"), name: "Enceladus", position: 15/16, offsetAxis: 'x'},
+            {size: 2.02/16, texture: getTexturePath("Titan"), name: "Titan", position: -20/16, offsetAxis: 'x'}]
         const saturn = createCelestialBody("Saturn", 10/16, getTexturePath("Saturn").body, 138/16, saturnRing, saturnMoons)
         const uranusRing = { innerRadius: 7/16, outerRadius: 12/16, texture: getTexturePath("Uranus").ring }
-        const uranusMoons = [{size: 0.65/16, texture: getTexturePath("Ariel"), name: "Ariel", offset: -10/16, offsetAxis: 'x'},
-            {size: 0.741/16, texture: getTexturePath("Titania"), name: "Titania", offset: 12/16, offsetAxis: 'x'},
-            {size: 0.681/16, texture: getTexturePath("Oberon"), name: "Oberon", offset: 12/16, offsetAxis: 'z'}]
+        const uranusMoons = [{size: 0.65/16, texture: getTexturePath("Ariel"), name: "Ariel", position: -10/16, offsetAxis: 'x'},
+            {size: 0.741/16, texture: getTexturePath("Titania"), name: "Titania", position: 12/16, offsetAxis: 'x'},
+            {size: 0.681/16, texture: getTexturePath("Oberon"), name: "Oberon", position: 12/16, offsetAxis: 'z'}]
         const uranus = createCelestialBody("Uranus", 7/16, getTexturePath("Uranus").body, -176/16, uranusRing, uranusMoons)
         const neptune = createCelestialBody("Neptune", 7/16, getTexturePath("Neptune"), 200/16)
-        let plutoMoons = [{size: 1.4/16, texture: getTexturePath("Kharon"), name: "Kharon", offset: -5/16, offsetAxis: 'z'}]
+        let plutoMoons = [{size: 1.4/16, texture: getTexturePath("Kharon"), name: "Kharon", position: -5/16, offsetAxis: 'z'}]
         const pluto = createCelestialBody("Pluto", 2.8/16, getTexturePath("Pluto"), -216/16, null, plutoMoons)
 
         // Sun has default emission to make bloom effect
@@ -143,7 +143,6 @@ export default function SolarSystemVR() {
                     interactable.push(object.moonMesh[i])
                 }
             }
-
         }
 
         document.addEventListener('pointermove', onPointerMove)
@@ -152,56 +151,180 @@ export default function SolarSystemVR() {
         document.addEventListener('keydown', onKeyDown)
         document.body.appendChild(VRButton.createButton(renderer))
         renderer.xr.enabled = true
+        const controllerModelFactory = new XRControllerModelFactory()
 
-        //Camera position when entered in VR
+        // Camera position when entered in VR
         const cameraGroup = new THREE.Group()
-        cameraGroup.position.set(0, 3, 0)
+        cameraGroup.position.set(0, 1, 2)
 
-        //When user enters VR mode reposition the camera
+        // When user enters VR mode reposition the camera and add event listeners to controllers
         renderer.xr.addEventListener('sessionstart', function () {
             scene.add(cameraGroup)
             cameraGroup.add(camera)
+            rightController.addEventListener('selectstart', onSelectStart)
+            rightController.addEventListener('selectend', onSelectEnd)
+            leftController.addEventListener('selectstart', onSelectStart)
+            leftController.addEventListener('selectend', onSelectEnd)
+            rightController.addEventListener('squeezestart', onSqueezeStart)
+            rightController.addEventListener('squeezeend', onSqueezeEnd)
+            leftController.addEventListener('squeezestart', onSqueezeStart)
+            leftController.addEventListener('squeezeend', onSqueezeEnd)
+
+
         })
-        //When user exits VR mode reposition the camera
+        // When user exits VR mode reposition the camera and remove event listeners of controllers
         renderer.xr.addEventListener('sessionend', function () {
             scene.remove(cameraGroup)
             cameraGroup.remove(camera)
+            rightController.removeEventListener('selectstart', onSelectStart)
+            rightController.removeEventListener('selectend', onSelectEnd)
+            leftController.removeEventListener('selectstart', onSelectStart)
+            leftController.removeEventListener('selectend', onSelectEnd)
+            rightController.removeEventListener('squeezestart', onSqueezeStart)
+            rightController.removeEventListener('squeezeend', onSqueezeEnd)
+            leftController.removeEventListener('squeezestart', onSqueezeStart)
+            leftController.removeEventListener('squeezeend', onSqueezeEnd)
         })
 
-        const geometry = new THREE.BufferGeometry();
-        geometry.setFromPoints( [ new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, - 5 ) ] );
+        // Line geometry for VR controllers
+        const geometry = new THREE.BufferGeometry()
+        geometry.setFromPoints( [ new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, - 1 ) ] )
+        const line = new THREE.Line( geometry )
+        line.name = 'line'
+        line.scale.z = 5
 
-        const controller1 = renderer.xr.getController( 0 );
-        controller1.add( new THREE.Line( geometry ) );
-        scene.add( controller1 );
+        // Create right and left controllers and add line to them
+        const rightController = renderer.xr.getController( 0 )
+        rightController.add(line.clone())
+        scene.add(rightController)
 
-        const controller2 = renderer.xr.getController( 1 );
-        controller2.add( new THREE.Line( geometry ) );
-        scene.add( controller2 );
+        const leftController = renderer.xr.getController( 1 )
+        leftController.add(line.clone())
+        scene.add(leftController)
 
-        const controllerModelFactory = new XRControllerModelFactory();
+        // Create right and left controller grips and add them to controllers
+        const rightControllerGrip = renderer.xr.getControllerGrip( 0 )
+        rightControllerGrip.add(controllerModelFactory.createControllerModel(rightControllerGrip))
+        scene.add( rightControllerGrip )
 
-        const controllerGrip1 = renderer.xr.getControllerGrip( 0 );
-        controllerGrip1.add( controllerModelFactory.createControllerModel( controllerGrip1 ) );
-        scene.add( controllerGrip1 );
+        const leftControllerGrip = renderer.xr.getControllerGrip( 1 )
+        leftControllerGrip.add(controllerModelFactory.createControllerModel(leftControllerGrip))
+        scene.add(leftControllerGrip)
 
-        const controllerGrip2 = renderer.xr.getControllerGrip( 1 );
-        controllerGrip2.add( controllerModelFactory.createControllerModel( controllerGrip2 ) );
-        scene.add( controllerGrip2 );
-
-        // isDragging determines if the user is dragging their mouse
-        let isDragging
-        // intersect is the first object that the raycast intersects with
-        let intersect
-        // description is the description of the celestial body the user has clicked
-        let description = null
-        // cameraTarget is the target where the camera is looking at
-        let cameraTarget = sun.body
         /**
          * Raycaster is used to cast a ray and determine if it hits something
          * @type {Raycaster}
          */
         const raycaster = new THREE.Raycaster()
+        // intersect is the first object that the raycast intersects with
+        let intersect
+        // description is the description of the celestial body the user has clicked
+        let description = null
+        // temporary matrix for saving controller position
+        const tempMatrix = new THREE.Matrix4()
+        // array for intersected object in VR
+        const intersected = []
+
+        /**
+         * onSqueezeStart is called when user presses squeeze trigger on VR controller
+         * then it check if controllers ray cast intersects any interactable object and if so description of object will popup
+         * @param event
+         */
+        function onSqueezeStart(event) {
+            const controller = event.target
+            const intersections = getIntersections(controller)
+            if(intersections.length > 0) {
+                intersect = intersections[0].object
+                description = createDescription(font, intersect)
+                descriptionFadeIn(scene, description)
+            }
+        }
+
+        /**
+         * onSqueezeEnd is called when user releases squeeze trigger on VR controller and then check if there is active
+         * description, if there is then it removes it
+         * @param event
+         */
+        function onSqueezeEnd(event) {
+            if (description) scene.remove(description)
+        }
+
+        /**
+         * onSelectStart is called when user presses select button on VR controller and then checks if controllers ray cast hits
+         * any interactable object if so attaches the object to controller so it can be inspected or moved while in hand
+         * @param event
+         */
+        function onSelectStart(event) {
+            const controller = event.target
+            const intersections = getIntersections(controller)
+            if(intersections.length > 0) {
+                intersect = intersections[0].object
+                controller.attach(intersect)
+                controller.userData.selected = intersect
+            }
+        }
+
+        /**
+         * onSelectEnd is called when user releases select button on the VR controller. It checks if there is object attached to controller
+         * if so it detaches it and adds the object back to scene.
+         * @param event
+         */
+        function onSelectEnd(event) {
+            const controller = event.target
+            if(controller.userData.selected !== undefined) {
+                const object = controller.userData.selected
+                interactable.push(object)
+                scene.add(object)
+                controller.userData.selected = undefined
+            }
+        }
+
+        /**
+         * getIntersections is called when something needs to check if controllers ray cast hits any interactable object
+         * returns array of intersected objects
+         * @param controller
+         * @returns {*[]|*}
+         */
+        function getIntersections(controller) {
+            tempMatrix.identity().extractRotation(controller.matrixWorld)
+            raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld)
+            raycaster.ray.direction.set(0, 0, -1).applyMatrix4(tempMatrix)
+            return raycaster.intersectObjects(interactable, false)
+        }
+
+        /**
+         * intersectObjectVR is called when in VR mode to check if any object is not selected by controller
+         * and line of controller intersects with an object
+         * @param controller
+         */
+        function intersectObjectsVR(controller) {
+            if(controller.userData.selected !== undefined) return
+            const line = controller.getObjectByName('line')
+            const intersections = getIntersections(controller)
+            if(intersections.length > 0) {
+                intersect = intersections[0].object
+                intersected.push(intersect)
+                line.scale.z = intersect.distance
+            } else {
+                line.scale.z = 5
+            }
+        }
+
+        /**
+         * Empties intersected array
+         */
+        function cleanIntersected() {
+            while ( intersected.length ) {
+                const object = intersected.pop();
+
+            }
+        }
+
+        // isDragging determines if the user is dragging their mouse
+        let isDragging
+        // cameraTarget is the target where the camera is looking at
+        let cameraTarget = sun.body
+
         /**
          * Pointer is the coordinates of the mouse on the browser window
          * @type {Vector2}
@@ -275,8 +398,8 @@ export default function SolarSystemVR() {
             const direction = new THREE.Vector3()
             cameraTarget.getWorldPosition(direction)
 
-            const cameraOffset = 80
-            const xDistance = Math.random() * 60 + 90
+            const cameraOffset = 10
+            const xDistance = Math.random() * 2 + 10
 
             // Start camera transitions to target
             new TWEEN.Tween(camera.position)
@@ -434,11 +557,17 @@ export default function SolarSystemVR() {
         }
 
         /**
-         * Rendering loop for vr render
+         * Rendering loop for VR render, update framerate window and update VR controller functions only when renderer.xr.isPresenting is true
          */
         renderer.setAnimationLoop(function() {
             requestID = requestAnimationFrame(animate)
             stats.update()
+            if(renderer.xr.isPresenting) {
+                cleanIntersected()
+                intersectObjectsVR(rightController)
+                intersectObjectsVR(leftController)
+            }
+
 
         })
 
