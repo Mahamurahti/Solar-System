@@ -1,0 +1,107 @@
+@use 'variables' as var
+
+@mixin flex-center
+  display: flex
+  justify-content: center
+  align-items: center
+
+@mixin transition
+  transition: all .2s ease-in-out
+
+.main
+  @include flex-center
+  position: relative
+  min-height: 100vh
+  padding: var.$gap-large 0
+  flex: 1
+  flex-direction: column
+
+.footer
+  @include flex-center
+  position: relative
+  padding: var.$gap-medium 0
+  border-top: 1px solid #eaeaea
+
+@font-face
+  font-family: Anurati
+  src: url(../public/fonts/Anurati-Regular.otf)
+
+.title
+  font-family: Anurati, sans-serif
+  margin: 0 0 var.$gap-medium
+  line-height: 1.15
+  font-size: 6rem
+
+@media (max-width: 600px)
+  .title
+    font-size: 4rem
+
+.title,
+.description
+  text-align: center
+
+.description
+  text-align: center
+  font-size: var.$text-size-normal
+  line-height: 1.5
+  max-width: 800px
+  margin: var.$gap-medium 0
+
+.list
+  font-size: var.$text-size-normal
+  line-height: 1.5
+  margin: var.$gap-medium 0
+  a
+    color: var.$primary-color
+    &:hover
+      color: var.$secondary-color
+      text-decoration: underline
+
+.section
+  @include flex-center
+  flex-direction: column
+
+.button
+  flex: 1 0 49%
+  margin: var.$gap-small
+  text-align: center
+  border: 3px solid var.$white
+  outline: 0 solid var.$white
+  max-width: 300px
+  max-height: 100px
+  @include transition
+  &:hover
+    outline: 3px solid var.$primary-color
+    border-color: var.$primary-color
+    .button_text
+      color: var.$primary-color
+    .arrow
+      transform: scale(1)
+  &:focus,
+  &:active
+    outline: 3px solid var.$secondary-color
+    border-color: var.$secondary-color
+    .button_text
+      color: var.$secondary-color
+    .arrow
+      color: var.$secondary-color
+
+@media (max-width: 600px)
+  .button
+    min-width: 250px
+
+.button_text
+  margin: 0
+  padding: var.$gap-medium
+  @include transition
+
+.arrow
+  display: inline-block
+  color: var.$primary-color
+  transform: scale(0)
+  @include transition
+
+.logo
+  height: 1em
+  margin-left: 0.5rem
+
