@@ -21,7 +21,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Panorama />
+      <Panorama texturePath={"CubemapRed"}/>
 
       <main className={styles.main}>
         <h1 className={styles.title}>
