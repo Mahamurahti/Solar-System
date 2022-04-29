@@ -51,11 +51,12 @@
   font-size: var.$text-size-normal
   line-height: 1.5
   margin: var.$gap-medium 0
-  a
-    color: var.$primary-color
-    &:hover
-      color: var.$secondary-color
-      text-decoration: underline
+
+.link
+  color: var.$primary-color
+  &:hover
+    color: var.$secondary-color
+    text-decoration: underline
 
 .section
   @include flex-center
@@ -105,3 +106,5 @@
   height: 1em
   margin-left: 0.5rem
 
+.red
+  color: red
