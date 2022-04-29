@@ -1,9 +1,10 @@
 export default function getTexturePath(name) {
+    const dir = 'cubemap/'
+    const red = 'red/', blue = 'blue/'
+    const images = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png']
     switch (name) {
-        case "Cubemap":
-            const dir = 'cubemap/'
-            const images = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png']
-            return images.map(image => dir + image)
+        case "CubemapRed": return images.map(image => dir + red + image)
+        case "CubemapBlue": return images.map(image => dir + blue + image)
         case "Stars": return 'textures/stars.jpg'
         case "Sun": return 'textures/sun.jpg'
         case "Mercury": return 'textures/mercury.jpg'
