@@ -10,6 +10,7 @@ import createComposer from "./createComposer"
 import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
 import styles from '../../styles/SolarSystem.module.sass'
 import Stats from "three/examples/jsm/libs/stats.module";
+import getDescription from "../../helpers/getDescription";
 
 /**
  * Creates a solar system that can be interacted with.
@@ -25,6 +26,8 @@ export default function SolarSystem() {
     useEffect(()  => {
         const WIDTH = window.innerWidth
         const HEIGHT = window.innerHeight
+
+        // ---------------------------------------- SETTING UP SCENE ---------------------------------------- //
 
         const stats = new Stats()
         document.body.appendChild(stats.dom)
@@ -60,6 +63,8 @@ export default function SolarSystem() {
 
         mountRef.current?.appendChild(renderer.domElement)
 
+        // ---------------------------------------- CONTROLS ---------------------------------------- //
+
         /**
          * Orbit controls gives access to orbit around the scene.
          * @type {OrbitControls}
@@ -72,6 +77,8 @@ export default function SolarSystem() {
         // Prevent spastic description behaviour at extremes of polar angles
         controls.maxPolarAngle = Math.PI - .01
         controls.minPolarAngle = .01
+
+        // ---------------------------------------- LIGHTING ---------------------------------------- //
 
         /**
          * Ambient light to lighten up the scene artificially, meaning even the dark sides of celestial bodies
@@ -92,6 +99,8 @@ export default function SolarSystem() {
         pointLight.shadow.mapSize.width = pointLight.shadow.mapSize.height = shadowResolution
         scene.add(pointLight)
 
+        // ---------------------------------------- POST PROCESSING ---------------------------------------- //
+
         const composerParams = { strength: .6, radius: .4, threshold: .85 }
         /**
          * Composer gives the scene a bloom effect.
@@ -99,8 +108,9 @@ export default function SolarSystem() {
          */
         const composer = createComposer(scene, camera, renderer, composerParams)
 
-        // Create all relevant celestial bodies in the solar system
+        // ---------------------------------------- SOLAR SYSTEM BUILDING ---------------------------------------- //
 
+        // Create all relevant celestial bodies in the solar system
         const sun = createCelestialBody("Sun", 100, getTexturePath("Sun"), 0)
         const mercury = createCelestialBody("Mercury", 1.8, getTexturePath("Mercury"), -119)
         const venus = createCelestialBody("Venus", 4.75, getTexturePath("Venus"), 136)
@@ -126,8 +136,8 @@ export default function SolarSystem() {
         const uranusMoons = [ariel, titania, oberon]
         const uranus = createCelestialBody("Uranus", 20.3, getTexturePath("Uranus").body, -1060, uranusMoons, uranusRing)
         const neptune = createCelestialBody("Neptune", 19.4, getTexturePath("Neptune"), 1605)
-        const kharon = { name: "Kharon", size: 1.4, texture: getTexturePath("Kharon"), offset: -5, offsetAxis: 'z' }
-        const plutoMoons = [kharon]
+        const charon = { name: "Charon", size: 1.4, texture: getTexturePath("Charon"), offset: -5, offsetAxis: 'z' }
+        const plutoMoons = [charon]
         const pluto = createCelestialBody("Pluto", 2.8, getTexturePath("Pluto"), -2050, plutoMoons)
 
         // Sun has default emission to make bloom effect
@@ -146,11 +156,13 @@ export default function SolarSystem() {
             scene.add(object.group)
             // Add body of celestial body to be interactable
             interactable.push(object.body)
-            // If the celestial body has moons, add all moon to be interactable
+            // If the celestial body has moons, add all moons to be interactable
             if(object.moons) for (const moon of object.moons) interactable.push(moon)
             // If the celestial body has a ring, add it to be interactable
             if(object.ring) interactable.push(object.ring)
         }
+
+        // ---------------------------------------- MOUSE EVENTS ---------------------------------------- //
 
         document.addEventListener('pointermove', onPointerMove)
         document.addEventListener('pointerdown', onPointerDown)
@@ -228,15 +240,17 @@ export default function SolarSystem() {
             }
         }
 
+        // ---------------------------------------- TRANSITION ANIMATION ---------------------------------------- //
+
         /**
          * transitionToTarget is called whenever the user has successfully clicked on an interactable object. In this
-         * function the target of the camera will change to the clicked object and a tween animation will start.
-         * In this animation the camera will move to specified location near the clicked object. y- and z-axis will
-         * always have a certain amount of offset, but the x-axis will be random between 90 - 150 units. When the
-         * animation starts, orbit controls are disabled, during the animation the camera should always look at the
-         * target and any description in the scene is removed (prevents creations of multiple descriptions if spam
-         * clicking) and when the animation is complete, the targets description will be created and faded in above
-         * the target.
+         * function the target of the camera will change to the clicked object and a tween animation will start (cancels
+         * all other tween animations before starting any new ones). In this animation the camera will move to specified
+         * location near the clicked object. y- and z-axis will always have a certain amount of offset, but the x-axis
+         * will be random between 275 - 315 units. When the animation starts, orbit controls are disabled, during the
+         * animation the camera should always look at the target and any description in the scene is removed (prevents
+         * creations of multiple descriptions if spam clicking) and when the animation is complete, the targets
+         * description will be created and faded in above the target.
          */
         function transitionToTarget(target) {
             // Cancel all other animations before starting transition
@@ -277,7 +291,14 @@ export default function SolarSystem() {
                 .start()
         }
 
-        const toast = document.querySelector('p')
+        // ---------------------------------------- TOASTS ---------------------------------------- //
+
+        /**
+         * Toast is a small text box where the latest key event will be shown. Triggers only when using keys from
+         * keyboard.
+         * @type {HTMLElement}
+         */
+        const toast = document.getElementById('toast')
         const timeout = () => toast.style.opacity = '0'
         function showToast(message) {
             toast.innerHTML = message
@@ -285,14 +306,16 @@ export default function SolarSystem() {
             setTimeout(() => timeout(), 1000)
         }
 
+        // ---------------------------------------- KEY EVENTS ---------------------------------------- //
+
         /**
-         * When number is pressed on keyboard a transition to the specified target will occur.
-         * The if statement check that the pressed key must be either from keyboard numbers or numeric keypad keys.
-         * @param event to check which number was pressed
+         * When a key is pressed, check if the key is any of the keys that are being used in the solar system key
+         * bindings. If yes, trigger key event, if no, don't do anything.
+         * Numbers from 0-9 are reserved for planets and the Sun and the upper row of letters (Q-P) are reserved for
+         * planets moons. Control is reserved for camera locking and Space for orbit locking.
+         * @param event to check which key was pressed
          */
         function onKeyDown(event) {
-            // Is the pressed number from keyboard numbers or numpad numbers
-
             const keycode = event.keyCode
             if (
                 keycodes.isKeyboardNumber(keycode) ||
@@ -301,95 +324,42 @@ export default function SolarSystem() {
                 keycodes.isQWERTYUIOP(keycode) ||
                 keycodes.isControl(keycode)
             ) {
+                function handleKeypress(target) {
+                    transitionToTarget(target)
+                    showToast(target.name.toUpperCase())
+                }
                 const pressedKey = event.key
                 switch(pressedKey) {
-                    case '1':
-                        transitionToTarget(sun.body)
-                        showToast(sun.body.name.toUpperCase())
-                        break
-                    case '2':
-                        transitionToTarget(mercury.body)
-                        showToast(mercury.body.name.toUpperCase())
-                        break
-                    case '3':
-                        transitionToTarget(venus.body)
-                        showToast(venus.body.name.toUpperCase())
-                        break
-                    case '4':
-                        transitionToTarget(earth.body)
-                        showToast(earth.body.name.toUpperCase())
-                        break
-                    case '5':
-                        transitionToTarget(mars.body)
-                        showToast(mars.body.name.toUpperCase())
-                        break
-                    case '6':
-                        transitionToTarget(jupiter.body)
-                        showToast(jupiter.body.name.toUpperCase())
-                        break
-                    case '7':
-                        transitionToTarget(saturn.body)
-                        showToast(saturn.body.name.toUpperCase())
-                        break
-                    case '8':
-                        transitionToTarget(uranus.body)
-                        showToast(uranus.body.name.toUpperCase())
-                        break
-                    case '9':
-                        transitionToTarget(neptune.body)
-                        showToast(neptune.body.name.toUpperCase())
-                        break
-                    case '0':
-                        transitionToTarget(pluto.body)
-                        showToast(pluto.body.name.toUpperCase())
-                        break
-                    case 'q':
-                        transitionToTarget(earth.moons[0])
-                        showToast(earth.moons[0].name.toUpperCase())
-                        break
-                    case 'w':
-                        transitionToTarget(mars.moons[0])
-                        showToast(mars.moons[0].name.toUpperCase())
-                        break
-                    case 'e':
-                        transitionToTarget(mars.moons[1])
-                        showToast(mars.moons[1].name.toUpperCase())
-                        break
-                    case 'r':
-                        transitionToTarget(jupiter.moons[0])
-                        showToast(jupiter.moons[0].name.toUpperCase())
-                        break
-                    case 't':
-                        transitionToTarget(saturn.moons[0])
-                        showToast(saturn.moons[0].name.toUpperCase())
-                        break
-                    case 'y':
-                        transitionToTarget(saturn.moons[1])
-                        showToast(saturn.moons[1].name.toUpperCase())
-                        break
-                    case 'u':
-                        transitionToTarget(uranus.moons[0])
-                        showToast(uranus.moons[0].name.toUpperCase())
-                        break
-                    case 'i':
-                        transitionToTarget(uranus.moons[1])
-                        showToast(uranus.moons[1].name.toUpperCase())
-                        break
-                    case 'o':
-                        transitionToTarget(uranus.moons[2])
-                        showToast(uranus.moons[2].name.toUpperCase())
-                        break
-                    case 'p':
-                        transitionToTarget(pluto.moons[0])
-                        showToast(pluto.moons[0].name.toUpperCase())
-                        break
+                    case '1': return handleKeypress(sun.body)
+                    case '2': return handleKeypress(mercury.body)
+                    case '3': return handleKeypress(venus.body)
+                    case '4': return handleKeypress(earth.body)
+                    case '5': return handleKeypress(mars.body)
+                    case '6': return handleKeypress(jupiter.body)
+                    case '7': return handleKeypress(saturn.body)
+                    case '8': return handleKeypress(uranus.body)
+                    case '9': return handleKeypress(neptune.body)
+                    case '0': return handleKeypress(pluto.body)
+                    case 'q': return handleKeypress(earth.moons[0])
+                    case 'w': return handleKeypress(mars.moons[0])
+                    case 'e': return handleKeypress(mars.moons[1])
+                    case 'r': return handleKeypress(jupiter.moons[0])
+                    case 't': return handleKeypress(saturn.moons[0])
+                    case 'y': return handleKeypress(saturn.moons[1])
+                    case 'u': return handleKeypress(uranus.moons[0])
+                    case 'i': return handleKeypress(uranus.moons[1])
+                    case 'o': return handleKeypress(uranus.moons[2])
+                    case 'p': return handleKeypress(pluto.moons[0])
                     case 'Control':
-                        // Pressing space will lock the zoomLevel. This way the user can easily follow the celestial body
+                        // Pressing control will lock the zoomLevel.
+                        // This way the user can easily follow the celestial body
                         lockZoom = !lockZoom
-                        if (lockZoom) zoomLevel = controls.target.distanceTo(controls.object.position)
+                        if (lockZoom) zoomLevel = controls.target.distanceTo(camera.position)
                         showToast(lockZoom ? "CAMERA LOCKED" : "CAMERA UNLOCKED")
                         break
                     case ' ':
+                        // Pressing space will lock orbiting.
+                        // This way the user can easily read the description above the celestial body
                         stopOrbit = !stopOrbit
                         showToast(stopOrbit ? "ORBITING STOPPED" : "ORBITING RESUMED")
                         break
@@ -399,10 +369,11 @@ export default function SolarSystem() {
 
         // Font of the description will be loaded here, since there is
         // a lot of problems loading it in createDescription.js
-        const robotoFontPath = 'fonts/Roboto_Regular.json'
-        const fontLoader = new FontLoader()
         let font
-        fontLoader.load(robotoFontPath, function (robotoFont) { font = robotoFont })
+        const fontLoader = new FontLoader()
+        fontLoader.load('fonts/Roboto_Regular.json', function (robotoFont) { font = robotoFont })
+
+        // ---------------------------------------- WINDOW RESIZING ---------------------------------------- //
 
         window.addEventListener( 'resize', onResize, false )
 
@@ -414,6 +385,8 @@ export default function SolarSystem() {
             camera.updateProjectionMatrix()
             renderer.setSize(window.innerWidth, window.innerHeight)
         }
+
+        // ---------------------------------------- RENDERING ---------------------------------------- //
 
         /**
          * updateDescription keeps the description is positioned a little above a celestial body.
@@ -429,6 +402,11 @@ export default function SolarSystem() {
             }
         }
 
+        /**
+         * lockZoom lock the zoom level to a certain amount, which means if the planet is orbiting, the camera will not
+         * just look at the target but follow it also on the zoom level which it was locked in.
+         * @type {boolean}
+         */
         let lockZoom = false, zoomLevel
 
         /**
@@ -458,7 +436,12 @@ export default function SolarSystem() {
          * requestID is only used for performance matters. If the context is lost (which we force when the component
          * unmounts) the latest animation frame will be cancelled.
          */
-        let requestID, stopOrbit = false
+        let requestID
+        /**
+         * stopOrbit lock the orbiting of planets in place. Controls the speed of orbit, which is 0 if true.
+         * @type {boolean}
+         */
+        let stopOrbit = false
 
         /**
          * animate animates the scene. Animation frames are requested and called continuously. Every celestial body
@@ -517,7 +500,6 @@ export default function SolarSystem() {
         }
 
         animate()
-        console.log(toast)
 
         return () => {
             mountRef.current?.removeChild(renderer.domElement)
@@ -526,9 +508,30 @@ export default function SolarSystem() {
         }
     }, [])
 
+    /**
+     * handleClick handles the click of the button that shows the key bindings the scene has.
+     */
+    function handleClick() {
+        const controlsText = document.getElementById('controls_text')
+        const controlsButton = document.getElementById('controls_button')
+        const opacity = controlsText.style.opacity
+        if (opacity === '1') {
+            controlsText.style.opacity = '0'
+            controlsButton.style.transform = 'rotate(360deg)'
+        } else {
+            controlsText.style.opacity = '1'
+            controlsButton.style.transform = 'rotate(180deg)'
+        }
+        controlsButton.blur()
+    }
+
     return (
         <>
-            <p className={styles.toast}>TOAST</p>
+            <p className={styles.toast} id="toast">TOAST</p>
+            <div className={styles.controls_container}>
+                <p className={styles.controls_text} id="controls_text">{getDescription("Controls")}</p>
+                <button className={styles.controls_button} id="controls_button" onClick={handleClick}>&lt;</button>
+            </div>
             <div ref={mountRef} />
         </>
     )
