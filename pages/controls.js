@@ -1,10 +1,10 @@
 import Head from 'next/head'
-import Image from 'next/image'
 import Link from "next/link"
 import styles from '../styles/Controls.module.sass'
 
 import Panorama from "../components/Panorama/Panorama"
-import Control from "../components/Controls/Control";
+import Control from "../components/Controls/Control"
+import Footer from "../components/Footer"
 
 /**
  * Creates the Controls page
@@ -17,7 +17,7 @@ export default function Controls() {
     return (
         <>
             <Head>
-                <title>About - Solar System</title>
+                <title>Controls - Solar System</title>
                 <meta name="description" content="Controls of the Solar System web application" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
@@ -213,18 +213,7 @@ export default function Controls() {
                 </div>
             </main>
 
-            <footer className={styles.footer}>
-                <a
-                    href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Powered by{' '}
-                    <span className={styles.logo}>
-                        <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-                    </span>
-                </a>
-            </footer>
+            <Footer />
         </>
     )
 }
