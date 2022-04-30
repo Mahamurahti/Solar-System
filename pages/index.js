@@ -62,7 +62,7 @@ export default function Home() {
           </div>
 
           <div className={styles.card}>
-            <Link href="/">
+            <Link href="/controls">
               <a>
                 <h2 className={styles.card_text}>
                   <div className={styles.arrow}>&lt;</div>
