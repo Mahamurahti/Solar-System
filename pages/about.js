@@ -4,6 +4,7 @@ import styles from '../styles/About.module.sass'
 
 import Panorama from "../components/Panorama/Panorama"
 import Footer from "../components/Footer";
+import ListItem from "../components/About/ListItem";
 
 /**
  * Creates the About page
@@ -57,82 +58,23 @@ export default function About() {
                 <section className={styles.section}>
                     <h2>Technologies</h2>
                     <ul className={styles.list}>
-                        <li>
-                            <a
-                                href="https://nextjs.org/"
-                                target="_blank"
-                                rel="noreferrer"
-                                className={styles.link}
-                            >
-                                Next.js
-                            </a> - React framework
-                        </li>
-                        <li>
-                            <a
-                                href="https://threejs.org/"
-                                target="_blank"
-                                rel="noreferrer"
-                                className={styles.link}
-                            >
-                                Three.js
-                            </a> - 3D computer graphic library
-                        </li>
-                        <li>
-                            <a
-                                href="https://github.com/tweenjs/tween.js/"
-                                target="_blank"
-                                rel="noreferrer"
-                                className={styles.link}
-                            >
-                                Tween.js
-                            </a> - animation engine
-                        </li>
-                        <li>
-                            <a
-                                href="https://sass-lang.com/"
-                                target="_blank"
-                                rel="noreferrer"
-                                className={styles.link}
-                            >
-                                Sass
-                            </a> - CSS pre-processor
-                        </li>
-                        <li>
-                            <a
-                                href="https://git-scm.com/"
-                                target="_blank"
-                                rel="noreferrer"
-                                className={styles.link}
-                            >
-                                Git
-                            </a> - version control
-                        </li>
+                        <ListItem link={"https://nextjs.org/"}>Next.js - React framework</ListItem>
+                        <ListItem link={"https://threejs.org/"}>Three.js - 3D computer graphic library</ListItem>
+                        <ListItem link={"https://github.com/tweenjs/tween.js/"}>Tween.js - animation engine</ListItem>
+                        <ListItem link={"https://sass-lang.com/"}>Sass - CSS preprocessor</ListItem>
+                        <ListItem link={"https://git-scm.com/"}>Git - version control</ListItem>
                     </ul>
                 </section>
 
                 <section className={styles.section}>
                     <h2>Textures</h2>
                     <ul className={styles.list}>
-                        <li>
-                            <a
-                                href="https://tools.wwwtyro.net/space-3d/index.html"
-                                target="_blank"
-                                rel="noreferrer"
-                                className={styles.link}
-                            >
-                                Space Panoramas
-                            </a> - procedurally created cubemaps of space
-                        </li>
-                        <li>
-                            <a
-                                href="https://www.solarsystemscope.com/textures/"
-                                target="_blank"
-                                rel="noreferrer"
-                                className={styles.link}
-                            >
-                                Celestial body textures
-                            </a> - all relevant textures of bodies in our Solar System
-                        </li>
+                        <ListItem link={"https://tools.wwwtyro.net/space-3d/index.html"}>
+                            Space Panoramas - procedurally created cubemaps of space
+                        </ListItem>
+                        <ListItem link={"https://www.solarsystemscope.com/textures/"}>
+                            Celestial body textures - all relevant textures of bodies in our Solar System
+                        </ListItem>
                     </ul>
                 </section>
 
