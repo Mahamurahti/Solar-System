@@ -1,10 +1,8 @@
-import Head from 'next/head'
-import Link from "next/link"
-import styles from '../styles/Home.module.sass'
-
+import Head from "next/head"
+import styles from "../styles/Home.module.sass"
 import Panorama from "../components/Panorama/Panorama"
-import Footer from "../components/Footer";
-import Button from "../components/Button";
+import Footer from "../components/Footer"
+import Button from "../components/Button"
 
 /**
  * Creates the Home page

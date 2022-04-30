@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import * as THREE from "three"
 
 /**
  * Creates a ring object for a celestial body
@@ -29,7 +29,7 @@ export default function createRing(name, radii, texture, position) {
     ringMesh.position.y = position.y
     ringMesh.position.z = position.z
     ringMesh.rotation.x = -0.5 * Math.PI
-    if(name === 'Uranus') ringMesh.rotation.y = 90
+    if(name === "Uranus") ringMesh.rotation.y = 90
 
     ringMesh.receiveShadow = true
     ringMesh.castShadow = true

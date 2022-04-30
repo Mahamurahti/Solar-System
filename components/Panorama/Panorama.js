@@ -1,5 +1,5 @@
-import * as THREE from 'three'
-import { useEffect, useRef } from 'react'
+import * as THREE from "three"
+import { useEffect, useRef } from "react"
 import getTexturePath from "../../helpers/getTexturePath"
 
 /**
@@ -40,7 +40,7 @@ export default function Panorama(props) {
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
         renderer.setSize(WIDTH, HEIGHT)
         renderer.setPixelRatio(window.devicePixelRatio)
-        renderer.getContext().canvas.addEventListener('webglcontextlost', function(event) {
+        renderer.getContext().canvas.addEventListener("webglcontextlost", function(event) {
             event.preventDefault()
             cancelAnimationFrame(requestID)
         })
@@ -51,8 +51,8 @@ export default function Panorama(props) {
         const target = new THREE.Vector2()
         const windowHalf = new THREE.Vector2(WIDTH / 2, HEIGHT / 2)
 
-        document.addEventListener( 'mousemove', onMouseMove, false )
-        window.addEventListener( 'resize', onResize, false )
+        document.addEventListener( "mousemove", onMouseMove, false )
+        window.addEventListener( "resize", onResize, false )
 
         /**
          * onMouseMove updates the mouse position.

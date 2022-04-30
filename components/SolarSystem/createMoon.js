@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import * as THREE from "three"
 
 /**
  * Creates a moon object for a celestial body
@@ -21,8 +21,8 @@ export default function createMoon(name, size, texture, offset, offsetAxis) {
     const moonMesh = new THREE.Mesh(moonGeometry, moonMaterial)
     moonMesh.name = name
 
-    if (offsetAxis === 'x') moonMesh.position.x = offset
-    if (offsetAxis === 'z') moonMesh.position.z = offset
+    if (offsetAxis === "x") moonMesh.position.x = offset
+    if (offsetAxis === "z") moonMesh.position.z = offset
 
     moonMesh.receiveShadow = true
     moonMesh.castShadow = true

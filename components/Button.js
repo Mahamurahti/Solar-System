@@ -1,5 +1,5 @@
 import styles from "../styles/Button.module.sass"
-import Link from "next/link";
+import Link from "next/link"
 
 export default function Button(props) {
     return props.external ? (

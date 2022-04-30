@@ -1,5 +1,5 @@
-import * as THREE from 'three'
-import { useEffect, useRef } from 'react'
+import * as THREE from "three"
+import { useEffect, useRef } from "react"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader"
 import getTexturePath from "../../helpers/getTexturePath"
@@ -8,9 +8,9 @@ import createCelestialBody from "./createCelestialBody"
 import createDescription, { descriptionFadeIn, descriptionFadeOut } from "./createDescription"
 import createComposer from "./createComposer"
 import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
-import styles from '../../styles/SolarSystem.module.sass'
-import Stats from "three/examples/jsm/libs/stats.module";
-import getDescription from "../../helpers/getDescription";
+import styles from "../../styles/SolarSystem.module.sass"
+import Stats from "three/examples/jsm/libs/stats.module"
+import getDescription from "../../helpers/getDescription"
 
 /**
  * Creates a solar system that can be interacted with.
@@ -56,7 +56,7 @@ export default function SolarSystem() {
         renderer.setPixelRatio(window.devicePixelRatio)
         renderer.shadowMap.enabled = true
         renderer.shadowMap.type = THREE.PCFSoftShadowMap
-        renderer.getContext().canvas.addEventListener('webglcontextlost', function(event) {
+        renderer.getContext().canvas.addEventListener("webglcontextlost", function(event) {
             event.preventDefault()
             cancelAnimationFrame(requestID)
         })
@@ -114,29 +114,29 @@ export default function SolarSystem() {
         const sun = createCelestialBody("Sun", 100, getTexturePath("Sun"), 0)
         const mercury = createCelestialBody("Mercury", 1.8, getTexturePath("Mercury"), -119)
         const venus = createCelestialBody("Venus", 4.75, getTexturePath("Venus"), 136)
-        const moon = { name: "Moon", size: 1.35, texture: getTexturePath("Moon"), offset: 7, offsetAxis: 'x'}
+        const moon = { name: "Moon", size: 1.35, texture: getTexturePath("Moon"), offset: 7, offsetAxis: "x"}
         const earthMoons = [moon]
         const earth = createCelestialBody("Earth", 5, getTexturePath("Earth"), -150, earthMoons)
-        const phobos = { name: "Phobos", size: 0.25, texture: getTexturePath("Phobos"), offset: 4, offsetAxis: 'x' }
-        const deimos = { name: "Deimos", size: 0.125, texture: getTexturePath("Deimos"), offset: -6, offsetAxis: 'x' }
+        const phobos = { name: "Phobos", size: 0.25, texture: getTexturePath("Phobos"), offset: 4, offsetAxis: "x" }
+        const deimos = { name: "Deimos", size: 0.125, texture: getTexturePath("Deimos"), offset: -6, offsetAxis: "x" }
         const marsMoons = [phobos, deimos]
         const mars = createCelestialBody("Mars", 2.66, getTexturePath("Mars"), 175, marsMoons)
-        const europa = { name: "Europa", size: 1.25, texture: getTexturePath("Europa"), offset: -156, offsetAxis: 'x' }
+        const europa = { name: "Europa", size: 1.25, texture: getTexturePath("Europa"), offset: -156, offsetAxis: "x" }
         const jupiterMoons = [europa]
         const jupiter = createCelestialBody("Jupiter", 56, getTexturePath("Jupiter"), -360, jupiterMoons)
         const saturnRing = { innerRadius: 47, outerRadius: 94, texture: getTexturePath("Saturn").ring }
-        const enceladus = { name: "Enceladus", size: 0.65, texture: getTexturePath("Enceladus"), offset: 100, offsetAxis: 'x'}
-        const titan = { name: "Titan", size: 2.02, texture: getTexturePath("Titan"), offset: -140, offsetAxis: 'x' }
+        const enceladus = { name: "Enceladus", size: 0.65, texture: getTexturePath("Enceladus"), offset: 100, offsetAxis: "x"}
+        const titan = { name: "Titan", size: 2.02, texture: getTexturePath("Titan"), offset: -140, offsetAxis: "x" }
         const saturnMoons =  [enceladus, titan]
         const saturn = createCelestialBody("Saturn", 47, getTexturePath("Saturn").body, 625, saturnMoons, saturnRing)
         const uranusRing = { innerRadius: 20.3, outerRadius: 34.8, texture: getTexturePath("Uranus").ring }
-        const ariel = { name: "Ariel", size: 0.65, texture: getTexturePath("Ariel"), offset: -39, offsetAxis: 'x' }
-        const titania = { name: "Titania", size: 0.741, texture: getTexturePath("Titania"), offset: 42, offsetAxis: 'x' }
-        const oberon = { name: "Oberon", size: 0.681, texture: getTexturePath("Oberon"), offset: 37, offsetAxis: 'z' }
+        const ariel = { name: "Ariel", size: 0.65, texture: getTexturePath("Ariel"), offset: -39, offsetAxis: "x" }
+        const titania = { name: "Titania", size: 0.741, texture: getTexturePath("Titania"), offset: 42, offsetAxis: "x" }
+        const oberon = { name: "Oberon", size: 0.681, texture: getTexturePath("Oberon"), offset: 37, offsetAxis: "z" }
         const uranusMoons = [ariel, titania, oberon]
         const uranus = createCelestialBody("Uranus", 20.3, getTexturePath("Uranus").body, -1060, uranusMoons, uranusRing)
         const neptune = createCelestialBody("Neptune", 19.4, getTexturePath("Neptune"), 1605)
-        const charon = { name: "Charon", size: 1.4, texture: getTexturePath("Charon"), offset: -5, offsetAxis: 'z' }
+        const charon = { name: "Charon", size: 1.4, texture: getTexturePath("Charon"), offset: -5, offsetAxis: "z" }
         const plutoMoons = [charon]
         const pluto = createCelestialBody("Pluto", 2.8, getTexturePath("Pluto"), -2050, plutoMoons)
 
@@ -164,10 +164,10 @@ export default function SolarSystem() {
 
         // ---------------------------------------- MOUSE EVENTS ---------------------------------------- //
 
-        document.addEventListener('pointermove', onPointerMove)
-        document.addEventListener('pointerdown', onPointerDown)
-        document.addEventListener('pointerup', onPointerUp)
-        document.addEventListener('keydown', onKeyDown)
+        document.addEventListener("pointermove", onPointerMove)
+        document.addEventListener("pointerdown", onPointerDown)
+        document.addEventListener("pointerup", onPointerUp)
+        document.addEventListener("keydown", onKeyDown)
 
         // isDragging determines if the user is dragging their mouse
         let isDragging
@@ -192,7 +192,7 @@ export default function SolarSystem() {
          * onPointerMove is called when the user moves their mouse on the browser window. If the mouse is moving,
          * dragging is set to true and the mouse position is tracked. A raycast is then cast from the camera to the
          * point where the mouse is. If the raycast hits something, the intersected object will be highlighted as
-         * red (if interactable). If the raycast doesn't hit anything, the latest hit object will be returned to normal.
+         * red (if interactable). If the raycast doesn"t hit anything, the latest hit object will be returned to normal.
          * @param event is the mouse, from which the position is fetched
          */
         function onPointerMove(event) {
@@ -226,7 +226,7 @@ export default function SolarSystem() {
          * onPointerUp is called when the user releases their mouse button up. onPointerUp-function will execute its
          * functionality only if the user has not dragged their mouse after mouse button is pressed down. If the user
          * has dragged their mouse after mouse button is pressed down, nothing will happen. If the user just presses
-         * the mouse button (and doesn't drag) a raycast is fired off to the point of the mouse. If the raycast hits
+         * the mouse button (and doesn"t drag) a raycast is fired off to the point of the mouse. If the raycast hits
          * something that is interactable a transition to the object will happen. If nothing was hit and there is a
          * description in the scene, it will be removed.
          */
@@ -298,11 +298,11 @@ export default function SolarSystem() {
          * keyboard.
          * @type {HTMLElement}
          */
-        const toast = document.getElementById('toast')
-        const timeout = () => toast.style.opacity = '0'
+        const toast = document.getElementById("toast")
+        const timeout = () => toast.style.opacity = "0"
         function showToast(message) {
             toast.innerHTML = message
-            toast.style.opacity = '1'
+            toast.style.opacity = "1"
             setTimeout(() => timeout(), 1000)
         }
 
@@ -310,7 +310,7 @@ export default function SolarSystem() {
 
         /**
          * When a key is pressed, check if the key is any of the keys that are being used in the solar system key
-         * bindings. If yes, trigger key event, if no, don't do anything.
+         * bindings. If yes, trigger key event, if no, don"t do anything.
          * Numbers from 0-9 are reserved for planets and the Sun and the upper row of letters (Q-P) are reserved for
          * planets moons. Control is reserved for camera locking and Space for orbit locking.
          * @param event to check which key was pressed
@@ -330,34 +330,34 @@ export default function SolarSystem() {
                 }
                 const pressedKey = event.key
                 switch(pressedKey) {
-                    case '1': return handleKeypress(sun.body)
-                    case '2': return handleKeypress(mercury.body)
-                    case '3': return handleKeypress(venus.body)
-                    case '4': return handleKeypress(earth.body)
-                    case '5': return handleKeypress(mars.body)
-                    case '6': return handleKeypress(jupiter.body)
-                    case '7': return handleKeypress(saturn.body)
-                    case '8': return handleKeypress(uranus.body)
-                    case '9': return handleKeypress(neptune.body)
-                    case '0': return handleKeypress(pluto.body)
-                    case 'q': return handleKeypress(earth.moons[0])
-                    case 'w': return handleKeypress(mars.moons[0])
-                    case 'e': return handleKeypress(mars.moons[1])
-                    case 'r': return handleKeypress(jupiter.moons[0])
-                    case 't': return handleKeypress(saturn.moons[0])
-                    case 'y': return handleKeypress(saturn.moons[1])
-                    case 'u': return handleKeypress(uranus.moons[0])
-                    case 'i': return handleKeypress(uranus.moons[1])
-                    case 'o': return handleKeypress(uranus.moons[2])
-                    case 'p': return handleKeypress(pluto.moons[0])
-                    case 'Control':
+                    case "1": return handleKeypress(sun.body)
+                    case "2": return handleKeypress(mercury.body)
+                    case "3": return handleKeypress(venus.body)
+                    case "4": return handleKeypress(earth.body)
+                    case "5": return handleKeypress(mars.body)
+                    case "6": return handleKeypress(jupiter.body)
+                    case "7": return handleKeypress(saturn.body)
+                    case "8": return handleKeypress(uranus.body)
+                    case "9": return handleKeypress(neptune.body)
+                    case "0": return handleKeypress(pluto.body)
+                    case "q": return handleKeypress(earth.moons[0])
+                    case "w": return handleKeypress(mars.moons[0])
+                    case "e": return handleKeypress(mars.moons[1])
+                    case "r": return handleKeypress(jupiter.moons[0])
+                    case "t": return handleKeypress(saturn.moons[0])
+                    case "y": return handleKeypress(saturn.moons[1])
+                    case "u": return handleKeypress(uranus.moons[0])
+                    case "i": return handleKeypress(uranus.moons[1])
+                    case "o": return handleKeypress(uranus.moons[2])
+                    case "p": return handleKeypress(pluto.moons[0])
+                    case "Control":
                         // Pressing control will lock the zoomLevel.
                         // This way the user can easily follow the celestial body
                         lockZoom = !lockZoom
                         if (lockZoom) zoomLevel = controls.target.distanceTo(camera.position)
                         showToast(lockZoom ? "CAMERA LOCKED" : "CAMERA UNLOCKED")
                         break
-                    case ' ':
+                    case " ":
                         // Pressing space will lock orbiting.
                         // This way the user can easily read the description above the celestial body
                         stopOrbit = !stopOrbit
@@ -371,11 +371,11 @@ export default function SolarSystem() {
         // a lot of problems loading it in createDescription.js
         let font
         const fontLoader = new FontLoader()
-        fontLoader.load('fonts/Roboto_Regular.json', function (robotoFont) { font = robotoFont })
+        fontLoader.load("fonts/Roboto_Regular.json", function (robotoFont) { font = robotoFont })
 
         // ---------------------------------------- WINDOW RESIZING ---------------------------------------- //
 
-        window.addEventListener( 'resize', onResize, false )
+        window.addEventListener( "resize", onResize, false )
 
         /**
          * onResize scales the renderer and aspect ratio of the camera to screen size when the window size changes.
@@ -512,15 +512,15 @@ export default function SolarSystem() {
      * handleClick handles the click of the button that shows the key bindings the scene has.
      */
     function handleClick() {
-        const controlsText = document.getElementById('controls_text')
-        const controlsButton = document.getElementById('controls_button')
+        const controlsText = document.getElementById("controls_text")
+        const controlsButton = document.getElementById("controls_button")
         const opacity = controlsText.style.opacity
-        if (opacity === '1') {
-            controlsText.style.opacity = '0'
-            controlsButton.style.transform = 'rotate(360deg)'
+        if (opacity === "1") {
+            controlsText.style.opacity = "0"
+            controlsButton.style.transform = "rotate(360deg)"
         } else {
-            controlsText.style.opacity = '1'
-            controlsButton.style.transform = 'rotate(180deg)'
+            controlsText.style.opacity = "1"
+            controlsButton.style.transform = "rotate(180deg)"
         }
         controlsButton.blur()
     }

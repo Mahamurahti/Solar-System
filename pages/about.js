@@ -1,11 +1,9 @@
-import Head from 'next/head'
-import Link from "next/link"
-import styles from '../styles/About.module.sass'
-
+import Head from "next/head"
+import styles from "../styles/About.module.sass"
 import Panorama from "../components/Panorama/Panorama"
-import Footer from "../components/Footer";
-import ListItem from "../components/About/ListItem";
-import Button from "../components/Button";
+import Footer from "../components/Footer"
+import ListItem from "../components/About/ListItem"
+import Button from "../components/Button"
 
 /**
  * Creates the About page
@@ -82,7 +80,7 @@ export default function About() {
                 <section className={styles.section}>
                     <h2 className={styles.red}>!!! NOTES !!!</h2>
                     <p className={styles.description}>
-                        <b>The Solar System isn't completely to scale</b> even though distances and sizes are roughly
+                        <b>The Solar System isn"t completely to scale</b> even though distances and sizes are roughly
                         calculated according to astronomical units. Some exceptions are the Sun, which is literally so
                         big it would cover up too much of the scene, and the gas giants. <b>Not all moon are
                         present</b>, since we only added moon we could find textures for. The same reason applies for
