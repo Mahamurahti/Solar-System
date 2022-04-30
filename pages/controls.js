@@ -17,7 +17,7 @@ export default function Controls() {
             <Head>
                 <title>Controls - Solar System</title>
                 <meta name="description" content="Controls of the Solar System web application" />
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="/logo.svg" />
             </Head>
 
             <Panorama texturePath={"CubemapGreen"}/>

@@ -3,6 +3,7 @@ import styles from "../styles/Home.module.sass"
 import Panorama from "../components/Panorama"
 import Footer from "../components/Footer"
 import Button from "../components/Button"
+import Image from "next/image"
 
 /**
  * Creates the Home page
@@ -16,14 +17,18 @@ export default function Home() {
       <Head>
         <title>Solar System</title>
         <meta name="description" content="Solar System exploration web application" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/logo.svg" />
       </Head>
 
       <Panorama texturePath={"CubemapRed"}/>
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          SOLAR SYSTEM
+            S
+            <span className={styles.logo}>
+                <Image src={"/logo.svg"} width={100} height={80} />
+            </span>
+            LAR SYSTEM
         </h1>
 
 

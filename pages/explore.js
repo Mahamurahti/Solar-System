@@ -13,7 +13,7 @@ export default function Explore() {
             <Head>
                 <title>Explore - Solar System</title>
                 <meta name="description" content="Explore the Solar System" />
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="/logo.svg" />
             </Head>
             <SolarSystem />
         </>

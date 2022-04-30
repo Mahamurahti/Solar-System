@@ -17,7 +17,7 @@ export default function About() {
             <Head>
                 <title>About - Solar System</title>
                 <meta name="description" content="About the Solar System web application" />
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="/logo.svg" />
             </Head>
 
             <Panorama texturePath={"CubemapBlue"}/>

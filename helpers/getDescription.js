@@ -58,8 +58,8 @@ export default function getDescription(name) {
         case "Deimos":
             return "Deimos is the smaller and outermost of the two natural satellites of Mars. Deimos has a mean radius\n" +
                 "of 6.2 km and takes 30.3 hours to orbit Mars. Deimos is 23,460 km from Mars, much farther than Mars'\n" +
-                "other moon, Phobos. It is named after Deimos, the Ancient Greek god. Deimos's orbit is nearly circular\n" +
-                "and is close to Mars's equatorial plane. Deimos is possibly an asteroid that was perturbed by Jupiter\n" +
+                "other moon, Phobos. It is named after Deimos, the Ancient Greek god. Deimos' orbit is nearly circular\n" +
+                "and is close to Mars' equatorial plane. Deimos is possibly an asteroid that was perturbed by Jupiter\n" +
                 "into an orbit that allowed it to be captured by Mars, though this hypothesis is still controversial\n" +
                 "and disputed."
         case "Jupiter":
