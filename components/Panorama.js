@@ -1,13 +1,13 @@
 import * as THREE from "three"
 import { useEffect, useRef } from "react"
-import getTexturePath from "../../helpers/getTexturePath"
+import getTexturePath from "../helpers/getTexturePath"
 
 /**
  * Creates a Panorama of a star field.
  *
  * @author Eric Keränen
+ * @param props includes the specified texture path
  * @returns {JSX.Element}
- * @constructor
  */
 export default function Panorama(props) {
 

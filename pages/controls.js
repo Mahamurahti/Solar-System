@@ -1,6 +1,6 @@
 import Head from "next/head"
 import styles from "../styles/Controls.module.sass"
-import Panorama from "../components/Panorama/Panorama"
+import Panorama from "../components/Panorama"
 import Control from "../components/Controls/Control"
 import Footer from "../components/Footer"
 import Button from "../components/Button"
@@ -10,7 +10,6 @@ import Button from "../components/Button"
  *
  * @author Eric Keränen
  * @returns {JSX.Element}
- * @constructor
  */
 export default function Controls() {
     return (

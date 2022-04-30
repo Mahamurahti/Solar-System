@@ -1,6 +1,13 @@
 import styles from "../styles/Button.module.sass"
 import Link from "next/link"
 
+/**
+ * Creates a Button element
+ *
+ * @author Eric Keränen
+ * @param props contains information about the link, text and whether the link is to an external site or not
+ * @returns {JSX.Element}
+ */
 export default function Button(props) {
     return props.external ? (
         <div className={styles.button}>

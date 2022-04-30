@@ -1,6 +1,12 @@
 import styles from "../styles/Footer.module.sass"
 import Image from "next/image"
 
+/**
+ * Creates a Footer element
+ *
+ * @author Eric Keränen
+ * @returns {JSX.Element}
+ */
 export default function Footer() {
     return (
         <footer className={styles.footer}>

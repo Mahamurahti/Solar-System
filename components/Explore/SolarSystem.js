@@ -13,11 +13,10 @@ import Stats from "three/examples/jsm/libs/stats.module"
 import getDescription from "../../helpers/getDescription"
 
 /**
- * Creates a solar system that can be interacted with.
+ * Creates a Solar System that can be interacted with.
  *
  * @author Timo Tamminiemi & Eric Keränen
  * @returns {JSX.Element}
- * @constructor
  */
 export default function SolarSystem() {
 

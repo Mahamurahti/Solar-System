@@ -1,5 +1,12 @@
 import styles from "../../styles/ListItem.module.sass"
 
+/**
+ * Creates a list item for the list in About page
+ *
+ * @author Eric Keränen
+ * @param props includes information about the text and link
+ * @returns {JSX.Element}
+ */
 export default function ListItem(props) {
 
     const text = props.children
