@@ -1,16 +1,14 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import Link from "next/link"
-import styles from '../styles/Home.module.sass'
-
-import Panorama from "../components/Panorama/Panorama"
+import Head from "next/head"
+import styles from "../styles/Home.module.sass"
+import Panorama from "../components/Panorama"
+import Footer from "../components/Footer"
+import Button from "../components/Button"
 
 /**
  * Creates the Home page
  *
  * @author Eric Keränen
  * @returns {JSX.Element}
- * @constructor
  */
 export default function Home() {
   return (
@@ -36,67 +34,14 @@ export default function Home() {
         </p>
 
         <div className={styles.grid}>
-          <div className={styles.card}>
-            <Link href="/explore">
-              <a>
-                <h2 className={styles.card_text}>
-                  <div className={styles.arrow}>&lt;</div>
-                  {' '}Explore{' '}
-                  <div className={styles.arrow}>&gt;</div>
-                </h2>
-              </a>
-            </Link>
-          </div>
-
-
-          <div className={styles.card}>
-            <Link href="/about">
-              <a>
-                <h2 className={styles.card_text}>
-                  <div className={styles.arrow}>&lt;</div>
-                  {' '}About{' '}
-                  <div className={styles.arrow}>&gt;</div>
-                </h2>
-              </a>
-            </Link>
-          </div>
-
-          <div className={styles.card}>
-            <Link href="/controls">
-              <a>
-                <h2 className={styles.card_text}>
-                  <div className={styles.arrow}>&lt;</div>
-                  {' '}Controls{' '}
-                  <div className={styles.arrow}>&gt;</div>
-                </h2>
-              </a>
-            </Link>
-          </div>
-
-          <div className={styles.card}>
-            <a href="https://bit.ly/3vs64pT" target="_blank" rel="noreferrer">
-              <h2 className={styles.card_text}>
-                <div className={styles.arrow}>&lt;</div>
-                {' '}Surprise{' '}
-                <div className={styles.arrow}>&gt;</div>
-              </h2>
-            </a>
-          </div>
+          <Button link={"/explore"}>Explore</Button>
+          <Button link={"/about"}>About</Button>
+          <Button link={"/controls"}>Controls</Button>
+          <Button link={"https://bit.ly/3vs64pT"} external={true}>Surprise</Button>
         </div>
       </main>
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+      <Footer />
     </>
   )
 }

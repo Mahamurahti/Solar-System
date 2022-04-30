@@ -1,6 +1,6 @@
 import * as THREE from "three"
 import getDescription from "../../helpers/getDescription"
-import { TWEEN } from "three/examples/jsm/libs/tween.module.min";
+import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
 
 /**
  * Creates description for celestial body.

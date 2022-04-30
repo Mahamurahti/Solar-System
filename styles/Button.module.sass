@@ -1,0 +1,44 @@
+@use "variables" as var
+
+@mixin transition
+  transition: all .2s ease-in-out
+
+.button
+  flex: 1 0 49%
+  margin: var.$gap-small
+  text-align: center
+  border: 3px solid var.$white
+  outline: 0 solid var.$white
+  max-width: 300px
+  max-height: 100px
+  @include transition
+  &:hover
+    outline: 3px solid var.$primary-color
+    border-color: var.$primary-color
+    .button_text
+      color: var.$primary-color
+    .arrow
+      transform: scale(1)
+  &:focus,
+  &:active
+    outline: 3px solid var.$secondary-color
+    border-color: var.$secondary-color
+    .button_text
+      color: var.$secondary-color
+    .arrow
+      color: var.$secondary-color
+
+@media (max-width: 600px)
+  .button
+    min-width: 250px
+
+.button_text
+  margin: 0
+  padding: var.$gap-medium
+  @include transition
+
+.arrow
+  display: inline-block
+  color: var.$primary-color
+  transform: scale(0)
+  @include transition

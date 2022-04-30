@@ -1,0 +1,16 @@
+@use 'variables' as var
+
+@mixin flex-center
+  display: flex
+  justify-content: center
+  align-items: center
+
+.footer
+  @include flex-center
+  position: relative
+  padding: var.$gap-medium 0
+  border-top: 1px solid var.$white
+
+.logo
+  height: 1em
+  margin-left: 0.5rem

@@ -1,8 +1,8 @@
-import Head from 'next/head'
-import SolarSystem from "../components/SolarSystem/SolarSystem"
+import Head from "next/head"
+import SolarSystem from "../components/Explore/SolarSystem"
 
 /**
- * Creates explorable solar system
+ * Creates an explorable Solar System
  *
  * @author Timo Tamminiemi
  * @returns {JSX.Element}

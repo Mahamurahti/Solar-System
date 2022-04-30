@@ -1,16 +1,15 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import Link from "next/link"
-import styles from '../styles/About.module.sass'
-
-import Panorama from "../components/Panorama/Panorama"
+import Head from "next/head"
+import styles from "../styles/About.module.sass"
+import Panorama from "../components/Panorama"
+import Footer from "../components/Footer"
+import ListItem from "../components/About/ListItem"
+import Button from "../components/Button"
 
 /**
  * Creates the About page
  *
  * @author Eric Keränen
  * @returns {JSX.Element}
- * @constructor
  */
 export default function About() {
     return (
@@ -57,89 +56,30 @@ export default function About() {
                 <section className={styles.section}>
                     <h2>Technologies</h2>
                     <ul className={styles.list}>
-                        <li>
-                            <a
-                                href="https://nextjs.org/"
-                                target="_blank"
-                                rel="noreferrer"
-                                className={styles.link}
-                            >
-                                Next.js
-                            </a> - React framework
-                        </li>
-                        <li>
-                            <a
-                                href="https://threejs.org/"
-                                target="_blank"
-                                rel="noreferrer"
-                                className={styles.link}
-                            >
-                                Three.js
-                            </a> - 3D computer graphic library
-                        </li>
-                        <li>
-                            <a
-                                href="https://github.com/tweenjs/tween.js/"
-                                target="_blank"
-                                rel="noreferrer"
-                                className={styles.link}
-                            >
-                                Tween.js
-                            </a> - animation engine
-                        </li>
-                        <li>
-                            <a
-                                href="https://sass-lang.com/"
-                                target="_blank"
-                                rel="noreferrer"
-                                className={styles.link}
-                            >
-                                Sass
-                            </a> - CSS pre-processor
-                        </li>
-                        <li>
-                            <a
-                                href="https://git-scm.com/"
-                                target="_blank"
-                                rel="noreferrer"
-                                className={styles.link}
-                            >
-                                Git
-                            </a> - version control
-                        </li>
+                        <ListItem link={"https://nextjs.org/"}>Next.js - React framework</ListItem>
+                        <ListItem link={"https://threejs.org/"}>Three.js - 3D computer graphic library</ListItem>
+                        <ListItem link={"https://github.com/tweenjs/tween.js/"}>Tween.js - animation engine</ListItem>
+                        <ListItem link={"https://sass-lang.com/"}>Sass - CSS preprocessor</ListItem>
+                        <ListItem link={"https://git-scm.com/"}>Git - version control</ListItem>
                     </ul>
                 </section>
 
                 <section className={styles.section}>
                     <h2>Textures</h2>
                     <ul className={styles.list}>
-                        <li>
-                            <a
-                                href="https://tools.wwwtyro.net/space-3d/index.html"
-                                target="_blank"
-                                rel="noreferrer"
-                                className={styles.link}
-                            >
-                                Space Panoramas
-                            </a> - procedurally created cubemaps of space
-                        </li>
-                        <li>
-                            <a
-                                href="https://www.solarsystemscope.com/textures/"
-                                target="_blank"
-                                rel="noreferrer"
-                                className={styles.link}
-                            >
-                                Celestial body textures
-                            </a> - all relevant textures of bodies in our Solar System
-                        </li>
+                        <ListItem link={"https://tools.wwwtyro.net/space-3d/index.html"}>
+                            Space Panoramas - procedurally created cubemaps of space
+                        </ListItem>
+                        <ListItem link={"https://www.solarsystemscope.com/textures/"}>
+                            Celestial body textures - all relevant textures of bodies in our Solar System
+                        </ListItem>
                     </ul>
                 </section>
 
                 <section className={styles.section}>
                     <h2 className={styles.red}>!!! NOTES !!!</h2>
                     <p className={styles.description}>
-                        <b>The Solar System isn't completely to scale</b> even though distances and sizes are roughly
+                        <b>The Solar System isn"t completely to scale</b> even though distances and sizes are roughly
                         calculated according to astronomical units. Some exceptions are the Sun, which is literally so
                         big it would cover up too much of the scene, and the gas giants. <b>Not all moon are
                         present</b>, since we only added moon we could find textures for. The same reason applies for
@@ -147,31 +87,10 @@ export default function About() {
                     </p>
                 </section>
 
-                <div className={styles.button}>
-                    <Link href="/">
-                        <a>
-                            <h2 className={styles.button_text}>
-                                <div className={styles.arrow}>&lt;</div>
-                                {' '}Back{' '}
-                                <div className={styles.arrow}>&gt;</div>
-                            </h2>
-                        </a>
-                    </Link>
-                </div>
+                <Button link={"/"}>Back</Button>
             </main>
 
-            <footer className={styles.footer}>
-                <a
-                    href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Powered by{' '}
-                    <span className={styles.logo}>
-                        <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-                    </span>
-                </a>
-            </footer>
+            <Footer />
         </>
     )
 }

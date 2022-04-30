@@ -1,23 +1,21 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import Link from "next/link"
-import styles from '../styles/Controls.module.sass'
-
-import Panorama from "../components/Panorama/Panorama"
-import Control from "../components/Controls/Control";
+import Head from "next/head"
+import styles from "../styles/Controls.module.sass"
+import Panorama from "../components/Panorama"
+import Control from "../components/Controls/Control"
+import Footer from "../components/Footer"
+import Button from "../components/Button"
 
 /**
  * Creates the Controls page
  *
  * @author Eric Keränen
  * @returns {JSX.Element}
- * @constructor
  */
 export default function Controls() {
     return (
         <>
             <Head>
-                <title>About - Solar System</title>
+                <title>Controls - Solar System</title>
                 <meta name="description" content="Controls of the Solar System web application" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
@@ -39,7 +37,7 @@ export default function Controls() {
 
                     <Control img={"/controls/mouse_button_1.png"} width={64} height={83}>
                         Pressing mouse button 1 will either transition to an interactable object if the cursor is
-                        over one and the mouse has not been dragged or fade away descriptions if the cursor isn't over
+                        over one and the mouse has not been dragged or fade away descriptions if the cursor isn"t over
                         an interactable object and has not been dragged.
                     </Control>
 
@@ -48,11 +46,11 @@ export default function Controls() {
                     </Control>
 
                     <Control img={"/controls/mouse_scroll_up.png"} width={64} height={100} margin={true}>
-                        Scrolling up will zoom in the camera if it isn't locked.
+                        Scrolling up will zoom in the camera if it isn"t locked.
                     </Control>
 
                     <Control img={"/controls/mouse_scroll_down.png"} width={64} height={83}>
-                        Scrolling down will zoom out the camera if it isn't locked.
+                        Scrolling down will zoom out the camera if it isn"t locked.
                     </Control>
 
                     <Control img={"/controls/middle_mouse_button.png"} width={64} height={83}>
@@ -130,39 +128,39 @@ export default function Controls() {
                     </Control>
 
                     <Control img={"/controls/button_W.png"} width={67} height={90} margin={true}>
-                        Pressing button Q will transition to Mars' moon Phobos.
+                        Pressing button Q will transition to Mars" moon Phobos.
                     </Control>
 
                     <Control img={"/controls/button_E.png"} width={67} height={90} margin={true}>
-                        Pressing button E will transition to Mars' moon Deimos.
+                        Pressing button E will transition to Mars" moon Deimos.
                     </Control>
 
                     <Control img={"/controls/button_R.png"} width={67} height={90} margin={true}>
-                        Pressing button R will transition to Jupiter's moon Europa.
+                        Pressing button R will transition to Jupiter"s moon Europa.
                     </Control>
 
                     <Control img={"/controls/button_T.png"} width={67} height={90} margin={true}>
-                        Pressing button T will transition to Saturn's moon Enceladus.
+                        Pressing button T will transition to Saturn"s moon Enceladus.
                     </Control>
 
                     <Control img={"/controls/button_Y.png"} width={67} height={90} margin={true}>
-                        Pressing button Y will transition to Saturn's moon Titan.
+                        Pressing button Y will transition to Saturn"s moon Titan.
                     </Control>
 
                     <Control img={"/controls/button_U.png"} width={67} height={90} margin={true}>
-                        Pressing button U will transition to Uranus' moon Ariel.
+                        Pressing button U will transition to Uranus" moon Ariel.
                     </Control>
 
                     <Control img={"/controls/button_I.png"} width={67} height={90} margin={true}>
-                        Pressing button I will transition to Uranus' moon Titania.
+                        Pressing button I will transition to Uranus" moon Titania.
                     </Control>
 
                     <Control img={"/controls/button_O.png"} width={67} height={90} margin={true}>
-                        Pressing button O will transition to Uranus' moon Oberon.
+                        Pressing button O will transition to Uranus" moon Oberon.
                     </Control>
 
                     <Control img={"/controls/button_P.png"} width={67} height={90}>
-                        Pressing button P will transition to Pluto's moon Charon.
+                        Pressing button P will transition to Pluto"s moon Charon.
                     </Control>
 
                 </section>
@@ -200,31 +198,10 @@ export default function Controls() {
 
                 </section>
 
-                <div className={styles.button}>
-                    <Link href="/">
-                        <a>
-                            <h2 className={styles.button_text}>
-                                <div className={styles.arrow}>&lt;</div>
-                                {' '}Back{' '}
-                                <div className={styles.arrow}>&gt;</div>
-                            </h2>
-                        </a>
-                    </Link>
-                </div>
+                <Button link={"/"}>Back</Button>
             </main>
 
-            <footer className={styles.footer}>
-                <a
-                    href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Powered by{' '}
-                    <span className={styles.logo}>
-                        <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-                    </span>
-                </a>
-            </footer>
+            <Footer />
         </>
     )
 }
