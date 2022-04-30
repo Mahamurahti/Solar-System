@@ -4,6 +4,7 @@ import styles from '../styles/Home.module.sass'
 
 import Panorama from "../components/Panorama/Panorama"
 import Footer from "../components/Footer";
+import Button from "../components/Button";
 
 /**
  * Creates the Home page
@@ -36,52 +37,10 @@ export default function Home() {
         </p>
 
         <div className={styles.grid}>
-          <div className={styles.card}>
-            <Link href="/explore">
-              <a>
-                <h2 className={styles.card_text}>
-                  <div className={styles.arrow}>&lt;</div>
-                  {' '}Explore{' '}
-                  <div className={styles.arrow}>&gt;</div>
-                </h2>
-              </a>
-            </Link>
-          </div>
-
-
-          <div className={styles.card}>
-            <Link href="/about">
-              <a>
-                <h2 className={styles.card_text}>
-                  <div className={styles.arrow}>&lt;</div>
-                  {' '}About{' '}
-                  <div className={styles.arrow}>&gt;</div>
-                </h2>
-              </a>
-            </Link>
-          </div>
-
-          <div className={styles.card}>
-            <Link href="/controls">
-              <a>
-                <h2 className={styles.card_text}>
-                  <div className={styles.arrow}>&lt;</div>
-                  {' '}Controls{' '}
-                  <div className={styles.arrow}>&gt;</div>
-                </h2>
-              </a>
-            </Link>
-          </div>
-
-          <div className={styles.card}>
-            <a href="https://bit.ly/3vs64pT" target="_blank" rel="noreferrer">
-              <h2 className={styles.card_text}>
-                <div className={styles.arrow}>&lt;</div>
-                {' '}Surprise{' '}
-                <div className={styles.arrow}>&gt;</div>
-              </h2>
-            </a>
-          </div>
+          <Button link={"/explore"}>Explore</Button>
+          <Button link={"/about"}>About</Button>
+          <Button link={"/controls"}>Controls</Button>
+          <Button link={"https://bit.ly/3vs64pT"} external={true}>Surprise</Button>
         </div>
       </main>
 

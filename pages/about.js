@@ -5,6 +5,7 @@ import styles from '../styles/About.module.sass'
 import Panorama from "../components/Panorama/Panorama"
 import Footer from "../components/Footer";
 import ListItem from "../components/About/ListItem";
+import Button from "../components/Button";
 
 /**
  * Creates the About page
@@ -89,17 +90,7 @@ export default function About() {
                     </p>
                 </section>
 
-                <div className={styles.button}>
-                    <Link href="/">
-                        <a>
-                            <h2 className={styles.button_text}>
-                                <div className={styles.arrow}>&lt;</div>
-                                {' '}Back{' '}
-                                <div className={styles.arrow}>&gt;</div>
-                            </h2>
-                        </a>
-                    </Link>
-                </div>
+                <Button link={"/"}>Back</Button>
             </main>
 
             <Footer />

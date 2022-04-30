@@ -5,6 +5,7 @@ import styles from '../styles/Controls.module.sass'
 import Panorama from "../components/Panorama/Panorama"
 import Control from "../components/Controls/Control"
 import Footer from "../components/Footer"
+import Button from "../components/Button";
 
 /**
  * Creates the Controls page
@@ -200,17 +201,7 @@ export default function Controls() {
 
                 </section>
 
-                <div className={styles.button}>
-                    <Link href="/">
-                        <a>
-                            <h2 className={styles.button_text}>
-                                <div className={styles.arrow}>&lt;</div>
-                                {' '}Back{' '}
-                                <div className={styles.arrow}>&gt;</div>
-                            </h2>
-                        </a>
-                    </Link>
-                </div>
+                <Button link={"/"}>Back</Button>
             </main>
 
             <Footer />

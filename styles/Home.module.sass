@@ -5,9 +5,6 @@
     justify-content: center
     align-items: center
 
-@mixin transition
-    transition: all .2s ease-in-out
-
 .main
     @include flex-center
     position: relative
@@ -30,10 +27,6 @@
     .title
         font-size: 4rem
 
-.title,
-.description
-    text-align: center
-
 .description
     text-align: center
     font-size: var.$text-size-normal
@@ -50,42 +43,3 @@
     .grid
         width: 100%
         flex-direction: column
-
-.card
-    flex: 1 0 49%
-    margin: var.$gap-small
-    text-align: center
-    border: 3px solid var.$white
-    outline: 0 solid var.$white
-    max-width: 300px
-    @include transition
-    &:hover
-        outline: 3px solid var.$primary-color
-        border-color: var.$primary-color
-        .card_text
-            color: var.$primary-color
-        .arrow
-            transform: scale(1)
-    &:focus,
-    &:active
-        outline: 3px solid var.$secondary-color
-        border-color: var.$secondary-color
-        .card_text
-            color: var.$secondary-color
-        .arrow
-            color: var.$secondary-color
-
-@media (max-width: 600px)
-    .card
-        min-width: 250px
-
-.card_text
-    margin: 0
-    padding: var.$gap-medium
-    @include transition
-
-.arrow
-    display: inline-block
-    color: var.$primary-color
-    transform: scale(0)
-    @include transition
