@@ -1,0 +1,25 @@
+@use 'variables' as var
+
+@mixin flex-center
+  display: flex
+  justify-content: center
+  align-items: center
+
+.description
+  font-size: var.$text-size-normal
+  line-height: 1.5
+  width: 600px
+  margin: var.$gap-medium 0
+
+@media (max-width: 600px)
+  .description
+    max-width: 400px
+
+.row
+  @include flex-center
+
+.margin
+  margin-bottom: var.$gap-small
+
+.icon
+  margin-right: var.$gap-small
