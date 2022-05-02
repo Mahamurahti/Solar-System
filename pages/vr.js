@@ -1,5 +1,5 @@
 import Head from "next/head";
-import SolarSystemVR from "../components/SolarSystem/SolarSystemVR";
+import SolarSystemVR from "../components/Explore/SolarSystemVR";
 
 /**
  * Creates explorable solar system in with vr option
@@ -13,7 +13,7 @@ export default function ExploreVR() {
             <Head>
                 <title>Explore the Solar System in VR</title>
                 <meta name="description" content="Explore the Solar System in VR" />
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="/logo.svg" />
             </Head>
             <SolarSystemVR />
         </>
