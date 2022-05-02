@@ -3,9 +3,7 @@ import { useEffect, useRef } from 'react'
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader"
 import getTexturePath from "../../helpers/getTexturePath"
 import createCelestialBody from "./createCelestialBody"
-import createDescription, { descriptionFadeIn, descriptionFadeOut } from "./createDescription"
-import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
-import {VRButton} from "three/examples/jsm/webxr/VRButton";
+import { VRButton } from "three/examples/jsm/webxr/VRButton";
 import Stats from "three/examples/jsm/libs/stats.module";
 import { XRControllerModelFactory } from "three/examples/jsm/webxr/XRControllerModelFactory";
 
@@ -65,13 +63,13 @@ export default function SolarSystemVR() {
         /**
          * Point light is the origin of the solar systems light. The point light is inside of the sun. Point light
          * is the light that makes other objects cast shadows.
-         * @type {PointLight}
+         * @type {DirectionalLight}
          */
-        const pointLight = new THREE.PointLight(0xFFFFFF, 1.9, 230)
-        pointLight.castShadow = true
+        const dirLight = new THREE.DirectionalLight(0xFFFFFF, 1.9)
+        dirLight.castShadow = true
         const shadowResolution = 640
-        pointLight.shadow.mapSize.width = pointLight.shadow.mapSize.height = shadowResolution
-        scene.add(pointLight)
+        dirLight.shadow.mapSize.width = dirLight.shadow.mapSize.height = shadowResolution
+        scene.add(dirLight)
 
         const stats = new Stats()
         document.body.appendChild(stats.dom)
@@ -110,15 +108,14 @@ export default function SolarSystemVR() {
         const group = new THREE.Group()
 
         for (const object of objects) {
-            // Add group to scene (celestial body, moons and ring if the body has one)
+            // Add group to scene (celestial body, moons of celestial body and ring if it has one)
             group.add(object.group)
-            // Only the body and moons are currently interactable (ring is not interactable)
+            // Add body of celestial body to be interactable
             interactable.push(object.body)
-            if(object.moonMesh) {
-                for (let i =0; i<object.moonMesh.length; i++) {
-                    interactable.push(object.moonMesh[i])
-                }
-            }
+            // If the celestial body has moons, add all moons to be interactable
+            if(object.moonMesh) for (const moon of object.moonMesh) interactable.push(moon)
+            // If the celestial body has a ring, add it to be interactable
+            if(object.ring) interactable.push(object.ring)
         }
         scene.add(group)
 
@@ -139,11 +136,8 @@ export default function SolarSystemVR() {
             rightController.addEventListener('selectend', onSelectEnd)
             leftController.addEventListener('selectstart', onSelectStart)
             leftController.addEventListener('selectend', onSelectEnd)
-            rightController.addEventListener('squeezestart', onSqueezeStart)
-            rightController.addEventListener('squeezeend', onSqueezeEnd)
-            leftController.addEventListener('squeezestart', onSqueezeStart)
-            leftController.addEventListener('squeezeend', onSqueezeEnd)
-
+            rightController.addEventListener('squeeze', onSqueeze)
+            leftController.addEventListener('squeeze', onSqueeze)
 
         })
         // When user exits VR mode reposition the camera and remove event listeners of controllers
@@ -154,10 +148,8 @@ export default function SolarSystemVR() {
             rightController.removeEventListener('selectend', onSelectEnd)
             leftController.removeEventListener('selectstart', onSelectStart)
             leftController.removeEventListener('selectend', onSelectEnd)
-            rightController.removeEventListener('squeezestart', onSqueezeStart)
-            rightController.removeEventListener('squeezeend', onSqueezeEnd)
-            leftController.removeEventListener('squeezestart', onSqueezeStart)
-            leftController.removeEventListener('squeezeend', onSqueezeEnd)
+            rightController.removeEventListener('squeeze', onSqueeze)
+            leftController.removeEventListener('squeeze', onSqueeze)
         })
 
         // Line geometry for VR controllers
@@ -190,38 +182,26 @@ export default function SolarSystemVR() {
          * @type {Raycaster}
          */
         const raycaster = new THREE.Raycaster()
-        // intersect is the first object that the raycast intersects with
-        let intersect
-        // description is the description of the celestial body the user has clicked
-        let description = null
         // temporary matrix for saving controller position
         const tempMatrix = new THREE.Matrix4()
         // array for intersected object in VR
         const intersected = []
+        // Speed of irbiting
+        let orbitSpeed = 0.1
 
         /**
          * onSqueezeStart is called when user presses squeeze trigger on VR controller
          * then it check if controllers ray cast intersects any interactable object and if so description of object will popup
          * @param event
          */
-        function onSqueezeStart(event) {
+        function onSqueeze(event) {
             const controller = event.target
-            const intersections = getIntersections(controller)
-            if(intersections.length > 0) {
-                intersect = intersections[0].object
-                description = createDescription(font, intersect, .25)
-                descriptionFadeIn(scene, description)
-                description.rotation.copy(camera.rotation)
+            if(controller === rightController) {
+                orbitSpeed += .2
             }
-        }
-
-        /**
-         * onSqueezeEnd is called when user releases squeeze trigger on VR controller and then check if there is active
-         * description, if there is then it removes it
-         * @param event
-         */
-        function onSqueezeEnd(event) {
-            if (description) descriptionFadeOut(scene, description)
+            if(controller === leftController) {
+                orbitSpeed -= .2
+            }
         }
 
         /**
@@ -233,8 +213,8 @@ export default function SolarSystemVR() {
             const controller = event.target
             const intersections = getIntersections(controller)
             if(intersections.length > 0) {
-                const intersection = intersections[0]
-                const object = intersection.object
+                const intersect = intersections[0]
+                const object = intersect.object
                 object.material.emissive.r = .2
                 controller.attach( object )
                 controller.userData.selected = object
@@ -279,12 +259,12 @@ export default function SolarSystemVR() {
             const line = controller.getObjectByName('line')
             const intersections = getIntersections(controller)
             if(intersections.length > 0) {
-                intersect = intersections[0].object
-                intersect.material.emissive.g = .5
-                intersected.push(intersect)
-                line.scale.z = intersect.distance
+                const intersect = intersections[0];
+                const object = intersect.object;
+                object.material.emissive.g = 1;
+                intersected.push( object );
+                line.scale.z = intersect.distance;
             } else {
-                intersect.material.emissive.g = 0
                 line.scale.z = 20
             }
         }
@@ -293,7 +273,10 @@ export default function SolarSystemVR() {
          * Empties intersected array
          */
         function cleanIntersected() {
-            while ( intersected.length ) intersected.pop();
+            while (intersected.length) {
+                const object = intersected.pop();
+                object.material.emissive.g = 0
+            }
         }
 
         // Font of the description will be loaded here, since there is
@@ -335,7 +318,6 @@ export default function SolarSystemVR() {
          * rendered.
          */
         const animate = function () {
-            TWEEN.update()
             renderer.render(scene, camera)
         }
 
@@ -345,10 +327,51 @@ export default function SolarSystemVR() {
         renderer.setAnimationLoop(function() {
             requestID = requestAnimationFrame(animate)
             stats.update()
+
             if(renderer.xr.isPresenting) {
                 cleanIntersected()
                 intersectObjectsVR(rightController)
                 intersectObjectsVR(leftController)
+
+                const negateDirection = Math.PI / -2
+                const rotateSpeed = 0.2
+
+                // Around own axis rotation
+                sun.body.rotateY(0.004 * rotateSpeed)
+                mercury.body.rotateY(0.004 * rotateSpeed)
+                venus.body.rotateY(0.002 * rotateSpeed)
+                earth.body.rotateY(0.02 * rotateSpeed)
+                mars.body.rotateY(0.018 * rotateSpeed)
+                jupiter.body.rotateY(0.04 * rotateSpeed)
+                saturn.body.rotateY(0.038 * rotateSpeed)
+                uranus.body.rotateY(0.03 * rotateSpeed)
+                neptune.body.rotateY(0.032 * rotateSpeed)
+                pluto.body.rotateY(0.008 * rotateSpeed)
+
+                // Around sun rotation
+                mercury.group.rotateY(0.04 * orbitSpeed)
+                venus.group.rotateY(0.015 * orbitSpeed)
+                earth.group.rotateY(0.01 * orbitSpeed)
+                mars.group.rotateY(0.008 * orbitSpeed)
+                jupiter.group.rotateY(0.002 * orbitSpeed)
+                saturn.group.rotateY(0.0009 * orbitSpeed)
+                uranus.group.rotateY(0.0004 * orbitSpeed)
+                neptune.group.rotateY(0.0001 * orbitSpeed)
+                pluto.group.rotateY(0.00007 * orbitSpeed)
+                group.rotateY(0.02 * orbitSpeed)
+
+                // Rotate the matrix, which is applied to the moons
+                const matrix = new THREE.Matrix4()
+                earth.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.012 * negateDirection * rotateSpeed))
+                mars.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection * rotateSpeed))
+                mars.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.023 * negateDirection * rotateSpeed))
+                jupiter.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.026 * negateDirection * rotateSpeed))
+                saturn.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection * rotateSpeed))
+                saturn.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.025 * negateDirection * rotateSpeed))
+                uranus.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.016 * negateDirection * rotateSpeed))
+                uranus.moonMesh[1].position.applyMatrix4(matrix.makeRotationY(0.017 * negateDirection * rotateSpeed))
+                uranus.moonMesh[2].position.applyMatrix4(matrix.makeRotationY(0.018 * negateDirection * rotateSpeed))
+                pluto.moonMesh[0].position.applyMatrix4(matrix.makeRotationY(0.022 * negateDirection * rotateSpeed))
             }
         })
 
