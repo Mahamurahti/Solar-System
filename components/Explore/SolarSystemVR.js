@@ -3,7 +3,6 @@ import { useEffect, useRef } from 'react'
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader"
 import getTexturePath from "../../helpers/getTexturePath"
 import createCelestialBody from "./createCelestialBody"
-import { VRButton } from "three/examples/jsm/webxr/VRButton";
 import Stats from "three/examples/jsm/libs/stats.module";
 import { XRControllerModelFactory } from "three/examples/jsm/webxr/XRControllerModelFactory";
 
@@ -119,8 +118,11 @@ export default function SolarSystemVR() {
         }
         scene.add(group)
 
-        const button = VRButton.createButton(renderer)
-        document.body.appendChild(button)
+        async function createVRButton() {
+            const button = await import("three/examples/jsm/webxr/VRButton").then(module => module.VRButton.createButton(renderer))
+            document.body.appendChild(button)
+        }
+        createVRButton()
         renderer.xr.enabled = true
         const controllerModelFactory = new XRControllerModelFactory()
 
@@ -379,7 +381,7 @@ export default function SolarSystemVR() {
             const session = renderer.xr.getSession();
             if (session !== null) session.end()
             mountRef.current?.removeChild(renderer.domElement)
-            document.body.removeChild(button)
+            //document.body.removeChild(button)
             // Bad practice to force context loss, but gets the job done
             renderer.forceContextLoss()
         }
