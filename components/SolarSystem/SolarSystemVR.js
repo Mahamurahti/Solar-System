@@ -149,7 +149,8 @@ export default function SolarSystemVR() {
         document.addEventListener('pointerdown', onPointerDown)
         document.addEventListener('pointerup', onPointerUp)
         document.addEventListener('keydown', onKeyDown)
-        document.body.appendChild(VRButton.createButton(renderer))
+        const button = VRButton.createButton(renderer)
+        document.body.appendChild(button)
         renderer.xr.enabled = true
         const controllerModelFactory = new XRControllerModelFactory()
 
@@ -235,7 +236,7 @@ export default function SolarSystemVR() {
             const intersections = getIntersections(controller)
             if(intersections.length > 0) {
                 intersect = intersections[0].object
-                description = createDescription(font, intersect)
+                description = createDescription(font, intersect, .25)
                 descriptionFadeIn(scene, description)
             }
         }
@@ -510,7 +511,7 @@ export default function SolarSystemVR() {
         function updateDescription()  {
             if (description !== null) {
                 // Description is above the target
-                description.position.copy(controls.target).add(new THREE.Vector3(0,80,0))
+                description.position.copy(controls.target)//.add(new THREE.Vector3(0,20,0))
                 description.rotation.copy(camera.rotation)
             }
         }
@@ -573,6 +574,7 @@ export default function SolarSystemVR() {
 
         return () => {
             mountRef.current?.removeChild(renderer.domElement)
+            document.body.removeChild(button)
             // Bad practice to force context loss, but gets the job done
             renderer.forceContextLoss()
         }

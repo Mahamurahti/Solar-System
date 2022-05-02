@@ -10,10 +10,10 @@ import { TWEEN } from "three/examples/jsm/libs/tween.module.min";
  * @param target for which celestial body is the description for
  * @returns {Mesh}
  */
-export default function createDescription(font, target) {
+export default function createDescription(font, target, size) {
     const fontMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 })
     const message = getDescription(target.name)
-    const shapes = font.generateShapes(message, 4)
+    const shapes = font.generateShapes(message, size ? size : 4)
 
     const geometry = new THREE.ShapeGeometry(shapes)
     geometry.computeBoundingBox()
