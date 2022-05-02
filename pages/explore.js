@@ -2,7 +2,7 @@ import Head from "next/head"
 import SolarSystem from "../components/Explore/SolarSystem"
 
 /**
- * Creates an explorable Solar System
+ * Creates an explorable Solar System page
  *
  * @author Timo Tamminiemi
  * @returns {JSX.Element}
