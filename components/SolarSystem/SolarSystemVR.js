@@ -280,10 +280,12 @@ export default function SolarSystemVR() {
             const intersections = getIntersections(controller)
             if(intersections.length > 0) {
                 intersect = intersections[0].object
+                intersect.material.emissive.g = .5
                 intersected.push(intersect)
                 line.scale.z = intersect.distance
             } else {
-                line.scale.z = 5
+                intersect.material.emissive.g = 0
+                line.scale.z = 20
             }
         }
 
