@@ -9,7 +9,6 @@ import createDescription, { descriptionFadeIn, descriptionFadeOut } from "./crea
 import createComposer from "./createComposer"
 import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
 import styles from "../../styles/SolarSystem.module.sass"
-import Stats from "three/examples/jsm/libs/stats.module"
 import getDescription from "../../helpers/getDescription"
 
 /**

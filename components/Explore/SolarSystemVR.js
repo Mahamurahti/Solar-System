@@ -2,7 +2,6 @@ import * as THREE from 'three'
 import { useEffect, useRef } from 'react'
 import getTexturePath from "../../helpers/getTexturePath"
 import createCelestialBody from "./createCelestialBody"
-import Stats from "three/examples/jsm/libs/stats.module";
 import { XRControllerModelFactory } from "three/examples/jsm/webxr/XRControllerModelFactory";
 
 /**
@@ -67,9 +66,6 @@ export default function SolarSystemVR() {
         const shadowResolution = 640
         dirLight.shadow.mapSize.width = dirLight.shadow.mapSize.height = shadowResolution
         scene.add(dirLight)
-
-        const stats = new Stats()
-        document.body.appendChild(stats.dom)
 
         // Create all relevant celestial bodies in the solar system
         const downScaleAmount = 16
@@ -336,7 +332,6 @@ export default function SolarSystemVR() {
          */
         renderer.setAnimationLoop(function() {
             requestID = requestAnimationFrame(animate)
-            stats.update()
 
             if(renderer.xr.isPresenting) {
                 cleanIntersected()
