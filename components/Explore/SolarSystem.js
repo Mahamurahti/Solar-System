@@ -28,6 +28,12 @@ export default function SolarSystem() {
 
         // ---------------------------------------- SETTING UP SCENE ---------------------------------------- //
 
+        /**
+         * Stats component to see framerate
+         * @type {{REVISION: number, domElement: HTMLDivElement, dom: HTMLDivElement, showPanel: function(*): void,
+         * setMode: function(*): void, addPanel: function(*): *, update: function(): void, end: function(): *,
+         * begin: function(): void}}
+         */
         const stats = new Stats()
         document.body.appendChild(stats.dom)
 

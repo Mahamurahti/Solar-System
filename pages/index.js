@@ -42,7 +42,7 @@ export default function Home() {
           <Button link={"/explore"}>Explore</Button>
           <Button link={"/about"}>About</Button>
           <Button link={"/controls"}>Controls</Button>
-          <Button link={"https://bit.ly/3vs64pT"} external={true}>Surprise</Button>
+          <Button link={"/vr"}>Sandbox VR</Button>
         </div>
       </main>
 
