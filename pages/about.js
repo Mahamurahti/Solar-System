@@ -86,7 +86,8 @@ export default function About() {
                         calculated according to astronomical units. Some exceptions are the Sun, which is literally so
                         big it would cover up too much of the scene, and the gas giants. <b>Not all moon are
                         present</b>, since we only added moon we could find textures for. The same reason applies for
-                        the numerous trans-Neptunian dwarf planets except Pluto.
+                        the numerous trans-Neptunian dwarf planets except Pluto. Because of time restraints the sandbox
+                        VR is only experimental.
                     </p>
                 </section>
 

@@ -11,7 +11,7 @@ export default function ExploreVR() {
     return (
         <>
             <Head>
-                <title>Explore the Solar System in VR</title>
+                <title>VR - Solar System</title>
                 <meta name="description" content="Explore the Solar System in VR" />
                 <link rel="icon" href="/logo.svg" />
             </Head>
