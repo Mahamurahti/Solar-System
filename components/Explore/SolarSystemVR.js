@@ -17,7 +17,7 @@ export default function SolarSystemVR() {
 
     const mountRef = useRef(null)
 
-    useEffect(()  => {
+    useEffect(() => {
         const WIDTH = window.innerWidth
         const HEIGHT = window.innerHeight
 
@@ -121,8 +121,9 @@ export default function SolarSystemVR() {
         async function createVRButton() {
             const button = await import("three/examples/jsm/webxr/VRButton").then(module => module.VRButton.createButton(renderer))
             document.body.appendChild(button)
+            return button
         }
-        createVRButton()
+        const button = createVRButton()
         renderer.xr.enabled = true
         const controllerModelFactory = new XRControllerModelFactory()
 
@@ -377,11 +378,11 @@ export default function SolarSystemVR() {
             }
         })
 
-        return () => {
+        return async () => {
             const session = renderer.xr.getSession();
             if (session !== null) session.end()
+            document.body.removeChild(await button)
             mountRef.current?.removeChild(renderer.domElement)
-            //document.body.removeChild(button)
             // Bad practice to force context loss, but gets the job done
             renderer.forceContextLoss()
         }
