@@ -26,7 +26,7 @@ export default function Home() {
         <h1 className={styles.title}>
             S
             <span className={styles.logo}>
-                <Image src={"/logo.svg"} width={100} height={80} />
+                <Image src={"/logo.svg"} width={100} height={80} alt={"Logo of Solar System web app"}/>
             </span>
             LAR SYSTEM
         </h1>

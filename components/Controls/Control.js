@@ -13,7 +13,7 @@ export default function Control(props) {
     return (
         <div className={`${styles.row} ${props.margin && styles.margin}`}>
             <span className={styles.icon}>
-                <Image src={props.img} width={props.width} height={props.height}/>
+                <Image src={props.img} width={props.width} height={props.height} alt={props.alt} />
             </span>
             <p className={styles.description}>
                 {props.children}

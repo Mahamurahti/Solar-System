@@ -44,7 +44,7 @@ export default function About() {
                     <p className={styles.description}>
                         The project had many inspirations and sources, from which we took ideas from. Our main inspiration
                         was from a <a href="https://www.youtube.com/watch?v=XXzqSAt3UIw" className={styles.link}
-                        target="_blank">Youtube video</a> by Wael Yasmina who created a working Solar System with
+                        target="_blank" rel="noreferrer">Youtube video</a> by Wael Yasmina who created a working Solar System with
                         Three.js. After this we tried to make the scene our own by adding more objects and making them
                         interactable, which we did by ourselves. We also wanted a functional camera to the scene and
                         decided to add Tween.js into the fold. Tween.js allowed us to make really nice transitions
@@ -79,7 +79,7 @@ export default function About() {
                 <section className={styles.section}>
                     <h2 className={styles.red}>!!! NOTES !!!</h2>
                     <p className={styles.description}>
-                        <b>The Solar System isn"t completely to scale</b> even though distances and sizes are roughly
+                        <b>The Solar System isn't completely to scale</b> even though distances and sizes are roughly
                         calculated according to astronomical units. Some exceptions are the Sun, which is literally so
                         big it would cover up too much of the scene, and the gas giants. <b>Not all moon are
                         present</b>, since we only added moon we could find textures for. The same reason applies for

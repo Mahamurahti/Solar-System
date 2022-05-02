@@ -12,9 +12,7 @@ import getTexturePath from "../helpers/getTexturePath"
 export default function Panorama(props) {
 
     const mountRef = useRef(null)
-
-    const texturePath = props.texturePath
-
+    
     useEffect(() => {
         const WIDTH = window.innerWidth
         const HEIGHT = window.innerHeight
@@ -25,7 +23,7 @@ export default function Panorama(props) {
          * @type {Scene}
          */
         const scene = new THREE.Scene()
-        scene.background = new THREE.CubeTextureLoader().load(getTexturePath(texturePath))
+        scene.background = new THREE.CubeTextureLoader().load(getTexturePath(props.texturePath))
 
         /**
          * Perspective camera for defining the "eyes" of the scene. We can look at the scene through the camera.
