@@ -261,7 +261,7 @@ export default function SolarSystemVR() {
             if(intersections.length > 0) {
                 const intersect = intersections[0];
                 const object = intersect.object;
-                object.material.emissive.g = 1;
+                object.material.emissive.g = .2;
                 intersected.push( object );
                 line.scale.z = intersect.distance;
             } else {
