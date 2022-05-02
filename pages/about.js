@@ -28,7 +28,7 @@ export default function About() {
                 </h1>
 
                 <section className={styles.section}>
-                    <h2>The Project</h2>
+                    <h2>Project</h2>
                     <p className={styles.description}>
                         This project was done as the final project of a 3D-modeling and mixed reality course for
                         Metropolia UAS. The goal of the project was to make an application that somehow utilized 3D
@@ -36,6 +36,9 @@ export default function About() {
                         decided to go with a web application where the user can explore a 3D Solar System. The project
                         was designed to be more educational in nature so we decided to add interesting facts and
                         information about the objects in our Solar System.
+                        <br/>
+                        <br/>
+                        Created by Eric Keränen & Timo Tamminiemi
                     </p>
                 </section>
 
