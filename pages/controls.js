@@ -37,7 +37,7 @@ export default function Controls() {
 
                     <Control img={"/controls/mouse_button_1.png"} width={64} height={83} alt={"Mouse button 1 icon"}>
                         Pressing mouse button 1 will either transition to an interactable object if the cursor is
-                        over one and the mouse has not been dragged or fade away descriptions if the cursor isn't over
+                        over one and the mouse has not been dragged or fade away descriptions if the cursor isn&apos;t over
                         an interactable object and has not been dragged.
                     </Control>
 
@@ -46,11 +46,11 @@ export default function Controls() {
                     </Control>
 
                     <Control img={"/controls/mouse_scroll_up.png"} width={64} height={100} margin={true} alt={"Mouse scroll up icon"}>
-                        Scrolling up will zoom in the camera if it isn't locked.
+                        Scrolling up will zoom in the camera if it isn&apos;t locked.
                     </Control>
 
                     <Control img={"/controls/mouse_scroll_down.png"} width={64} height={83} alt={"Mouse scroll down icon"}>
-                        Scrolling down will zoom out the camera if it isn't locked.
+                        Scrolling down will zoom out the camera if it isn&apos;t locked.
                     </Control>
 
                     <Control img={"/controls/middle_mouse_button.png"} width={64} height={83} alt={"Middle mouse button icon"}>
@@ -128,39 +128,39 @@ export default function Controls() {
                     </Control>
 
                     <Control img={"/controls/button_W.png"} width={67} height={90} margin={true} alt={"W button icon"}>
-                        Pressing button Q will transition to Mars' moon Phobos.
+                        Pressing button Q will transition to Mars&apos; moon Phobos.
                     </Control>
 
                     <Control img={"/controls/button_E.png"} width={67} height={90} margin={true} alt={"E button icon"}>
-                        Pressing button E will transition to Mars' moon Deimos.
+                        Pressing button E will transition to Mars&apos; moon Deimos.
                     </Control>
 
                     <Control img={"/controls/button_R.png"} width={67} height={90} margin={true} alt={"R button icon"}>
-                        Pressing button R will transition to Jupiter's moon Europa.
+                        Pressing button R will transition to Jupiter&apos;s moon Europa.
                     </Control>
 
                     <Control img={"/controls/button_T.png"} width={67} height={90} margin={true} alt={"T button icon"}>
-                        Pressing button T will transition to Saturn's moon Enceladus.
+                        Pressing button T will transition to Saturn&apos;s moon Enceladus.
                     </Control>
 
                     <Control img={"/controls/button_Y.png"} width={67} height={90} margin={true} alt={"Y button icon"}>
-                        Pressing button Y will transition to Saturn's moon Titan.
+                        Pressing button Y will transition to Saturn&apos;s moon Titan.
                     </Control>
 
                     <Control img={"/controls/button_U.png"} width={67} height={90} margin={true} alt={"U button icon"}>
-                        Pressing button U will transition to Uranus' moon Ariel.
+                        Pressing button U will transition to Uranus&apos; moon Ariel.
                     </Control>
 
                     <Control img={"/controls/button_I.png"} width={67} height={90} margin={true} alt={"I button icon"}>
-                        Pressing button I will transition to Uranus' moon Titania.
+                        Pressing button I will transition to Uranus&apos; moon Titania.
                     </Control>
 
                     <Control img={"/controls/button_O.png"} width={67} height={90} margin={true} alt={"O button icon"}>
-                        Pressing button O will transition to Uranus' moon Oberon.
+                        Pressing button O will transition to Uranus&apos; moon Oberon.
                     </Control>
 
                     <Control img={"/controls/button_P.png"} width={67} height={90} alt={"P button icon"}>
-                        Pressing button P will transition to Pluto's moon Charon.
+                        Pressing button P will transition to Pluto&apos;s moon Charon.
                     </Control>
 
                 </section>

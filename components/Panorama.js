@@ -12,7 +12,7 @@ import getTexturePath from "../helpers/getTexturePath"
 export default function Panorama(props) {
 
     const mountRef = useRef(null)
-    
+
     useEffect(() => {
         const WIDTH = window.innerWidth
         const HEIGHT = window.innerHeight
@@ -97,7 +97,7 @@ export default function Panorama(props) {
             // Bad practice to force context loss, but gets the job done
             renderer.forceContextLoss()
         }
-    }, [])
+    }, [props.texturePath])
 
     return <div ref={mountRef} style={{position: "fixed"}}/>
 }
