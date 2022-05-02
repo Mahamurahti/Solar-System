@@ -1,15 +1,13 @@
 import * as THREE from 'three'
 import { useEffect, useRef } from 'react'
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader"
 import getTexturePath from "../../helpers/getTexturePath"
 import createCelestialBody from "./createCelestialBody"
 import createDescription, { descriptionFadeIn, descriptionFadeOut } from "./createDescription"
-import createComposer from "./createComposer"
 import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
 import {VRButton} from "three/examples/jsm/webxr/VRButton";
 import Stats from "three/examples/jsm/libs/stats.module";
-import {XRControllerModelFactory} from "three/examples/jsm/webxr/XRControllerModelFactory";
+import { XRControllerModelFactory } from "three/examples/jsm/webxr/XRControllerModelFactory";
 
 /**
  * Creates a solar system that can be interacted with.
@@ -57,19 +55,6 @@ export default function SolarSystemVR() {
         mountRef.current?.appendChild(renderer.domElement)
 
         /**
-         * Orbit controls gives access to orbit around the scene.
-         * @type {OrbitControls}
-         */
-        const controls = new OrbitControls(camera, renderer.domElement)
-        controls.enableDamping = true
-        controls.dampingFactor = .05
-        controls.screenSpacePanning = true
-        controls.maxDistance = 600
-        // Prevent spastic description behaviour at extremes of polar angles
-        controls.maxPolarAngle = Math.PI - .01
-        controls.minPolarAngle = .01
-
-        /**
          * Ambient light to lighten up the scene artificially, meaning even the dark sides of celestial bodies
          * are slightly visible.
          * @type {AmbientLight}
@@ -88,15 +73,8 @@ export default function SolarSystemVR() {
         pointLight.shadow.mapSize.width = pointLight.shadow.mapSize.height = shadowResolution
         scene.add(pointLight)
 
-        const composerParams = { strength: .6, radius: .4, threshold: .85 }
-
         const stats = new Stats()
         document.body.appendChild(stats.dom)
-        /**
-         * Composer gives the scene a bloom effect.
-         * @type {EffectComposer}
-         */
-        const composer = createComposer(scene, camera, renderer, composerParams)
 
         // Create all relevant celestial bodies in the solar system
         const sun = createCelestialBody("Sun", 16/16, getTexturePath("Sun"), 0)
@@ -122,9 +100,6 @@ export default function SolarSystemVR() {
         let plutoMoons = [{size: 1.4/16, texture: getTexturePath("Kharon"), name: "Kharon", position: -5/16, offsetAxis: 'z'}]
         const pluto = createCelestialBody("Pluto", 2.8/16, getTexturePath("Pluto"), -216/16, null, plutoMoons)
 
-        // Sun has default emission to make bloom effect
-        sun.body.material.emissive.setHex(0xffd99c)
-        sun.body.material.emissiveIntensity = .98
         sun.body.castShadow = false
 
         const objects = [
@@ -145,10 +120,6 @@ export default function SolarSystemVR() {
             }
         }
 
-        document.addEventListener('pointermove', onPointerMove)
-        document.addEventListener('pointerdown', onPointerDown)
-        document.addEventListener('pointerup', onPointerUp)
-        document.addEventListener('keydown', onKeyDown)
         const button = VRButton.createButton(renderer)
         document.body.appendChild(button)
         renderer.xr.enabled = true
@@ -238,6 +209,7 @@ export default function SolarSystemVR() {
                 intersect = intersections[0].object
                 description = createDescription(font, intersect, .25)
                 descriptionFadeIn(scene, description)
+                description.rotation.copy(camera.rotation)
             }
         }
 
@@ -247,7 +219,7 @@ export default function SolarSystemVR() {
          * @param event
          */
         function onSqueezeEnd(event) {
-            if (description) scene.remove(description)
+            if (description) descriptionFadeOut(scene, description)
         }
 
         /**
@@ -315,175 +287,7 @@ export default function SolarSystemVR() {
          * Empties intersected array
          */
         function cleanIntersected() {
-            while ( intersected.length ) {
-                const object = intersected.pop();
-
-            }
-        }
-
-        // isDragging determines if the user is dragging their mouse
-        let isDragging
-        // cameraTarget is the target where the camera is looking at
-        let cameraTarget = sun.body
-
-        /**
-         * Pointer is the coordinates of the mouse on the browser window
-         * @type {Vector2}
-         */
-        const pointer = new THREE.Vector2()
-
-        /**
-         * onPointerMove is called when the user moves their mouse on the browser window. If the mouse is moving,
-         * dragging is set to true and the mouse position is tracked. A raycast is then cast from the camera to the
-         * point where the mouse is. If the raycast hits something, the intersected object will be highlighted as
-         * red (if interactable). If the raycast doesn't hit anything, the latest hit object will be returned to normal.
-         * @param event is the mouse, from which the position is fetched
-         */
-        function onPointerMove(event) {
-            isDragging = true
-            pointer.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1)
-
-            raycaster.setFromCamera(pointer, camera)
-            const intersects = raycaster.intersectObjects(interactable, false)
-            if (intersects.length > 0) {
-                if (intersect !== intersects[0].object) {
-                    if (intersect) intersect.material.emissive.setHex(intersect.currentHex)
-                    intersect = intersects[0].object
-                    intersect.currentHex = intersect.material.emissive.getHex()
-                    intersect.material.emissive.setHex(0xFFDD00)
-                }
-            } else {
-                if (intersect) intersect.material.emissive.setHex(intersect.currentHex)
-                intersect = null
-            }
-        }
-
-        /**
-         * onPointerDown is called when the user presses their mouse button down. If the mouse button is pressed down
-         * the user is not dragging.
-         */
-        function onPointerDown() {
-            isDragging = false
-        }
-
-        /**
-         * onPointerUp is called when the user releases their mouse button up. onPointerUp-function will execute its
-         * functionality only if the user has not dragged their mouse after mouse button is pressed down. If the user
-         * has dragged their mouse after mouse button is pressed down, nothing will happen. If the user just presses
-         * the mouse button (and doesn't drag) a raycast is fired off to the point of the mouse. If the raycast hits
-         * something that is interactable a transition to the object will happen. If nothing was hit and there is a
-         * description in the scene, it will be removed.
-         */
-        function onPointerUp() {
-            if (!isDragging) {
-                raycaster.setFromCamera(pointer, camera)
-                const intersects = raycaster.intersectObjects(interactable, false)
-
-                if (intersects.length > 0) transitionToTarget(intersects[0].object)
-                else if (description) descriptionFadeOut(scene, description)
-            }
-        }
-
-        /**
-         * transitionToTarget is called whenever the user has successfully clicked on an interactable object. In this
-         * function the target of the camera will change to the clicked object and a tween animation will start.
-         * In this animation the camera will move to specified location near the clicked object. y- and z-axis will
-         * always have a certain amount of offset, but the x-axis will be random between 90 - 150 units. When the
-         * animation starts, orbit controls are disabled, during the animation the camera should always look at the
-         * target and any description in the scene is removed (prevents creations of multiple descriptions if spam
-         * clicking) and when the animation is complete, the targets description will be created and faded in above
-         * the target.
-         */
-        function transitionToTarget(target) {
-            cameraTarget = target
-            const direction = new THREE.Vector3()
-            cameraTarget.getWorldPosition(direction)
-
-            const cameraOffset = 10
-            const xDistance = Math.random() * 2 + 10
-
-            // Start camera transitions to target
-            new TWEEN.Tween(camera.position)
-                .to({
-                    x: direction.x + xDistance,
-                    y: direction.y + cameraOffset,
-                    z: direction.z + cameraOffset
-                }, 1000)
-                .easing(TWEEN.Easing.Quadratic.InOut)
-                .onStart(() => {
-                    // Disable orbit controls for transition duration
-                    controls.enabled = false
-                })
-                .onUpdate(() => {
-                    // Always look at target while in transition
-                    controls.target = direction
-                    if (description) scene.remove(description)
-                })
-                .onComplete(() => {
-                    // Enable orbit controls when transition ends
-                    controls.enabled = true
-                    controls.update()
-                    // Add targets description to scene
-                    description = createDescription(font, cameraTarget)
-                    descriptionFadeIn(scene, description)
-                })
-                .start()
-        }
-
-        /**
-         * When number is pressed on keyboard a transition to the specified target will occur.
-         * The if statement check that the pressed key must be either from keyboard numbers or numeric keypad keys.
-         * @param event to check which number was pressed
-         */
-        function onKeyDown(event) {
-            // Is the pressed number from keyboard numbers or numpad numbers
-
-            const keys = [69, 73, 79, 80, 81, 82, 84, 85, 87, 89]
-            if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105) || keys.includes(event.keyCode)) {
-                let pressedKey = event.key
-                switch(pressedKey) {
-                    case '1': transitionToTarget(sun.body)
-                        break
-                    case '2': transitionToTarget(mercury.body)
-                        break
-                    case '3': transitionToTarget(venus.body)
-                        break
-                    case '4': transitionToTarget(earth.body)
-                        break
-                    case '5': transitionToTarget(mars.body)
-                        break
-                    case '6': transitionToTarget(jupiter.body)
-                        break
-                    case '7': transitionToTarget(saturn.body)
-                        break
-                    case '8': transitionToTarget(uranus.body)
-                        break
-                    case '9': transitionToTarget(neptune.body)
-                        break
-                    case '0': transitionToTarget(pluto.body)
-                        break
-                    case 'q': transitionToTarget(earth.moonMesh[0])
-                        break
-                    case 'w': transitionToTarget(mars.moonMesh[0])
-                        break
-                    case 'e': transitionToTarget(mars.moonMesh[1])
-                        break
-                    case 'r': transitionToTarget(jupiter.moonMesh[0])
-                        break
-                    case 't': transitionToTarget(saturn.moonMesh[0])
-                        break
-                    case 'y': transitionToTarget(saturn.moonMesh[1])
-                        break
-                    case 'u': transitionToTarget(uranus.moonMesh[0])
-                        break
-                    case 'i': transitionToTarget(uranus.moonMesh[1])
-                        break
-                    case 'o': transitionToTarget(uranus.moonMesh[2])
-                        break
-                    case 'p': transitionToTarget(pluto.moonMesh[0])
-                        break
-                }
-            }
+            while ( intersected.length ) intersected.pop();
         }
 
         // Font of the description will be loaded here, since there is
@@ -502,30 +306,6 @@ export default function SolarSystemVR() {
             camera.aspect = window.innerWidth / window.innerHeight
             camera.updateProjectionMatrix()
             renderer.setSize(window.innerWidth, window.innerHeight)
-        }
-
-        /**
-         * updateDescription keeps the description is positioned a little above a celestial body.
-         * The description will always face the camera.
-         */
-        function updateDescription()  {
-            if (description !== null) {
-                // Description is above the target
-                description.position.copy(controls.target)//.add(new THREE.Vector3(0,20,0))
-                description.rotation.copy(camera.rotation)
-            }
-        }
-
-        /**
-         * updateCamera tracks the camera target. This is done via orbit controls.
-         */
-        function updateCamera() {
-            cameraTarget.getWorldPosition(controls.target)
-            controls.update()
-
-            const direction = new THREE.Vector3()
-            direction.subVectors(camera.position, controls.target)
-            camera.position.copy(direction.add(controls.target))
         }
 
         /**
@@ -550,10 +330,6 @@ export default function SolarSystemVR() {
          */
         const animate = function () {
             TWEEN.update()
-            updateDescription()
-            updateCamera()
-            render()
-            composer.render()
             renderer.render(scene, camera)
         }
 
@@ -568,11 +344,11 @@ export default function SolarSystemVR() {
                 intersectObjectsVR(rightController)
                 intersectObjectsVR(leftController)
             }
-
-
         })
 
         return () => {
+            const session = renderer.xr.getSession();
+            if (session !== null) session.end()
             mountRef.current?.removeChild(renderer.domElement)
             document.body.removeChild(button)
             // Bad practice to force context loss, but gets the job done
