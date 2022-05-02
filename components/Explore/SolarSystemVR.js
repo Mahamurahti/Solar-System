@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import { useEffect, useRef } from 'react'
-import { FontLoader } from "three/examples/jsm/loaders/FontLoader"
 import getTexturePath from "../../helpers/getTexturePath"
 import createCelestialBody from "./createCelestialBody"
 import Stats from "three/examples/jsm/libs/stats.module";
@@ -11,7 +10,6 @@ import { XRControllerModelFactory } from "three/examples/jsm/webxr/XRControllerM
  *
  * @author Timo Tamminiemi & Eric Keränen
  * @returns {JSX.Element}
- * @constructor
  */
 export default function SolarSystemVR() {
 
@@ -74,28 +72,35 @@ export default function SolarSystemVR() {
         document.body.appendChild(stats.dom)
 
         // Create all relevant celestial bodies in the solar system
-        const sun = createCelestialBody("Sun", 16/16, getTexturePath("Sun"), 0)
-        const mercury = createCelestialBody("Mercury", 3.2/16, getTexturePath("Mercury"), -28/16)
-        const venus = createCelestialBody("Venus", 5.8/16, getTexturePath("Venus"), 44/16)
-        const earthMoon = [{size: 1.35/16, texture: getTexturePath("Moon"), name: "Moon", position: 10/16, offsetAxis: 'x'}]
-        const earth = createCelestialBody("Earth", 6/16, getTexturePath("Earth"), -62/16, earthMoon)
-        let marsMoons = [{size: 0.25/16, texture: getTexturePath("Phobos"), name: "Phobos", position: 4/16, offsetAxis: 'x'},
-        {size: 0.125/16, texture: getTexturePath("Deimos"), name: "Deimos", position: -6/16, offsetAxis: 'x'}]
-        const mars = createCelestialBody("Mars", 4/16, getTexturePath("Mars"), 78/16, marsMoons)
-        const jupiterMoons = [{size: 1.25/16, texture: getTexturePath("Europa"), name: "Europa", position: -16/16, offsetAxis: 'x'}]
-        const jupiter = createCelestialBody("Jupiter", 12/16, getTexturePath("Jupiter"), -100/16, jupiterMoons)
-        const saturnRing = { innerRadius: 10/16, outerRadius: 20/16, texture: getTexturePath("Saturn").ring }
-        const saturnMoons =  [{size: 0.65/16, texture: getTexturePath("Enceladus"), name: "Enceladus", position: 15/16, offsetAxis: 'x'},
-            {size: 2.02/16, texture: getTexturePath("Titan"), name: "Titan", position: -20/16, offsetAxis: 'x'}]
-        const saturn = createCelestialBody("Saturn", 10/16, getTexturePath("Saturn").body, 138/16, saturnMoons, saturnRing)
-        const uranusRing = { innerRadius: 7/16, outerRadius: 12/16, texture: getTexturePath("Uranus").ring }
-        const uranusMoons = [{size: 0.65/16, texture: getTexturePath("Ariel"), name: "Ariel", position: -10/16, offsetAxis: 'x'},
-            {size: 0.741/16, texture: getTexturePath("Titania"), name: "Titania", position: 12/16, offsetAxis: 'x'},
-            {size: 0.681/16, texture: getTexturePath("Oberon"), name: "Oberon", position: 12/16, offsetAxis: 'z'}]
-        const uranus = createCelestialBody("Uranus", 7/16, getTexturePath("Uranus").body, -176/16, uranusMoons, uranusRing)
-        const neptune = createCelestialBody("Neptune", 7/16, getTexturePath("Neptune"), 200/16)
-        let plutoMoons = [{size: 1.4/16, texture: getTexturePath("Kharon"), name: "Kharon", position: -5/16, offsetAxis: 'z'}]
-        const pluto = createCelestialBody("Pluto", 2.8/16, getTexturePath("Pluto"), -216/16, plutoMoons)
+        const downScaleAmount = 16
+        const sun = createCelestialBody("Sun", 16/downScaleAmount, getTexturePath("Sun"), 0)
+        const mercury = createCelestialBody("Mercury", 3.2/downScaleAmount, getTexturePath("Mercury"), -28/downScaleAmount)
+        const venus = createCelestialBody("Venus", 5.8/downScaleAmount, getTexturePath("Venus"), 44/downScaleAmount)
+        const moon = { name: "Moon", size: 1.35/downScaleAmount, texture: getTexturePath("Moon"), position: 10/downScaleAmount, offsetAxis: 'x' }
+        const earthMoon = [moon]
+        const earth = createCelestialBody("Earth", 6/downScaleAmount, getTexturePath("Earth"), -62/downScaleAmount, earthMoon)
+        const phobos = { name: "Phobos", size: 0.25/downScaleAmount, texture: getTexturePath("Phobos"), position: 4/downScaleAmount, offsetAxis: 'x' }
+        const deimos = { name: "Deimos", size: 0.125/downScaleAmount, texture: getTexturePath("Deimos"), position: -6/downScaleAmount, offsetAxis: 'x' }
+        const marsMoons = [phobos, deimos]
+        const mars = createCelestialBody("Mars", 4/downScaleAmount, getTexturePath("Mars"), 78/downScaleAmount, marsMoons)
+        const europa = { name: "Europa", size: 1.25/downScaleAmount, texture: getTexturePath("Europa"), position: -16/downScaleAmount, offsetAxis: 'x'}
+        const jupiterMoons = [europa]
+        const jupiter = createCelestialBody("Jupiter", 12/downScaleAmount, getTexturePath("Jupiter"), -100/downScaleAmount, jupiterMoons)
+        const enceladus = { name: "Enceladus", size: 0.65/downScaleAmount, texture: getTexturePath("Enceladus"), position: 15/downScaleAmount, offsetAxis: 'x' }
+        const titan = { name: "Titan", size: 2.02/downScaleAmount, texture: getTexturePath("Titan"), position: -20/downScaleAmount, offsetAxis: 'x' }
+        const saturnMoons =  [enceladus, titan]
+        const saturnRing = { innerRadius: 10/downScaleAmount, outerRadius: 20/downScaleAmount, texture: getTexturePath("Saturn").ring }
+        const saturn = createCelestialBody("Saturn", 10/downScaleAmount, getTexturePath("Saturn").body, 138/downScaleAmount, saturnMoons, saturnRing)
+        const ariel = { name: "Ariel", size: 0.65/downScaleAmount, texture: getTexturePath("Ariel"), position: -10/downScaleAmount, offsetAxis: 'x' }
+        const titania = { name: "Titania", size: 0.741/downScaleAmount, texture: getTexturePath("Titania"), position: 12/downScaleAmount, offsetAxis: 'x' }
+        const oberon = { name: "Oberon", size: 0.681/downScaleAmount, texture: getTexturePath("Oberon"), position: 12/downScaleAmount, offsetAxis: 'z' }
+        const uranusMoons = [ariel, titania, oberon]
+        const uranusRing = { innerRadius: 7/downScaleAmount, outerRadius: 12/downScaleAmount, texture: getTexturePath("Uranus").ring }
+        const uranus = createCelestialBody("Uranus", 7/downScaleAmount, getTexturePath("Uranus").body, -176/downScaleAmount, uranusMoons, uranusRing)
+        const neptune = createCelestialBody("Neptune", 7/downScaleAmount, getTexturePath("Neptune"), 200/downScaleAmount)
+        const charon = { name: "Charon", size: 1.4/downScaleAmount, texture: getTexturePath("Charon"), position: -5/downScaleAmount, offsetAxis: 'z' }
+        const plutoMoons = [charon]
+        const pluto = createCelestialBody("Pluto", 2.8/downScaleAmount, getTexturePath("Pluto"), -216/downScaleAmount, plutoMoons)
 
         sun.body.castShadow = false
 
@@ -107,7 +112,7 @@ export default function SolarSystemVR() {
         const group = new THREE.Group()
 
         for (const object of objects) {
-            // Add group to scene (celestial body, moons of celestial body and ring if it has one)
+            // Add object group to a separate group (celestial body, moons of celestial body and ring if it has one)
             group.add(object.group)
             // Add body of celestial body to be interactable
             interactable.push(object.body)
@@ -116,8 +121,13 @@ export default function SolarSystemVR() {
             // If the celestial body has a ring, add it to be interactable
             if(object.ring) interactable.push(object.ring)
         }
+        // Add the group as a whole to the scene
         scene.add(group)
 
+        /**
+         * createVRButton creates the button that can be clicked to access VR mode
+         * @returns {Promise<HTMLButtonElement|HTMLAnchorElement>}
+         */
         async function createVRButton() {
             const button = await import("three/examples/jsm/webxr/VRButton").then(module => module.VRButton.createButton(renderer))
             document.body.appendChild(button)
@@ -125,11 +135,15 @@ export default function SolarSystemVR() {
         }
         const button = createVRButton()
         renderer.xr.enabled = true
+        /**
+         * XRControllerModelFactory provides the model that will be used as the controller in VR
+         * @type {XRControllerModelFactory}
+         */
         const controllerModelFactory = new XRControllerModelFactory()
 
         // Camera position when entered in VR
         const cameraGroup = new THREE.Group()
-        cameraGroup.position.set(0, 5, 2)
+        cameraGroup.position.set(0, 1, 2)
 
         // When user enters VR mode reposition the camera and add event listeners to controllers
         renderer.xr.addEventListener('sessionstart', function () {
@@ -157,26 +171,26 @@ export default function SolarSystemVR() {
 
         // Line geometry for VR controllers
         const geometry = new THREE.BufferGeometry()
-        geometry.setFromPoints( [ new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, - 1 ) ] )
-        const line = new THREE.Line( geometry )
+        geometry.setFromPoints([new THREE.Vector3(0,0,0 ), new THREE.Vector3(0,0,-1)])
+        const line = new THREE.Line(geometry)
         line.name = 'line'
         line.scale.z = 5
 
         // Create right and left controllers and add line to them
-        const rightController = renderer.xr.getController( 0 )
+        const rightController = renderer.xr.getController(0)
         rightController.add(line.clone())
         scene.add(rightController)
 
-        const leftController = renderer.xr.getController( 1 )
+        const leftController = renderer.xr.getController(1)
         leftController.add(line.clone())
         scene.add(leftController)
 
         // Create right and left controller grips and add them to controllers
-        const rightControllerGrip = renderer.xr.getControllerGrip( 0 )
+        const rightControllerGrip = renderer.xr.getControllerGrip(0)
         rightControllerGrip.add(controllerModelFactory.createControllerModel(rightControllerGrip))
-        scene.add( rightControllerGrip )
+        scene.add(rightControllerGrip)
 
-        const leftControllerGrip = renderer.xr.getControllerGrip( 1 )
+        const leftControllerGrip = renderer.xr.getControllerGrip(1)
         leftControllerGrip.add(controllerModelFactory.createControllerModel(leftControllerGrip))
         scene.add(leftControllerGrip)
 
@@ -193,24 +207,23 @@ export default function SolarSystemVR() {
         let orbitSpeed = 0.1
 
         /**
-         * onSqueezeStart is called when user presses squeeze trigger on VR controller
-         * then it check if controllers ray cast intersects any interactable object and if so description of object will popup
-         * @param event
+         * onSqueeze is called when user presses squeeze trigger on VR controller.
+         * Pressing the squeeze button with right controller will speed up the orbiting clockwise of celestial bodies.
+         * Pressing the squeeze button with left controller will speed up the orbiting counter clockwise of celestial
+         * bodies.
+         * @param event is used to get the controller
          */
         function onSqueeze(event) {
             const controller = event.target
-            if(controller === rightController) {
-                orbitSpeed += .2
-            }
-            if(controller === leftController) {
-                orbitSpeed -= .2
-            }
+            if(controller === rightController) orbitSpeed += .2
+            if(controller === leftController) orbitSpeed -= .2
         }
 
         /**
-         * onSelectStart is called when user presses select button on VR controller and then checks if controllers ray cast hits
-         * any interactable object if so attaches the object to controller so it can be inspected or moved while in hand
-         * @param event
+         * onSelectStart is called when user presses select button on VR controller and then checks if controllers
+         * raycast hits any interactable object and if so, attaches the object to controller so it can be inspected
+         * or moved while in hand.
+         * @param event is used to get the controller
          */
         function onSelectStart(event) {
             const controller = event.target
@@ -225,9 +238,10 @@ export default function SolarSystemVR() {
         }
 
         /**
-         * onSelectEnd is called when user releases select button on the VR controller. It checks if there is object attached to controller
-         * if so it detaches it and adds the object back to scene.
-         * @param event
+         * onSelectEnd is called when user releases select button on the VR controller. It checks if there is object
+         * attached to controller and if so, it detaches it and adds the object back to scene to the position it was
+         * left to.
+         * @param event is used to get the controller
          */
         function onSelectEnd(event) {
             const controller = event.target
@@ -240,9 +254,9 @@ export default function SolarSystemVR() {
         }
 
         /**
-         * getIntersections is called when something needs to check if controllers ray cast hits any interactable object
+         * getIntersections is called when something needs to check if controllers raycast hits any interactable object
          * returns array of intersected objects
-         * @param controller
+         * @param controller is the used to determine is the controller the left one or the right one
          * @returns {*[]|*}
          */
         function getIntersections(controller) {
@@ -255,7 +269,7 @@ export default function SolarSystemVR() {
         /**
          * intersectObjectVR is called when in VR mode to check if any object is not selected by controller
          * and line of controller intersects with an object
-         * @param controller
+         * @param controller is the used to determine is the controller the left one or the right one
          */
         function intersectObjectsVR(controller) {
             if(controller.userData.selected !== undefined) return
@@ -273,7 +287,7 @@ export default function SolarSystemVR() {
         }
 
         /**
-         * Empties intersected array
+         * Empties intersected array and resets highlight color (green)
          */
         function cleanIntersected() {
             while (intersected.length) {
@@ -282,14 +296,7 @@ export default function SolarSystemVR() {
             }
         }
 
-        // Font of the description will be loaded here, since there is
-        // a lot of problems loading it in createDescription.js
-        const robotoFontPath = 'fonts/Roboto_Regular.json'
-        const fontLoader = new FontLoader()
-        let font
-        fontLoader.load(robotoFontPath, function (robotoFont) { font = robotoFont })
-
-        window.addEventListener( 'resize', onResize, false )
+        window.addEventListener('resize', onResize, false)
 
         /**
          * onResize scales the renderer and aspect ratio of the camera to screen size when the window size changes.
@@ -317,15 +324,15 @@ export default function SolarSystemVR() {
         /**
          * animate animates the scene. Animation frames are requested and called continuously. Every celestial body
          * is rotated around their own axis and all other celestial bodies except the sun are rotated around the origin
-         * (the sun acts as the origin). Then the description is updated and the camera is updated. Lastly the scene is
-         * rendered.
+         * (the sun acts as the origin).
          */
         const animate = function () {
             renderer.render(scene, camera)
         }
 
         /**
-         * Rendering loop for VR render, update framerate window and update VR controller functions only when renderer.xr.isPresenting is true
+         * Rendering loop for VR render, update framerate window and update VR controller functions only when
+         * renderer.xr.isPresenting is true, meaning VR mode is on.
          */
         renderer.setAnimationLoop(function() {
             requestID = requestAnimationFrame(animate)

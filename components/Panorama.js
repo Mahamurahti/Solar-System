@@ -85,7 +85,7 @@ export default function Panorama(props) {
             target.y = (1 - mouse.y) * 0.001
             camera.rotation.x += 0.01 * (target.y - camera.rotation.x)
             camera.rotation.y += 0.01 * (target.x - camera.rotation.y)
-            // -----------------------------------------//
+            // ---------------------------------------- //
 
             renderer.render(scene, camera)
         }

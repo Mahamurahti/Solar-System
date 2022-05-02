@@ -29,15 +29,6 @@ export default function SolarSystem() {
         // ---------------------------------------- SETTING UP SCENE ---------------------------------------- //
 
         /**
-         * Stats component to see framerate
-         * @type {{REVISION: number, domElement: HTMLDivElement, dom: HTMLDivElement, showPanel: function(*): void,
-         * setMode: function(*): void, addPanel: function(*): *, update: function(): void, end: function(): *,
-         * begin: function(): void}}
-         */
-        const stats = new Stats()
-        document.body.appendChild(stats.dom)
-
-        /**
          * Scene for displaying 3D graphics. Scene has a cubemap of stars as background.
          * @type {Scene}
          */
@@ -283,6 +274,7 @@ export default function SolarSystem() {
                 .onUpdate(() => {
                     // Always look at target while in transition
                     controls.target = direction
+                    // Remove any descriptions, called in onUpdate to prevent descriptions created from spam clicking
                     if (description) scene.remove(description)
                 })
                 .onComplete(() => {
@@ -317,7 +309,7 @@ export default function SolarSystem() {
          * When a key is pressed, check if the key is any of the keys that are being used in the solar system key
          * bindings. If yes, trigger key event, if no, don"t do anything.
          * Numbers from 0-9 are reserved for planets and the Sun and the upper row of letters (Q-P) are reserved for
-         * planets moons. Control is reserved for camera locking and Space for orbit locking.
+         * moons. Control is reserved for camera locking and Space for orbit locking.
          * @param event to check which key was pressed
          */
         function onKeyDown(event) {
@@ -380,7 +372,7 @@ export default function SolarSystem() {
 
         // ---------------------------------------- WINDOW RESIZING ---------------------------------------- //
 
-        window.addEventListener( "resize", onResize, false )
+        window.addEventListener("resize", onResize, false)
 
         /**
          * onResize scales the renderer and aspect ratio of the camera to screen size when the window size changes.
@@ -394,7 +386,7 @@ export default function SolarSystem() {
         // ---------------------------------------- RENDERING ---------------------------------------- //
 
         /**
-         * updateDescription keeps the description is positioned a little above a celestial body.
+         * updateDescription keeps the description positioned a little above a celestial body.
          * The description will always face the camera.
          */
         function updateDescription()  {
@@ -408,14 +400,14 @@ export default function SolarSystem() {
         }
 
         /**
-         * lockZoom lock the zoom level to a certain amount, which means if the planet is orbiting, the camera will not
+         * lockZoom locks the zoom level to a certain amount, which means if the planet is orbiting, the camera will not
          * just look at the target but follow it also on the zoom level which it was locked in.
          * @type {boolean}
          */
         let lockZoom = false, zoomLevel
 
         /**
-         * updateCamera tracks the camera target. This is done via orbit controls.
+         * updateCamera tracks the camera target. This is done via orbit controls (controls.target).
          */
         function updateCamera() {
             cameraTarget.getWorldPosition(controls.target)
@@ -438,7 +430,7 @@ export default function SolarSystem() {
         }
 
         /**
-         * requestID is only used for performance matters. If the context is lost (which we force when the component
+         * requestID is only used for performance reasons. If the context is lost (which we force when the component
          * unmounts) the latest animation frame will be cancelled.
          */
         let requestID
@@ -457,7 +449,7 @@ export default function SolarSystem() {
         const animate = function () {
             requestID = requestAnimationFrame(animate)
             TWEEN.update()
-            stats.update()
+
             const orbitSpeed = stopOrbit ? 0 : 0.05
             const negateDirection = Math.PI / -2
             const rotateSpeed = 0.2
@@ -500,7 +492,6 @@ export default function SolarSystem() {
 
             updateDescription()
             updateCamera()
-            //render()
             composer.render()
         }
 
@@ -527,6 +518,7 @@ export default function SolarSystem() {
             controlsText.style.opacity = "1"
             controlsButton.style.transform = "rotate(180deg)"
         }
+        // Unfocus from the button, to prevent Space from triggering the appearance of controls (must be clicked)
         controlsButton.blur()
     }
 

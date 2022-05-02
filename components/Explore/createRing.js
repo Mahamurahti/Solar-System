@@ -29,6 +29,7 @@ export default function createRing(name, radii, texture, position) {
     ringMesh.position.y = position.y
     ringMesh.position.z = position.z
     ringMesh.rotation.x = -0.5 * Math.PI
+    // Uranus is a exception, since its ring is almost vertical
     if(name === "Uranus") ringMesh.rotation.y = 90
 
     ringMesh.receiveShadow = true

@@ -6,7 +6,8 @@ import Image from "next/image"
  * Control element is for the Controls page.
  *
  * @author Eric Keränen
- * @param props includes information about if an extra margin is needed, image link, image width and image height
+ * @param props includes information about if an extra margin is needed,
+ * image link, image width, image height and image alt
  * @returns {JSX.Element}
  */
 export default function Control(props) {
