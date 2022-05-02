@@ -172,28 +172,21 @@ export default function Controls() {
                         will be disabled and only the VR controls will function.
                     </p>
 
-                    <Control img={"/controls/vr_trigger_right.png"} width={146} height={230} alt={"VR control"}>
-                        Squeezing the right trigger will ... .
+                    <Control img={"/controls/vr_trigger_right.png"} width={146} height={230} alt={"VR right trigger button icon"}>
+                        Squeezing the right trigger will pickup interactable object if controllers ray cast hits it.
                     </Control>
 
-                    <Control img={"/controls/vr_grip_right.png"} width={146} height={230} alt={"VR control"}>
-                        Squeezing the right grip will ... .
+                    <Control img={"/controls/vr_grip_right.png"} width={146} height={230} alt={"VR right grip button icon"}>
+                        Squeezing the right grip will slow down orbit speed of solar system.
                     </Control>
 
-                    <Control img={"/controls/vr_thumbstick_right.png"} width={146} height={230} alt={"VR control"}>
-                        Rotating the right thumbstick will ... .
+
+                    <Control img={"/controls/vr_trigger_left.png"} width={146} height={230} alt={"VR left trigger button icon"}>
+                        Squeezing the left trigger will execute same functionality as right trigger.
                     </Control>
 
-                    <Control img={"/controls/vr_trigger_left.png"} width={146} height={230} alt={"VR control"}>
-                        Squeezing the left trigger will ... .
-                    </Control>
-
-                    <Control img={"/controls/vr_grip_left.png"} width={146} height={230} alt={"VR control"}>
-                        Squeezing the left grip will ... .
-                    </Control>
-
-                    <Control img={"/controls/vr_thumbstick_left.png"} width={146} height={230} alt={"VR control"}>
-                        Rotating the left thumbstick will ... .
+                    <Control img={"/controls/vr_grip_left.png"} width={146} height={230} alt={"VR left grip button icon"}>
+                        Squeezing the left grip will speed up orbit speed of solar system.
                     </Control>
 
                 </section>

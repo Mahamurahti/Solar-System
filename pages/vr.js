@@ -2,7 +2,7 @@ import Head from "next/head";
 import SolarSystemVR from "../components/Explore/SolarSystemVR";
 
 /**
- * Creates explorable solar system in with vr option
+ * Creates explorable solar system sandbox with VR interactions
  *
  * @author Timo Tamminiemi
  * @returns {JSX.Element}
