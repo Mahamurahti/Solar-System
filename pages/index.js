@@ -40,9 +40,9 @@ export default function Home() {
 
         <div className={styles.grid}>
           <Button link={"/explore"}>Explore</Button>
-          <Button link={"/about"}>About</Button>
-          <Button link={"/controls"}>Controls</Button>
-          <Button link={"/vr"}>Sandbox VR</Button>
+            <Button link={"/vr"}>Sandbox VR</Button>
+            <Button link={"/controls"}>Controls</Button>
+            <Button link={"/about"}>About</Button>
         </div>
       </main>
 
