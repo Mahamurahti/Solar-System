@@ -107,10 +107,11 @@ export default function SolarSystemVR() {
             jupiter, saturn, uranus, neptune, pluto
         ]
         const interactable = []
+        const group = new THREE.Group()
 
         for (const object of objects) {
             // Add group to scene (celestial body, moons and ring if the body has one)
-            scene.add(object.group)
+            group.add(object.group)
             // Only the body and moons are currently interactable (ring is not interactable)
             interactable.push(object.body)
             if(object.moonMesh) {
@@ -119,6 +120,7 @@ export default function SolarSystemVR() {
                 }
             }
         }
+        scene.add(group)
 
         const button = VRButton.createButton(renderer)
         document.body.appendChild(button)
@@ -231,9 +233,11 @@ export default function SolarSystemVR() {
             const controller = event.target
             const intersections = getIntersections(controller)
             if(intersections.length > 0) {
-                intersect = intersections[0].object
-                controller.attach(intersect)
-                controller.userData.selected = intersect
+                const intersection = intersections[0]
+                const object = intersection.object
+                object.material.emissive.r = .2
+                controller.attach( object )
+                controller.userData.selected = object
             }
         }
 
@@ -246,8 +250,8 @@ export default function SolarSystemVR() {
             const controller = event.target
             if(controller.userData.selected !== undefined) {
                 const object = controller.userData.selected
-                interactable.push(object)
-                scene.add(object)
+                object.material.emissive.r = 0
+                group.attach(object)
                 controller.userData.selected = undefined
             }
         }
