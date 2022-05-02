@@ -74,7 +74,7 @@ export default function SolarSystemVR() {
         document.body.appendChild(stats.dom)
 
         // Create all relevant celestial bodies in the solar system
-        //const sun = createCelestialBody("Sun", 16/16, getTexturePath("Sun"), 0)
+        const sun = createCelestialBody("Sun", 16/16, getTexturePath("Sun"), 0)
         const mercury = createCelestialBody("Mercury", 3.2/16, getTexturePath("Mercury"), -28/16)
         const venus = createCelestialBody("Venus", 5.8/16, getTexturePath("Venus"), 44/16)
         const earthMoon = [{size: 1.35/16, texture: getTexturePath("Moon"), name: "Moon", position: 10/16, offsetAxis: 'x'}]
@@ -97,10 +97,10 @@ export default function SolarSystemVR() {
         let plutoMoons = [{size: 1.4/16, texture: getTexturePath("Kharon"), name: "Kharon", position: -5/16, offsetAxis: 'z'}]
         const pluto = createCelestialBody("Pluto", 2.8/16, getTexturePath("Pluto"), -216/16, plutoMoons)
 
-        //sun.body.castShadow = false
+        sun.body.castShadow = false
 
         const objects = [
-            /*sun,*/ mercury, venus, earth, mars,
+            sun, mercury, venus, earth, mars,
             jupiter, saturn, uranus, neptune, pluto
         ]
         const interactable = []
@@ -128,7 +128,7 @@ export default function SolarSystemVR() {
 
         // Camera position when entered in VR
         const cameraGroup = new THREE.Group()
-        cameraGroup.position.set(0, 1, 2)
+        cameraGroup.position.set(0, 5, 2)
 
         // When user enters VR mode reposition the camera and add event listeners to controllers
         renderer.xr.addEventListener('sessionstart', function () {
@@ -339,7 +339,7 @@ export default function SolarSystemVR() {
                 const rotateSpeed = 0.2
 
                 // Around own axis rotation
-                //sun.body.rotateY(0.004 * rotateSpeed)
+                sun.body.rotateY(0.004 * rotateSpeed)
                 mercury.body.rotateY(0.004 * rotateSpeed)
                 venus.body.rotateY(0.002 * rotateSpeed)
                 earth.body.rotateY(0.02 * rotateSpeed)
