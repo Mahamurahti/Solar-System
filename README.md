@@ -82,7 +82,7 @@ sources, which are:
 2. [Solar System textures](https://www.solarsystemscope.com/textures/)
 3. [Most moon textures](https://www.celestiamotherlode.net/)
 
-![Texture of Mercury](https://i.gyazo.com/053b6ef61fe9b56c6aae874b589e7cc7.gif)
+![Mercurys texture](https://i.gyazo.com/78cc6d6352dcd63865b2a8e32b45a0a5.gif)
 
 ## Technology stack
 
