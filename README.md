@@ -78,7 +78,7 @@ really surprised and happy about the result Tween.js brought to the table.
 Textures we downloaded from websites that had high resolutions versions of them. Textures were from three different 
 sources, which are:
 
-1. [Tyro 3D SPace panoramas (cubemaps)](https://tools.wwwtyro.net/space-3d/index.html)
+1. [Tyro 3D Space panoramas (cubemaps)](https://tools.wwwtyro.net/space-3d/index.html)
 2. [Solar System textures](https://www.solarsystemscope.com/textures/)
 3. [Most moon textures](https://www.celestiamotherlode.net/)
 
