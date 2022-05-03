@@ -22,7 +22,7 @@ interesting facts and information about the objects in our Solar System.
 
 ![Lockable camera](https://i.gyazo.com/ee059460a9a9e3f64989a7aa27cf9be1.gif)
 
-- Stop the orbiting to read facts of the smaller bodies
+- Stop the orbiting of celestial bodies in the Solar System
 
 ![Orbiting can be stopped](https://i.gyazo.com/e687d1e6ce5ab700a5029592ad24411e.gif)
 
@@ -82,7 +82,7 @@ sources, which are:
 2. [Solar System textures](https://www.solarsystemscope.com/textures/)
 3. [Most moon textures](https://www.celestiamotherlode.net/)
 
-![Texture of Mercury](https://i.gyazo.com/3d027e4eb0c02f8ef46a6bed2f1b5e45.gif)
+![Texture of Mercury](https://i.gyazo.com/053b6ef61fe9b56c6aae874b589e7cc7.gif)
 
 ## Technology stack
 
