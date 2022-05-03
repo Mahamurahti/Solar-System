@@ -16,7 +16,7 @@ interesting facts and information about the objects in our Solar System.
 
 - Read interesting facts about our Solar System
 
-![Read interesting facts](https://i.gyazo.com/9306b385a1002c99291535b607b4ec6a.gif)
+![Read interesting facts](https://i.gyazo.com/ac22770aa0cf3a58ac6c4d6161e5bb43.gif)
 
 - Follow the orbit of any body in our Solar System
 
@@ -24,7 +24,7 @@ interesting facts and information about the objects in our Solar System.
 
 - Stop the orbiting to read facts of the smaller bodies
 
-![Stop orbiting](https://i.gyazo.com/3d35e2f03364ec0bdd8fbd54de2bf3b2.gif)
+![Stop orbiting](https://i.gyazo.com/8aeb6f43030c52ebbcd948084a8971f5.gif)
 
 - Have fun in our experimental sandbox VR mode!
 - Grab planets and move them around
@@ -82,7 +82,7 @@ sources, which are:
 2. [Solar System textures](https://www.solarsystemscope.com/textures/)
 3. [Most moon textures](https://www.celestiamotherlode.net/)
 
-![Mercury texture](https://i.gyazo.com/7cfada0e16cc9669cfe435f9def6815f.gif)
+![Mercury texture](https://i.gyazo.com/3d027e4eb0c02f8ef46a6bed2f1b5e45.gif)
 
 ## Technology stack
 
