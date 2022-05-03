@@ -24,7 +24,7 @@ interesting facts and information about the objects in our Solar System.
 
 - Stop the orbiting to read facts of the smaller bodies
 
-![Stoppable orbit](https://i.gyazo.com/8aeb6f43030c52ebbcd948084a8971f5.gif)
+![Orbiting can be stopped](https://i.gyazo.com/e687d1e6ce5ab700a5029592ad24411e.gif)
 
 - Have fun in our experimental sandbox VR mode!
 - Grab planets and move them around
