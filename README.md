@@ -16,7 +16,7 @@ interesting facts and information about the objects in our Solar System.
 
 - Read interesting facts about our Solar System
 
-![Interesting facts](https://i.gyazo.com/ac22770aa0cf3a58ac6c4d6161e5bb43.gif)
+![Interesting facts](https://i.gyazo.com/341e49b47f1e18c1e878ab98f1b8d850.gif)
 
 - Follow the orbit of any body in our Solar System
 
