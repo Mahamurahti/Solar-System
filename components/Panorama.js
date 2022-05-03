@@ -8,6 +8,7 @@ import getTexturePath from "../helpers/getTexturePath"
  * @author Eric Keränen
  * @param props includes the specified texture path
  * @returns {JSX.Element}
+ * @module Panorama
  */
 export default function Panorama(props) {
 

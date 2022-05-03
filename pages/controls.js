@@ -10,6 +10,7 @@ import Button from "../components/Button"
  *
  * @author Eric Keränen
  * @returns {JSX.Element}
+ * @module Controls
  */
 export default function Controls() {
     return (

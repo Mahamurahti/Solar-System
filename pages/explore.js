@@ -6,6 +6,7 @@ import SolarSystem from "../components/Explore/SolarSystem"
  *
  * @author Timo Tamminiemi
  * @returns {JSX.Element}
+ * @module Explore
  */
 export default function Explore() {
     return (

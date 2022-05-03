@@ -9,6 +9,7 @@ import { TWEEN } from "three/examples/jsm/libs/tween.module.min"
  * @param font of the description
  * @param target for which celestial body is the description for
  * @returns {Mesh}
+ * @module createDescription
  */
 export default function createDescription(font, target) {
     const fontMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 })

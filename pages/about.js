@@ -10,6 +10,7 @@ import Button from "../components/Button"
  *
  * @author Eric Keränen
  * @returns {JSX.Element}
+ * @module About
  */
 export default function About() {
     return (

@@ -12,6 +12,7 @@ import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer
  * @param renderer is the renderer of the scene
  * @param params are the parameters of the Unreal Bloom, params must include strength, radius and threshold
  * @returns {EffectComposer}
+ * @module createComposer
  */
 export default function createComposer(scene, camera, renderer, params) {
 

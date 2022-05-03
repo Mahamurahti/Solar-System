@@ -1,3 +1,9 @@
+/**
+ * getTexturePath return the specified texture. Return all relevant textures.
+ * @param name of the texture
+ * @returns {string|unknown[]|{ring: string, body: string}}
+ * @namespace getTexturePath
+ */
 export default function getTexturePath(name) {
     const dir = "cubemap/"
     const red = "red/", blue = "blue/", green = "green/"

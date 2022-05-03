@@ -9,6 +9,7 @@ import Image from "next/image"
  * @param props includes information about if an extra margin is needed,
  * image link, image width, image height and image alt
  * @returns {JSX.Element}
+ * @module Control
  */
 export default function Control(props) {
     return (

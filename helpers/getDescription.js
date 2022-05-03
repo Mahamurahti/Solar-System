@@ -1,3 +1,10 @@
+/**
+ * getDescription return a description of a specified celestial body
+ *
+ * @param name of the celestial body
+ * @returns {string}
+ * @namespace getDescription
+ */
 export default function getDescription(name) {
     switch (name) {
         case "Sun":

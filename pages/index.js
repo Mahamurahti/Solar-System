@@ -10,6 +10,7 @@ import Image from "next/image"
  *
  * @author Eric Keränen
  * @returns {JSX.Element}
+ * @module Home
  */
 export default function Home() {
   return (

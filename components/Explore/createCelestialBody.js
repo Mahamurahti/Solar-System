@@ -13,7 +13,8 @@ import createRing from "./createRing"
  * @param position of the celestial body in the solar system
  * @param moonParams of the celestial body (optional)
  * @param ringParams of the celestial body (optional)
- * @returns {{body: Mesh, moons: [], ring: Mesh, group: Object3D}}
+ * @returns {Object}
+ * @module createCelestialBody
  */
 export default function createCelestialBody(name, size, texture, position, moonParams, ringParams) {
 

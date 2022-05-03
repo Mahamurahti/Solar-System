@@ -9,6 +9,7 @@ import * as THREE from "three"
  * @param texture of the ring
  * @param position of the ring
  * @returns {Mesh}
+ * @module createRing
  */
 export default function createRing(name, radii, texture, position) {
     const textureLoader = new THREE.TextureLoader()

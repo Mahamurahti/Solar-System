@@ -10,6 +10,7 @@ import * as THREE from "three"
  * @param offset of the moon from the parent celestial body
  * @param offsetAxis offset from which axis
  * @returns {Mesh}
+ * @module createMoon
  */
 export default function createMoon(name, size, texture, offset, offsetAxis) {
     const textureLoader = new THREE.TextureLoader()

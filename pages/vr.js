@@ -6,6 +6,7 @@ import SolarSystemVR from "../components/Explore/SolarSystemVR";
  *
  * @author Timo Tamminiemi
  * @returns {JSX.Element}
+ * @module ExploreVR
  */
 export default function ExploreVR() {
     return (

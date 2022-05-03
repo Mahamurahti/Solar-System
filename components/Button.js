@@ -7,6 +7,7 @@ import Link from "next/link"
  * @author Eric Keränen
  * @param props contains information about the link
  * @returns {JSX.Element}
+ * @module Button
  */
 export default function Button(props) {
     return (

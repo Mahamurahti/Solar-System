@@ -6,6 +6,7 @@ import Image from "next/image"
  *
  * @author Eric Keränen
  * @returns {JSX.Element}
+ * @module Footer
  */
 export default function Footer() {
     return (

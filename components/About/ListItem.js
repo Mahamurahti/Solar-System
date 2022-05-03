@@ -6,6 +6,7 @@ import styles from "../../styles/ListItem.module.sass"
  * @author Eric Keränen
  * @param props includes information about the text and link
  * @returns {JSX.Element}
+ * @module ListItem
  */
 export default function ListItem(props) {
 

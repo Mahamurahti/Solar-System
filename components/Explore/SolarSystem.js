@@ -16,6 +16,7 @@ import getDescription from "../../helpers/getDescription"
  *
  * @author Timo Tamminiemi & Eric Keränen
  * @returns {JSX.Element}
+ * @module SolarSystem
  */
 export default function SolarSystem() {
 
@@ -30,6 +31,7 @@ export default function SolarSystem() {
         /**
          * Scene for displaying 3D graphics. Scene has a cubemap of stars as background.
          * @type {Scene}
+         * @namespace SolarSystem
          */
         const scene = new THREE.Scene()
         scene.background = new THREE.CubeTextureLoader().load(Array(6).fill(getTexturePath("Stars")))
@@ -38,6 +40,7 @@ export default function SolarSystem() {
         /**
          * Perspective camera for defining the "eyes" of the scene. We can look at the scene through the camera.
          * @type {PerspectiveCamera}
+         * @namespace SolarSystem
          */
         const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, .1, renderDistance)
         camera.position.set(-90, 140, 140)
@@ -45,6 +48,7 @@ export default function SolarSystem() {
         /**
          * Renderer renders the scene through the camera. Renderer has shadows enabled.
          * @type {WebGLRenderer}
+         * @namespace SolarSystem
          */
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
         renderer.setSize(WIDTH, HEIGHT)
@@ -63,6 +67,7 @@ export default function SolarSystem() {
         /**
          * Orbit controls gives access to orbit around the scene.
          * @type {OrbitControls}
+         * @namespace SolarSystem
          */
         const controls = new OrbitControls(camera, renderer.domElement)
         controls.enableDamping = true
@@ -79,6 +84,7 @@ export default function SolarSystem() {
          * Ambient light to lighten up the scene artificially, meaning even the dark sides of celestial bodies
          * are slightly visible.
          * @type {AmbientLight}
+         * @namespace SolarSystem
          */
         const ambientLight = new THREE.AmbientLight(0xFFFFFF, .2)
         scene.add(ambientLight)
@@ -87,6 +93,7 @@ export default function SolarSystem() {
          * Point light is the origin of the solar systems light. The point light is inside of the sun. Point light
          * is the light that makes other objects cast shadows.
          * @type {PointLight}
+         * @namespace SolarSystem
          */
         const pointLight = new THREE.PointLight(0xFFFFFF, .9, renderDistance)
         pointLight.castShadow = true
@@ -100,6 +107,7 @@ export default function SolarSystem() {
         /**
          * Composer gives the scene a bloom effect.
          * @type {EffectComposer}
+         * @namespace SolarSystem
          */
         const composer = createComposer(scene, camera, renderer, composerParams)
 
@@ -175,11 +183,13 @@ export default function SolarSystem() {
         /**
          * Raycaster is used to cast a ray and determine if it hits something
          * @type {Raycaster}
+         * @namespace SolarSystem
          */
         const raycaster = new THREE.Raycaster()
         /**
          * Pointer is the coordinates of the mouse on the browser window
          * @type {Vector2}
+         * 
          */
         const pointer = new THREE.Vector2()
 
@@ -189,6 +199,7 @@ export default function SolarSystem() {
          * point where the mouse is. If the raycast hits something, the intersected object will be highlighted as
          * red (if interactable). If the raycast doesn"t hit anything, the latest hit object will be returned to normal.
          * @param event is the mouse, from which the position is fetched
+         * @namespace SolarSystem
          */
         function onPointerMove(event) {
             isDragging = true
@@ -212,6 +223,7 @@ export default function SolarSystem() {
         /**
          * onPointerDown is called when the user presses their mouse button down. If the mouse button is pressed down
          * the user is not dragging.
+         * @namespace SolarSystem
          */
         function onPointerDown() {
             isDragging = false
@@ -224,6 +236,7 @@ export default function SolarSystem() {
          * the mouse button (and doesn"t drag) a raycast is fired off to the point of the mouse. If the raycast hits
          * something that is interactable a transition to the object will happen. If nothing was hit and there is a
          * description in the scene, it will be removed.
+         * @namespace SolarSystem
          */
         function onPointerUp() {
             if (!isDragging) {
@@ -246,6 +259,7 @@ export default function SolarSystem() {
          * animation the camera should always look at the target and any description in the scene is removed (prevents
          * creations of multiple descriptions if spam clicking) and when the animation is complete, the targets
          * description will be created and faded in above the target.
+         * @namespace SolarSystem
          */
         function transitionToTarget(target) {
             // Cancel all other animations before starting transition
@@ -293,6 +307,7 @@ export default function SolarSystem() {
          * Toast is a small text box where the latest key event will be shown. Triggers only when using keys from
          * keyboard.
          * @type {HTMLElement}
+         * @namespace SolarSystem
          */
         const toast = document.getElementById("toast")
         const timeout = () => toast.style.opacity = "0"
@@ -310,6 +325,7 @@ export default function SolarSystem() {
          * Numbers from 0-9 are reserved for planets and the Sun and the upper row of letters (Q-P) are reserved for
          * moons. Control is reserved for camera locking and Space for orbit locking.
          * @param event to check which key was pressed
+         * @namespace SolarSystem
          */
         function onKeyDown(event) {
             const keycode = event.keyCode
@@ -375,6 +391,7 @@ export default function SolarSystem() {
 
         /**
          * onResize scales the renderer and aspect ratio of the camera to screen size when the window size changes.
+         * @namespace SolarSystem
          */
         function onResize() {
             camera.aspect = window.innerWidth / window.innerHeight
@@ -387,6 +404,7 @@ export default function SolarSystem() {
         /**
          * updateDescription keeps the description positioned a little above a celestial body.
          * The description will always face the camera.
+         * @namespace SolarSystem
          */
         function updateDescription()  {
             if (description !== null) {
@@ -402,11 +420,13 @@ export default function SolarSystem() {
          * lockZoom locks the zoom level to a certain amount, which means if the planet is orbiting, the camera will not
          * just look at the target but follow it also on the zoom level which it was locked in.
          * @type {boolean}
+         * @namespace SolarSystem
          */
         let lockZoom = false, zoomLevel
 
         /**
          * updateCamera tracks the camera target. This is done via orbit controls (controls.target).
+         * @namespace SolarSystem
          */
         function updateCamera() {
             cameraTarget.getWorldPosition(controls.target)
@@ -422,6 +442,7 @@ export default function SolarSystem() {
 
         /**
          * render updates the matrix world and renders the scene through the camera.
+         * @namespace SolarSystem
          */
         function render() {
             camera.updateMatrixWorld()
@@ -431,11 +452,13 @@ export default function SolarSystem() {
         /**
          * requestID is only used for performance reasons. If the context is lost (which we force when the component
          * unmounts) the latest animation frame will be cancelled.
+         * @namespace SolarSystem
          */
         let requestID
         /**
          * stopOrbit lock the orbiting of planets in place. Controls the speed of orbit, which is 0 if true.
          * @type {boolean}
+         * @namespace SolarSystem
          */
         let stopOrbit = false
 
@@ -444,6 +467,7 @@ export default function SolarSystem() {
          * is rotated around their own axis and all other celestial bodies except the sun are rotated around the origin
          * (the sun acts as the origin). Then the description is updated and the camera is updated. Lastly the scene is
          * rendered.
+         * @namespace SolarSystem
          */
         const animate = function () {
             requestID = requestAnimationFrame(animate)
@@ -505,6 +529,7 @@ export default function SolarSystem() {
 
     /**
      * handleClick handles the click of the button that shows the key bindings the scene has.
+     * @namespace SolarSystem
      */
     function handleClick() {
         const controlsText = document.getElementById("controls_text")

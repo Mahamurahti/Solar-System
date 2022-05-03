@@ -9,6 +9,7 @@ import { XRControllerModelFactory } from "three/examples/jsm/webxr/XRControllerM
  *
  * @author Timo Tamminiemi & Eric Keränen
  * @returns {JSX.Element}
+ * @module SolarSystemVR
  */
 export default function SolarSystemVR() {
 
@@ -21,6 +22,7 @@ export default function SolarSystemVR() {
         /**
          * Scene for displaying 3D graphics. Scene has a cubemap of stars as background.
          * @type {Scene}
+         * @namespace SolarSystemVR
          */
         const scene = new THREE.Scene()
         scene.background = new THREE.CubeTextureLoader().load(Array(6).fill(getTexturePath("Stars")))
@@ -28,6 +30,7 @@ export default function SolarSystemVR() {
         /**
          * Perspective camera for defining the "eyes" of the scene. We can look at the scene through the camera.
          * @type {PerspectiveCamera}
+         * @namespace SolarSystemVR
          */
         const camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, .1, 1000)
         camera.position.set(-10, 10, 10)
@@ -35,6 +38,7 @@ export default function SolarSystemVR() {
         /**
          * Renderer renders the scene through the camera. Renderer has shadows enabled.
          * @type {WebGLRenderer}
+         * @namespace SolarSystemVR
          */
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
         renderer.setSize(WIDTH, HEIGHT)
@@ -52,6 +56,7 @@ export default function SolarSystemVR() {
          * Ambient light to lighten up the scene artificially, meaning even the dark sides of celestial bodies
          * are slightly visible.
          * @type {AmbientLight}
+         * @namespace SolarSystemVR
          */
         const ambientLight = new THREE.AmbientLight(0xFFFFFF, .2)
         scene.add(ambientLight)
@@ -60,6 +65,7 @@ export default function SolarSystemVR() {
          * Point light is the origin of the solar systems light. The point light is inside of the sun. Point light
          * is the light that makes other objects cast shadows.
          * @type {DirectionalLight}
+         * @namespace SolarSystemVR
          */
         const dirLight = new THREE.DirectionalLight(0xFFFFFF, 1.9)
         dirLight.castShadow = true
@@ -123,6 +129,7 @@ export default function SolarSystemVR() {
         /**
          * createVRButton creates the button that can be clicked to access VR mode
          * @returns {Promise<HTMLButtonElement|HTMLAnchorElement>}
+         * @namespace SolarSystemVR
          */
         async function createVRButton() {
             const button = await import("three/examples/jsm/webxr/VRButton").then(module => module.VRButton.createButton(renderer))
@@ -134,6 +141,7 @@ export default function SolarSystemVR() {
         /**
          * XRControllerModelFactory provides the model that will be used as the controller in VR
          * @type {XRControllerModelFactory}
+         * @namespace SolarSystemVR
          */
         const controllerModelFactory = new XRControllerModelFactory()
 
@@ -193,6 +201,7 @@ export default function SolarSystemVR() {
         /**
          * Raycaster is used to cast a ray and determine if it hits something
          * @type {Raycaster}
+         * @namespace SolarSystemVR
          */
         const raycaster = new THREE.Raycaster()
         // temporary matrix for saving controller position
@@ -208,6 +217,7 @@ export default function SolarSystemVR() {
          * Pressing the squeeze button with left controller will speed up the orbiting counter clockwise of celestial
          * bodies.
          * @param event is used to get the controller
+         * @namespace SolarSystemVR
          */
         function onSqueeze(event) {
             const controller = event.target
@@ -220,6 +230,7 @@ export default function SolarSystemVR() {
          * raycast hits any interactable object and if so, attaches the object to controller so it can be inspected
          * or moved while in hand.
          * @param event is used to get the controller
+         * @namespace SolarSystemVR
          */
         function onSelectStart(event) {
             const controller = event.target
@@ -238,6 +249,7 @@ export default function SolarSystemVR() {
          * attached to controller and if so, it detaches it and adds the object back to scene to the position it was
          * left to.
          * @param event is used to get the controller
+         * @namespace SolarSystemVR
          */
         function onSelectEnd(event) {
             const controller = event.target
@@ -253,7 +265,8 @@ export default function SolarSystemVR() {
          * getIntersections is called when something needs to check if controllers raycast hits any interactable object
          * returns array of intersected objects
          * @param controller is the used to determine is the controller the left one or the right one
-         * @returns {*[]|*}
+         * @returns {Array}
+         * @namespace SolarSystemVR
          */
         function getIntersections(controller) {
             tempMatrix.identity().extractRotation(controller.matrixWorld)
@@ -266,6 +279,7 @@ export default function SolarSystemVR() {
          * intersectObjectVR is called when in VR mode to check if any object is not selected by controller
          * and line of controller intersects with an object
          * @param controller is the used to determine is the controller the left one or the right one
+         * @namespace SolarSystemVR
          */
         function intersectObjectsVR(controller) {
             if(controller.userData.selected !== undefined) return
@@ -284,6 +298,7 @@ export default function SolarSystemVR() {
 
         /**
          * Empties intersected array and resets highlight color (green)
+         * @namespace SolarSystemVR
          */
         function cleanIntersected() {
             while (intersected.length) {
@@ -296,6 +311,7 @@ export default function SolarSystemVR() {
 
         /**
          * onResize scales the renderer and aspect ratio of the camera to screen size when the window size changes.
+         * @namespace SolarSystemVR
          */
         function onResize() {
             camera.aspect = window.innerWidth / window.innerHeight
@@ -305,6 +321,7 @@ export default function SolarSystemVR() {
 
         /**
          * render updates the matrix world and renders the scene through the camera.
+         * @namespace SolarSystemVR
          */
         function render() {
             camera.updateMatrixWorld()
@@ -314,6 +331,7 @@ export default function SolarSystemVR() {
         /**
          * requestID is only used for performance matters. If the context is lost (which we force when the component
          * unmounts) the latest animation frame will be cancelled.
+         * @namespace SolarSystemVR
          */
         let requestID
 
@@ -321,6 +339,7 @@ export default function SolarSystemVR() {
          * animate animates the scene. Animation frames are requested and called continuously. Every celestial body
          * is rotated around their own axis and all other celestial bodies except the sun are rotated around the origin
          * (the sun acts as the origin).
+         * @namespace SolarSystemVR
          */
         const animate = function () {
             renderer.render(scene, camera)
@@ -329,6 +348,7 @@ export default function SolarSystemVR() {
         /**
          * Rendering loop for VR render, update framerate window and update VR controller functions only when
          * renderer.xr.isPresenting is true, meaning VR mode is on.
+         * @namespace SolarSystemVR
          */
         renderer.setAnimationLoop(function() {
             requestID = requestAnimationFrame(animate)
